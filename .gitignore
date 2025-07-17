@@ -1,0 +1,9 @@
+*.xcuserstate
+FitnessTogether.xcodeproj/project.xcworkspace/
+*.xcworkspace
+Packages/
+.build/
+Package.pins
+Package.resolved
+xcuserdata/
+.xcode.env
