@@ -1,5 +1,6 @@
 
 import FTApi
+import FTDomainData
 import Foundation
 
 public final class FTManagerAPI: FTManager {
