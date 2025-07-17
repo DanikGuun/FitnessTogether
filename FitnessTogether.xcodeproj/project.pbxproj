@@ -6,6 +6,12 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		568E98852E28F0FF007144F7 /* FTApi in Frameworks */ = {isa = PBXBuildFile; productRef = 568E98842E28F0FF007144F7 /* FTApi */; };
+		568E988A2E28F226007144F7 /* FTApi in Frameworks */ = {isa = PBXBuildFile; productRef = 568E98892E28F226007144F7 /* FTApi */; };
+		568E988D2E28F23A007144F7 /* FTApi in Frameworks */ = {isa = PBXBuildFile; productRef = 568E988C2E28F23A007144F7 /* FTApi */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		568E98632E28E9C9007144F7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -65,6 +71,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				568E988D2E28F23A007144F7 /* FTApi in Frameworks */,
+				568E98852E28F0FF007144F7 /* FTApi in Frameworks */,
+				568E988A2E28F226007144F7 /* FTApi in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,6 +134,9 @@
 			);
 			name = FitnessTogether;
 			packageProductDependencies = (
+				568E98842E28F0FF007144F7 /* FTApi */,
+				568E98892E28F226007144F7 /* FTApi */,
+				568E988C2E28F23A007144F7 /* FTApi */,
 			);
 			productName = FitnessTogether;
 			productReference = 568E984C2E28E9C8007144F7 /* FitnessTogether.app */;
@@ -208,6 +220,9 @@
 			);
 			mainGroup = 568E98432E28E9C7007144F7;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				568E988B2E28F23A007144F7 /* XCLocalSwiftPackageReference "../FTApi" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 568E984D2E28E9C8007144F7 /* Products */;
 			projectDirPath = "";
@@ -569,6 +584,28 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCLocalSwiftPackageReference section */
+		568E988B2E28F23A007144F7 /* XCLocalSwiftPackageReference "../FTApi" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../FTApi;
+		};
+/* End XCLocalSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		568E98842E28F0FF007144F7 /* FTApi */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FTApi;
+		};
+		568E98892E28F226007144F7 /* FTApi */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FTApi;
+		};
+		568E988C2E28F23A007144F7 /* FTApi */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = FTApi;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 568E98442E28E9C7007144F7 /* Project object */;
 }
