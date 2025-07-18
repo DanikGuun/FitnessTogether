@@ -2,7 +2,7 @@
 import UIKit
 import SnapKit
 
-public final class FTViewController: UIViewController {
+public class FTViewController: UIViewController {
     
     public let stackView = UIStackView()
     
@@ -34,7 +34,7 @@ public final class FTViewController: UIViewController {
         stackView.spacing = 10
     }
     
-    public func addStackSubview(_ subview: UIView, height: CGFloat, spaceAfter: CGFloat = 0) {
+    public func addStackSubview(_ subview: UIView, height: CGFloat, spaceAfter: CGFloat = DC.Layout.spacing) {
         subview.heightAnchor.constraint(equalToConstant: height).isActive = true
         stackView.addArrangedSubview(subview)
         if spaceAfter > 0 { addSpacing(spaceAfter) }
