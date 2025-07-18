@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		567F1C662E2A680B00A32C0A /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 567F1C652E2A680B00A32C0A /* SnapKit */; };
 		568E98852E28F0FF007144F7 /* FTApi in Frameworks */ = {isa = PBXBuildFile; productRef = 568E98842E28F0FF007144F7 /* FTApi */; };
 		568E988A2E28F226007144F7 /* FTApi in Frameworks */ = {isa = PBXBuildFile; productRef = 568E98892E28F226007144F7 /* FTApi */; };
 		568E988D2E28F23A007144F7 /* FTApi in Frameworks */ = {isa = PBXBuildFile; productRef = 568E988C2E28F23A007144F7 /* FTApi */; };
@@ -72,6 +73,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				568E988D2E28F23A007144F7 /* FTApi in Frameworks */,
+				567F1C662E2A680B00A32C0A /* SnapKit in Frameworks */,
 				568E98852E28F0FF007144F7 /* FTApi in Frameworks */,
 				568E988A2E28F226007144F7 /* FTApi in Frameworks */,
 			);
@@ -137,6 +139,7 @@
 				568E98842E28F0FF007144F7 /* FTApi */,
 				568E98892E28F226007144F7 /* FTApi */,
 				568E988C2E28F23A007144F7 /* FTApi */,
+				567F1C652E2A680B00A32C0A /* SnapKit */,
 			);
 			productName = FitnessTogether;
 			productReference = 568E984C2E28E9C8007144F7 /* FitnessTogether.app */;
@@ -223,6 +226,7 @@
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
 				568E988B2E28F23A007144F7 /* XCLocalSwiftPackageReference "../FTApi" */,
+				567F1C642E2A680B00A32C0A /* XCRemoteSwiftPackageReference "SnapKit" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 568E984D2E28E9C8007144F7 /* Products */;
@@ -596,7 +600,23 @@
 		};
 /* End XCLocalSwiftPackageReference section */
 
+/* Begin XCRemoteSwiftPackageReference section */
+		567F1C642E2A680B00A32C0A /* XCRemoteSwiftPackageReference "SnapKit" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.7.1;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
 /* Begin XCSwiftPackageProductDependency section */
+		567F1C652E2A680B00A32C0A /* SnapKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 567F1C642E2A680B00A32C0A /* XCRemoteSwiftPackageReference "SnapKit" */;
+			productName = SnapKit;
+		};
 		568E98842E28F0FF007144F7 /* FTApi */ = {
 			isa = XCSwiftPackageProductDependency;
 			productName = FTApi;
