@@ -2,13 +2,30 @@
 import UIKit
 import SnapKit
 
-public class FTViewController: UIViewController {
+public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
+    
+    public override var title: String? { didSet { titleLabel.text = title } }
     
     public let stackView = UIStackView()
+    private let titleLabel = UILabel()
     
     public override func viewDidLoad() {
         super.viewDidLoad()
         setupStackView()
+        setupNavigationBar()
+    }
+    
+    public func addStackSubview(_ subview: UIView, height: CGFloat, spaceAfter: CGFloat = DC.Layout.spacing) {
+        subview.heightAnchor.constraint(equalToConstant: height).isActive = true
+        stackView.addArrangedSubview(subview)
+        if spaceAfter > 0 { addSpacing(spaceAfter) }
+    }
+    
+    public func addSpacing(_ height: CGFloat) {
+        let view = UIView()
+        view.backgroundColor = .clear
+        view.heightAnchor.constraint(equalToConstant: height).isActive = true
+        stackView.addArrangedSubview(view)
     }
     
     private func setupStackView() {
@@ -34,16 +51,28 @@ public class FTViewController: UIViewController {
         stackView.spacing = 10
     }
     
-    public func addStackSubview(_ subview: UIView, height: CGFloat, spaceAfter: CGFloat = DC.Layout.spacing) {
-        subview.heightAnchor.constraint(equalToConstant: height).isActive = true
-        stackView.addArrangedSubview(subview)
-        if spaceAfter > 0 { addSpacing(spaceAfter) }
+    private func setupNavigationBar() {
+        //BackButton
+        let item = UIBarButtonItem(image: UIImage(named: "BackArrow"), style: .plain, target: self, action: #selector(popViewController))
+        item.tintColor = .systemGray4
+        navigationItem.leftBarButtonItem = item
+        navigationItem.hidesBackButton = true
+        
+        //Title
+        titleLabel.font = DC.Font.roboto(weight: .semibold, size: 24)
+        navigationItem.titleView = titleLabel
+        
+        //Gesture
+        navigationController?.interactivePopGestureRecognizer?.delegate = self
     }
     
-    public func addSpacing(_ height: CGFloat) {
-        let view = UIView()
-        view.backgroundColor = .clear
-        view.heightAnchor.constraint(equalToConstant: height).isActive = true
-        stackView.addArrangedSubview(view)
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldBeRequiredToFailBy otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
     }
+    
+    @objc
+    private func popViewController() {
+        navigationController?.popViewController(animated: true)
+    }
+
 }
