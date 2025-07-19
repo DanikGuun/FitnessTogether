@@ -3,8 +3,11 @@ import UIKit
 
 public final class LoginViewController: FTViewController {
     
+    var delegate: LoginViewControllerDelegate?
+    
     public override func viewDidLoad() {
         super.viewDidLoad()
+        title = "Логин"
     }
     
     

@@ -23,6 +23,11 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
         setupNavigationBar()
     }
     
+    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        super.touchesBegan(touches, with: event)
+        print(123)
+    }
+    
     public func addStackSubview(_ subview: UIView, height: CGFloat, spaceAfter: SpaceKind = .fixed(DC.Layout.spacing)) {
         subview.heightAnchor.constraint(equalToConstant: height).isActive = true
         stackView.addArrangedSubview(subview)
@@ -85,6 +90,7 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
             maker.edges.equalToSuperview()
         }
         scrollView.showsVerticalScrollIndicator = false
+        scrollView.keyboardDismissMode = .interactive
         
         //Stack
         scrollView.addSubview(stackView)
