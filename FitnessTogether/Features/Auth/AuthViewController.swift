@@ -14,7 +14,7 @@ public final class AuthViewController: FTViewController {
     
     private func setupUI() {
         setupLabel()
-        addSpacing(view.bounds.height * 0.67)
+        addSpacing(.fractional(0.67))
         setupRegistrationButton()
         setupLoginButton()
     }

@@ -4,6 +4,11 @@ import SnapKit
 
 public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
     
+    public enum SpaceKind {
+        case fixed(_ value: CGFloat)
+        case fractional(_ percent: CGFloat)
+    }
+    
     public override var title: String? { didSet { titleLabel.text = title } }
     
     public var isScrollEnable = true { didSet { scrollView.isScrollEnabled = isScrollEnable } }
@@ -17,18 +22,29 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
         setupNavigationBar()
     }
     
-    public func addStackSubview(_ subview: UIView, height: CGFloat, spaceAfter: CGFloat = DC.Layout.spacing) {
+    public func addStackSubview(_ subview: UIView, height: CGFloat, spaceAfter: SpaceKind = .fixed(DC.Layout.spacing)) {
         subview.heightAnchor.constraint(equalToConstant: height).isActive = true
         stackView.addArrangedSubview(subview)
-        stackView.setCustomSpacing(spaceAfter, after: subview)
+        let space = getSpacing(spacing: spaceAfter)
+        stackView.setCustomSpacing(space, after: subview)
     }
     
-    public func addSpacing(_ height: CGFloat) {
+    public func addSpacing(_ spacing: SpaceKind) {
         let view = UIView()
         view.backgroundColor = .clear
+        let height = getSpacing(spacing: spacing)
         view.heightAnchor.constraint(equalToConstant: height).isActive = true
         stackView.addArrangedSubview(view)
         stackView.setCustomSpacing(0, after: view)
+    }
+    
+    private func getSpacing(spacing: SpaceKind) -> CGFloat {
+        switch spacing {
+        case .fixed(let value):
+            return value
+        case .fractional(let percent):
+            return view.bounds.height * percent
+        }
     }
     
     private func setupStackView() {
