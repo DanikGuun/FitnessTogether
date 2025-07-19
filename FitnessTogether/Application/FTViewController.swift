@@ -47,6 +47,36 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
+    public func animateToViews(_ views: [UIView], duration: TimeInterval = 0.6) {
+        UIView.animate(withDuration: duration/2, delay: 0, options: .curveEaseInOut, animations: { [weak self] in
+            guard let self else { return }
+            for subview in self.stackView.arrangedSubviews {
+                subview.alpha = 0
+                subview.isHidden = true
+                subview.transform = CGAffineTransform(translationX: 100, y: -700)
+            }
+        }, completion: { [weak self] _ in
+            
+            self?.stackView.arrangedSubviews.forEach { self?.stackView.removeArrangedSubview($0); $0.removeFromSuperview() }
+            
+            for view in views {
+                self?.stackView.addArrangedSubview(view)
+                view.alpha = 0
+                view.transform = CGAffineTransform(translationX: 0, y: 700)
+            }
+            
+            UIView.animate(withDuration: duration/2, delay: 0, options: .curveEaseInOut, animations: {
+                for view in views {
+                    view.alpha = 1
+                    view.transform = .identity
+                }
+            })
+            
+        })
+        
+
+    }
+    
     private func setupStackView() {
         //Mainscroll
         view.addSubview(scrollView)
