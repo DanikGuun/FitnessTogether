@@ -3,6 +3,7 @@ import OutlineTextfield
 import UIKit
 
 public extension OutlinedTextfield {
+    
     static func ftTextfield(placeholder: String = "") -> OutlinedTextfield {
         let standartAppearance = OutlineTextfieldAppearance(
             insets: UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 10),
@@ -25,4 +26,5 @@ public extension OutlinedTextfield {
         textfield.activeAppearance = activeAppearance
         return textfield
     }
+    
 }

@@ -18,6 +18,8 @@ public struct DC {
     public struct Font {
         public static let headline = DC.Font.roboto(weight: .medium, size: 20)
         public static let textfield = DC.Font.roboto(weight: .medium, size: 15)
+        public static let additionalInfo = DC.Font.roboto(weight: .regular, size: 12)
+        
         public static func roboto(weight: UIFont.Weight = .regular, size: CGFloat = 16) -> UIFont {
             let descriptor = UIFontDescriptor(fontAttributes: [
                 .family: "Roboto",

@@ -9,6 +9,22 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
         case fractional(_ percent: CGFloat)
     }
     
+    public enum AnimationDirection {
+        case up
+        case down
+        case left
+        case right
+        
+        var transform: CGAffineTransform {
+            switch self {
+            case .up: CGAffineTransform(translationX: 0, y: -800)
+            case .down: CGAffineTransform(translationX: 0, y: 800)
+            case .left: CGAffineTransform(translationX: -500, y: 0)
+            case .right: CGAffineTransform(translationX: 500, y: 0)
+            }
+        }
+    }
+    
     public override var title: String? { didSet { titleLabel.text = title } }
     
     public var isScrollEnable = true { didSet { scrollView.isScrollEnabled = isScrollEnable } }
@@ -28,8 +44,10 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
         print(123)
     }
     
-    public func addStackSubview(_ subview: UIView, height: CGFloat, spaceAfter: SpaceKind = .fixed(DC.Layout.spacing)) {
-        subview.heightAnchor.constraint(equalToConstant: height).isActive = true
+    public func addStackSubview(_ subview: UIView, height: CGFloat? = nil, spaceAfter: SpaceKind = .fixed(DC.Layout.spacing)) {
+        if let height {
+            subview.heightAnchor.constraint(equalToConstant: height).isActive = true
+        }
         stackView.addArrangedSubview(subview)
         let space = getSpacing(spacing: spaceAfter)
         stackView.setCustomSpacing(space, after: subview)
@@ -53,33 +71,36 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    public func animateToViews(_ views: [UIView], duration: TimeInterval = 0.6) {
-        UIView.animate(withDuration: duration/2, delay: 0, options: .curveEaseInOut, animations: { [weak self] in
+    public func removeAllSubviews(duration: TimeInterval = 0.3, direction: AnimationDirection = .up,
+                                  completion: (() -> Void)? = nil) {
+        UIView.animate(withDuration: duration, delay: 0, options: .curveEaseInOut, animations: { [weak self] in
             guard let self else { return }
             for subview in self.stackView.arrangedSubviews {
                 subview.alpha = 0
                 subview.isHidden = true
-                subview.transform = CGAffineTransform(translationX: 100, y: -700)
+                subview.transform = direction.transform
             }
         }, completion: { [weak self] _ in
-            
             self?.stackView.arrangedSubviews.forEach { self?.stackView.removeArrangedSubview($0); $0.removeFromSuperview() }
-            
-            for view in views {
-                self?.stackView.addArrangedSubview(view)
-                view.alpha = 0
-                view.transform = CGAffineTransform(translationX: 0, y: 700)
-            }
-            
-            UIView.animate(withDuration: duration/2, delay: 0, options: .curveEaseInOut, animations: {
-                for view in views {
-                    view.alpha = 1
-                    view.transform = .identity
-                }
-            })
-            
+            completion?()
         })
+    }
+    
+    public func addStackSubviews(_ views: [UIView], duration: TimeInterval = 0.3,
+                                 direction: AnimationDirection = .up, completion: (() -> Void)? = nil) {
+
+        for view in views {
+            stackView.addArrangedSubview(view)
+            view.alpha = 0
+            view.transform = direction.transform
+        }
         
+        UIView.animate(withDuration: duration, delay: 0, options: .curveEaseInOut, animations: {
+            for view in views {
+                view.alpha = 1
+                view.transform = .identity
+            }
+        }, completion: { _ in completion?() })
 
     }
     
