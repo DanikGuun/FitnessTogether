@@ -6,7 +6,9 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
     
     public override var title: String? { didSet { titleLabel.text = title } }
     
+    public var isScrollEnable = true { didSet { scrollView.isScrollEnabled = isScrollEnable } }
     public let stackView = UIStackView()
+    private let scrollView = UIScrollView()
     private let titleLabel = UILabel()
     
     public override func viewDidLoad() {
@@ -18,7 +20,7 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
     public func addStackSubview(_ subview: UIView, height: CGFloat, spaceAfter: CGFloat = DC.Layout.spacing) {
         subview.heightAnchor.constraint(equalToConstant: height).isActive = true
         stackView.addArrangedSubview(subview)
-        if spaceAfter > 0 { addSpacing(spaceAfter) }
+        stackView.setCustomSpacing(spaceAfter, after: subview)
     }
     
     public func addSpacing(_ height: CGFloat) {
@@ -26,11 +28,11 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
         view.backgroundColor = .clear
         view.heightAnchor.constraint(equalToConstant: height).isActive = true
         stackView.addArrangedSubview(view)
+        stackView.setCustomSpacing(0, after: view)
     }
     
     private func setupStackView() {
         //Mainscroll
-        let scrollView = UIScrollView()
         view.addSubview(scrollView)
         scrollView.snp.makeConstraints { maker in
             maker.edges.equalToSuperview()
@@ -53,10 +55,12 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
     
     private func setupNavigationBar() {
         //BackButton
-        let item = UIBarButtonItem(image: UIImage(named: "BackArrow"), style: .plain, target: self, action: #selector(popViewController))
-        item.tintColor = .systemGray4
-        navigationItem.leftBarButtonItem = item
         navigationItem.hidesBackButton = true
+        if navigationController?.viewControllers.first != self {
+            let item = UIBarButtonItem(image: UIImage(named: "BackArrow"), style: .plain, target: self, action: #selector(popViewController))
+            item.tintColor = .systemGray4
+            navigationItem.leftBarButtonItem = item
+        }
         
         //Title
         titleLabel.font = DC.Font.roboto(weight: .semibold, size: 24)

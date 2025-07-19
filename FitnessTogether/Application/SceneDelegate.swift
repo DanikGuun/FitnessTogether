@@ -15,10 +15,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         
-        let controller = RegistrationViewController()
-        window?.rootViewController = controller
+        let factory = BaseAuthViewControllerFactory()
+        let coordintor = AuthCoordinator(window: window!, factory: factory)
         
-        window?.makeKeyAndVisible()
+        window!.rootViewController = coordintor.mainVC
+        window!.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

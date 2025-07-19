@@ -1,22 +1,23 @@
 
 import UIKit
 
-public final class AuthCoordinator: Coordinator {
+public final class AuthCoordinator: NSObject, Coordinator {
 
     public var currentVC: UIViewController? { getCurrnetVC(base: window.rootViewController) }
     public var mainVC: UIViewController { navigationVC }
     
-    private let navigationVC: UINavigationController
+    private var navigationVC: UINavigationController!
     private let factory: AuthViewControllerFactory
     private let window: UIWindow
     
     init(window: UIWindow, factory: AuthViewControllerFactory) {
         self.factory = factory
         self.window = window
-        let startVC = factory.makeRegistrationVC()
+        self.navigationVC = nil
+        super.init()
+        let startVC = factory.makeAuthVC(delegate: self)
         self.navigationVC = UINavigationController(rootViewController: startVC)
     }
-    
     
     
     public func show(_ viewController: UIViewController) {
@@ -36,4 +37,13 @@ public final class AuthCoordinator: Coordinator {
         return base
     }
     
+}
+
+extension AuthCoordinator: AuthViewControllerDelegate {
+    public func authViewControllerGoToLogin(authViewController: AuthViewController) {
+        print("login")
+    }
+    public func authViewControllerGoToRegister(authViewController: AuthViewController) {
+        print( "register")
+    }
 }

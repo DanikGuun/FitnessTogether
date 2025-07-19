@@ -10,6 +10,11 @@ public struct DC {
         public static let spacing: CGFloat = 12
     }
     
+    public struct Size {
+        public static let buttonHeight: CGFloat = 54
+        public static let buttonCornerRadius: CGFloat = 20
+    }
+    
     public struct Font {
         public static func roboto(weight: UIFont.Weight = .regular, size: CGFloat = 16) -> UIFont {
             let descriptor = UIFontDescriptor(fontAttributes: [
