@@ -56,11 +56,11 @@ public final class AuthViewController: FTViewController {
 }
 
 public protocol AuthViewControllerDelegate {
-    func authViewControllerGoToRegister(authViewController: AuthViewController)
-    func authViewControllerGoToLogin(authViewController: AuthViewController)
+    func authViewControllerGoToRegister(authViewController: UIViewController)
+    func authViewControllerGoToLogin(authViewController: UIViewController)
 }
 
 extension AuthViewControllerDelegate {
-    public func authViewControllerGoToRegister(authViewController: AuthViewController) {}
-    public func authViewControllerGoToLogin(authViewController: AuthViewController) {}
+    public func authViewControllerGoToRegister(authViewController: UIViewController) {}
+    public func authViewControllerGoToLogin(authViewController: UIViewController) {}
 }

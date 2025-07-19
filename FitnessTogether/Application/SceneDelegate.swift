@@ -18,8 +18,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let factory = BaseAuthViewControllerFactory()
         let coordintor = AuthCoordinator(window: window!, factory: factory)
         
-        window!.rootViewController = coordintor.mainVC
-        window!.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

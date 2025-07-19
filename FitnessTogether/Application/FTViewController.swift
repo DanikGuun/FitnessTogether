@@ -18,6 +18,7 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        view.backgroundColor = .systemBackground
         setupStackView()
         setupNavigationBar()
     }

@@ -27,5 +27,9 @@ public final class RegistrationViewController: FTViewController{
 }
 
 public protocol RegistrationViewControllerDelegate {
-    func registrationViewControllerDidFinish(_ controller: RegistrationViewController)
+    func registrationViewControllerDidFinish(_ controller: UIViewController)
+}
+
+extension RegistrationViewControllerDelegate {
+    public func registrationViewControllerDidFinish(_ controller: UIViewController) {}
 }
