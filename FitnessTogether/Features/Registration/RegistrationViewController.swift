@@ -10,6 +10,7 @@ public final class RegistrationViewController: FTViewController, RegistrationSta
     var userRegister = FTUserRegister()
     private var states: [RegistrationState] = []
     private var currentState = -1
+    private var stepLabel = UILabel()
     
     //MARK: - Lifecycle
     public convenience init(model: RegistrationModel) {
@@ -28,6 +29,7 @@ public final class RegistrationViewController: FTViewController, RegistrationSta
         super.viewDidLoad()
         states = model.getStates()
         goToNextState()
+        setupStepLabel()
     }
     
     private func goToNextState() {
@@ -38,6 +40,22 @@ public final class RegistrationViewController: FTViewController, RegistrationSta
             self?.addSpacing(.fractional(0.1))
             self?.addStackSubviews(subviews, direction: .left)
         })
+        updateStepLabel()
+    }
+    
+    private func setupStepLabel() {
+        view.addSubview(stepLabel)
+        stepLabel.snp.makeConstraints { maker in
+            maker.centerX.equalToSuperview()
+            maker.bottom.equalToSuperview().inset(90)
+        }
+        
+        stepLabel.font = DC.Font.roboto(weight: .regular, size: 15)
+        stepLabel.textColor = UIColor.systemGray3
+    }
+    
+    private func updateStepLabel() {
+        stepLabel.text = "\(currentState + 1) из \(states.count) шагов"
     }
     
     public func registrationStateGoNext(_ state: any RegistrationState) {
