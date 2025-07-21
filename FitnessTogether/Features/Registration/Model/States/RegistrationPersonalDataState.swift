@@ -55,6 +55,11 @@ public final class RegistrationPersonalDataState: BaseRegistrationState, UITextF
         (TextField as? OutlinedTextField)?.isError = false
     }
     
+    public func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        (textField as? OutlinedTextField)?.isError = false
+        return true
+    }
+    
     internal func TextFieldShouldReturn(_ TextField: UITextField) -> Bool {
         if TextField == firstNameTextField {
             let _ = lastNameTextField.becomeFirstResponder()

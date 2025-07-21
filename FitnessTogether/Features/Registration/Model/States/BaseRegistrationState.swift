@@ -70,10 +70,10 @@ open class BaseRegistrationState: NSObject, RegistrationState {
     
     //MARK: - Validation
     internal func validateValues() -> Bool { //Override
-        return true
+        return false
     }
     
-    internal func updateFieldInConsistWithValidate(_ field: UIView, result: ValidatorResult) -> Bool {
+    @discardableResult internal func updateFieldInConsistWithValidate(_ field: UIView, result: ValidatorResult) -> Bool {
         
         var isValid: Bool = false
         var incorrectMessage: String? = ""

@@ -8,6 +8,7 @@ public protocol Validator {
     func isValidDateOfBirth(_ string: Date?) -> ValidatorResult
     func isValidEmail(_ string: String?) -> ValidatorResult
     func isValidPassword(_ string: String?) -> ValidatorResult
+    func isValidPasswordConfirmation(_ password: String?, _ confirmation: String?) -> ValidatorResult
     
 }
 

@@ -3,16 +3,16 @@ import XCTest
 import FTDomainData
 @testable import FitnessTogether
 
-final class RegistrationPersonalDataStateTests: XCTestCase {
+final class RegistrationCredintalsStateTests: XCTestCase {
     
     var delegate: MockRegistrationDelegate!
     var validator: MockValidator!
-    var state: RegistrationPersonalDataState!
+    var state: RegistrationCredintalsState!
     
     override func setUp() {
         delegate = MockRegistrationDelegate()
         validator = MockValidator()
-        state = RegistrationPersonalDataState(validator: validator)
+        state = RegistrationCredintalsState(validator: validator)
         state.delegate = delegate
         super.setUp()
     }
@@ -26,15 +26,12 @@ final class RegistrationPersonalDataStateTests: XCTestCase {
     
     func test_Applying() {
         var userRegister = FTUserRegister()
-        let name = "TestName"
-        let surname = "TestSurname"
+        let email = "test@example.com"
         
-        state.firstNameTextField.text = name
-        state.lastNameTextField.text = surname
+        state.emailTextField.text = email
         state.apply(userRegister: &userRegister)
         
-        XCTAssertEqual(userRegister.firstName, name)
-        XCTAssertEqual(userRegister.lastName, surname)
+        XCTAssertEqual(userRegister.email, email)
     }
     
     //MARK: - Next Button
@@ -45,34 +42,34 @@ final class RegistrationPersonalDataStateTests: XCTestCase {
     func test_NextButton_ActiveAfterFullData() {
         XCTAssertFalse(state.nextButton.isEnabled)
         
-        state.firstNameTextField.text = "Test"
+        state.emailTextField.text = "test@example.com"
         state.checkNextButtonAvailable(nil)
         XCTAssertFalse(state.nextButton.isEnabled)
         
-        state.lastNameTextField.text = "Test"
+        state.passwordTextField.text = "password"
         state.checkNextButtonAvailable(nil)
         XCTAssertFalse(state.nextButton.isEnabled)
 
-        state.datePickerView.date = Date()
+        state.confirmPasswordTextField.text = "password"
         state.checkNextButtonAvailable(nil)
         XCTAssertTrue(state.nextButton.isEnabled)
     }
     
-    func test_NextButton_InActiveAfterEmptingData() {
-        state.firstNameTextField.text = "Test"
-        state.lastNameTextField.text = "Test"
-        state.datePickerView.date = Date()
+    func test_NextButton_InactiveAfterEmptingData() {
+        state.emailTextField.text = "test@example.com"
+        state.passwordTextField.text = "password"
+        state.confirmPasswordTextField.text = "password"
         
         state.checkNextButtonAvailable(nil)
         XCTAssertTrue(state.nextButton.isEnabled)
         
-        state.firstNameTextField.text = ""
+        state.emailTextField.text = ""
         state.checkNextButtonAvailable(nil)
         XCTAssertFalse(state.nextButton.isEnabled)
     }
     
     func test_NextButton_InvalidData_DoesNotTriggerNextStep() {
-        validator.isValidFirstName = false
+        validator.isValidEmail = false
         
         state.nextButtonPressed(nil)
         
@@ -81,9 +78,8 @@ final class RegistrationPersonalDataStateTests: XCTestCase {
     }
     
     func test_NextButton_ValidData_TriggersNextStep() {
-        validator.isValidFirstName = true
-        validator.isValidLastName = true
-        validator.isValidDateOfBirth = true
+        validator.isValidEmail = true
+        validator.isValidPassword = true
         
         state.nextButtonPressed(nil)
         
@@ -91,35 +87,35 @@ final class RegistrationPersonalDataStateTests: XCTestCase {
         XCTAssertTrue(wasCalled)
     }
     
-    //MARK: - Firstname
-    func test_FirstName_Valid_DelegateDoesNotRequestToAddIncorrectLabel() {
-        validator.isValidFirstName = true
+    //MARK: - Email
+    func test_Email_Valid_DelegateDoesNotRequestToAddIncorrectLabel() {
+        validator.isValidEmail = true
         state.nextButtonPressed(nil)
         let incorrectLabel = delegate.lastViewInserted
         XCTAssertNil(incorrectLabel)
     }
     
-    func test_FirstName_Inalid_DelegateRequestToAddIncorrectLabel() {
-        validator.isValidFirstName = false
+    func test_Email_Invalid_DelegateRequestToAddIncorrectLabel() {
+        validator.isValidEmail = false
         state.nextButtonPressed(nil)
         let incorrectLabel = delegate.lastViewInserted
         XCTAssertNotNil(incorrectLabel)
     }
     
-    func test_FirstName_NotValid_After_Valid_DelegateRequestToAddAndRemoveIncorrectLabel() {
-        validator.isValidFirstName = false
+    func test_Email_NotValid_After_Valid_DelegateRequestToAddAndRemoveIncorrectLabel() {
+        validator.isValidEmail = false
         state.nextButtonPressed(nil)
         let incorrectLabel = delegate.lastViewInserted
         XCTAssertNotNil(incorrectLabel)
         
-        validator.isValidFirstName = true
+        validator.isValidEmail = true
         state.nextButtonPressed(nil)
         let removedLabel = delegate.lastViewRemoved
         XCTAssertNotNil(removedLabel)
     }
     
-    func test_FirstName_DoubleNotValid_DelegateShouldntAddDoubleLabel() {
-        validator.isValidFirstName = false
+    func test_Email_DoubleNotValid_DelegateShouldntAddDoubleLabel() {
+        validator.isValidEmail = false
         state.nextButtonPressed(nil)
         let incorrectLabel = delegate.lastViewInserted
         XCTAssertNotNil(incorrectLabel)
@@ -131,8 +127,8 @@ final class RegistrationPersonalDataStateTests: XCTestCase {
         XCTAssertNil(secondIncorrectLabel)
     }
     
-    func test_FirstName_NotValid_EmptyErrorMessage_DelegateNotRequestToAddIncorrectLabel() {
-        validator.isValidFirstName = false
+    func test_Email_NotValid_EmptyErrorMessage_DelegateNotRequestToAddIncorrectLabel() {
+        validator.isValidEmail = false
         validator.errorMessage = nil
         
         state.nextButtonPressed(nil)
@@ -141,35 +137,35 @@ final class RegistrationPersonalDataStateTests: XCTestCase {
         XCTAssertNil(incorrectLabel)
     }
     
-    //MARK: - Lastname
-    func test_LastName_Valid_DelegateDoesNotRequestToAddIncorrectLabel() {
-        validator.isValidLastName = true
+    //MARK: - Password
+    func test_Password_Valid_DelegateDoesNotRequestToAddIncorrectLabel() {
+        validator.isValidPassword = true
         state.nextButtonPressed(nil)
         let incorrectLabel = delegate.lastViewInserted
         XCTAssertNil(incorrectLabel)
     }
-
-    func test_LastName_Invalid_DelegateRequestToAddIncorrectLabel() {
-        validator.isValidLastName = false
+    
+    func test_Password_Invalid_DelegateRequestToAddIncorrectLabel() {
+        validator.isValidPassword = false
         state.nextButtonPressed(nil)
         let incorrectLabel = delegate.lastViewInserted
         XCTAssertNotNil(incorrectLabel)
     }
-
-    func test_LastName_NotValid_After_Valid_DelegateRequestToAddAndRemoveIncorrectLabel() {
-        validator.isValidLastName = false
+    
+    func test_Password_NotValid_After_Valid_DelegateRequestToAddAndRemoveIncorrectLabel() {
+        validator.isValidPassword = false
         state.nextButtonPressed(nil)
         let incorrectLabel = delegate.lastViewInserted
         XCTAssertNotNil(incorrectLabel)
         
-        validator.isValidLastName = true
+        validator.isValidPassword = true
         state.nextButtonPressed(nil)
         let removedLabel = delegate.lastViewRemoved
         XCTAssertNotNil(removedLabel)
     }
-
-    func test_LastName_DoubleNotValid_DelegateShouldntAddDoubleLabel() {
-        validator.isValidLastName = false
+    
+    func test_Password_DoubleNotValid_DelegateShouldntAddDoubleLabel() {
+        validator.isValidPassword = false
         state.nextButtonPressed(nil)
         let incorrectLabel = delegate.lastViewInserted
         XCTAssertNotNil(incorrectLabel)
@@ -181,8 +177,8 @@ final class RegistrationPersonalDataStateTests: XCTestCase {
         XCTAssertNil(secondIncorrectLabel)
     }
     
-    func test_LastName_NotValid_EmptyErrorMessage_DelegateNotRequestToAddIncorrectLabel() {
-        validator.isValidLastName = false
+    func test_Password_NotValid_EmptyErrorMessage_DelegateNotRequestToAddIncorrectLabel() {
+        validator.isValidPassword = false
         validator.errorMessage = nil
         
         state.nextButtonPressed(nil)
@@ -191,35 +187,37 @@ final class RegistrationPersonalDataStateTests: XCTestCase {
         XCTAssertNil(incorrectLabel)
     }
     
-    //MARK: - Datepicker
-    func test_DatePicker_Valid_DelegateDoesNotRequestToAddIncorrectLabel() {
-        validator.isValidDateOfBirth = true
+    //MARK: - Confirm Password
+    func test_ConfirmPassword_Valid_DelegateDoesNotRequestToAddIncorrectLabel() {
+        // Здесь нужно добавить логику валидации подтверждения пароля в MockValidator
+        validator.isValidPassword = true
         state.nextButtonPressed(nil)
         let incorrectLabel = delegate.lastViewInserted
         XCTAssertNil(incorrectLabel)
     }
-
-    func test_DatePicker_Invalid_DelegateRequestToAddIncorrectLabel() {
-        validator.isValidDateOfBirth = false
+    
+    func test_ConfirmPassword_Invalid_DelegateRequestToAddIncorrectLabel() {
+        // Здесь нужно добавить логику валидации подтверждения пароля в MockValidator
+        validator.isValidPassword = false
         state.nextButtonPressed(nil)
         let incorrectLabel = delegate.lastViewInserted
         XCTAssertNotNil(incorrectLabel)
     }
-
-    func test_DatePicker_NotValid_After_Valid_DelegateRequestToAddAndRemoveIncorrectLabel() {
-        validator.isValidDateOfBirth = false
+    
+    func test_ConfirmPassword_NotValid_After_Valid_DelegateRequestToAddAndRemoveIncorrectLabel() {
+        validator.isValidPassword = false
         state.nextButtonPressed(nil)
         let incorrectLabel = delegate.lastViewInserted
         XCTAssertNotNil(incorrectLabel)
         
-        validator.isValidDateOfBirth = true
+        validator.isValidPassword = true
         state.nextButtonPressed(nil)
         let removedLabel = delegate.lastViewRemoved
         XCTAssertNotNil(removedLabel)
     }
-
-    func test_DatePicker_DoubleNotValid_DelegateShouldntAddDoubleLabel() {
-        validator.isValidDateOfBirth = false
+    
+    func test_ConfirmPassword_DoubleNotValid_DelegateShouldntAddDoubleLabel() {
+        validator.isValidPassword = false
         state.nextButtonPressed(nil)
         let incorrectLabel = delegate.lastViewInserted
         XCTAssertNotNil(incorrectLabel)
@@ -231,8 +229,8 @@ final class RegistrationPersonalDataStateTests: XCTestCase {
         XCTAssertNil(secondIncorrectLabel)
     }
     
-    func test_DatePicker_NotValid_EmptyErrorMessage_DelegateNotRequestToAddIncorrectLabel() {
-        validator.isValidDateOfBirth = false  // Предполагая, что у вас есть такое свойство
+    func test_ConfirmPassword_NotValid_EmptyErrorMessage_DelegateNotRequestToAddIncorrectLabel() {
+        validator.isValidPassword = false
         validator.errorMessage = nil
         
         state.nextButtonPressed(nil)
@@ -240,5 +238,5 @@ final class RegistrationPersonalDataStateTests: XCTestCase {
         let incorrectLabel = delegate.lastViewInserted
         XCTAssertNil(incorrectLabel)
     }
-    
 }
+

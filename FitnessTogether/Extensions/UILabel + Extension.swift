@@ -8,6 +8,7 @@ public extension UILabel {
         label.textColor = .systemRed
         label.font = DC.Font.roboto(weight: .regular, size: 14)
         label.textAlignment = .center
+        label.numberOfLines = 0
         label.text = title
         return label
     }
