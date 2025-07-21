@@ -6,14 +6,18 @@ import FTDomainData
 
 final class RegistrationRoleStateTests: XCTestCase {
     
+    var delegate: MockRegistrationDelegate!
     var state: RegistrationRoleState!
     
     override func setUp() {
         super.setUp()
+        delegate = MockRegistrationDelegate()
         state = RegistrationRoleState(validator: MockValidator())
+        state.delegate = delegate
     }
     
     override func tearDown() {
+        delegate = nil
         state = nil
         super.tearDown()
     }
@@ -33,10 +37,21 @@ final class RegistrationRoleStateTests: XCTestCase {
         XCTAssertFalse(state.nextButton.isEnabled)
     }
     
+    func test_NextButton_NoRole_DoesNotTriggerNextStep() {
+        state.nextButtonPressed(nil)
+        XCTAssertFalse(delegate.goNextCalled)
+    }
+    
     func test_RoleSelected_NextButtonActive() {
         state.clientButton.isSelected = true
-        state.checkNextButtonAvailable(nil)
-        XCTAssertTrue(state.nextButton.isEnabled)
+        state.nextButtonPressed(nil)
+        XCTAssertTrue(delegate.goNextCalled)
+    }
+    
+    func test_NextButton_RoleSelected_TriggersNextStep() {
+        state.coachButton.isSelected = true
+        state.nextButtonPressed(nil)
+        XCTAssertTrue(delegate.goNextCalled)
     }
     
 }
