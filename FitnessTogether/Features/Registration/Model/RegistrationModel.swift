@@ -10,12 +10,7 @@ public final class BaseRegistrationModel: RegistrationModel {
     
     public func getStates() -> [any RegistrationState] {
         return [
-            RegistrationPersonalDataState(),
-            RegistrationPersonalDataState(),
-            RegistrationPersonalDataState(),
-            RegistrationPersonalDataState(),
-            RegistrationPersonalDataState(),
-            RegistrationPersonalDataState()
+            RegistrationPersonalDataState(validator: BaseValidator())
         ]
     }
     

@@ -44,6 +44,7 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
             subview.heightAnchor.constraint(equalToConstant: height).isActive = true
         }
         stackView.addArrangedSubview(subview)
+        
         let space = getSpacing(spacing: spaceAfter)
         stackView.setCustomSpacing(space, after: subview)
     }
@@ -66,7 +67,7 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    public func removeAllSubviews(duration: TimeInterval = 0.3, direction: AnimationDirection = .up,
+    public func removeAllStackSubviews(duration: TimeInterval = 0.3, direction: AnimationDirection = .up,
                                   completion: (() -> Void)? = nil) {
         UIView.animate(withDuration: duration, delay: 0, options: .curveEaseInOut, animations: { [weak self] in
             guard let self else { return }
@@ -102,8 +103,10 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
     private func setupStackView() {
         //Mainscroll
         view.addSubview(scrollView)
-        scrollView.snp.makeConstraints { maker in
-            maker.edges.equalToSuperview()
+        scrollView.snp.makeConstraints { [weak self] maker in
+            guard let self else { return }
+            maker.leading.trailing.top.equalTo(self.view.safeAreaLayoutGuide)
+            maker.bottom.equalTo(self.view.keyboardLayoutGuide.snp.top)
         }
         scrollView.showsVerticalScrollIndicator = false
         scrollView.keyboardDismissMode = .interactive
@@ -123,6 +126,14 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
     }
     
     private func setupNavigationBar() {
+        //Appearance
+        let appearance = UINavigationBarAppearance()
+        appearance.configureWithTransparentBackground()
+        navigationItem.standardAppearance = appearance
+        navigationItem.compactAppearance = appearance
+        navigationItem.scrollEdgeAppearance = appearance
+        navigationItem.compactScrollEdgeAppearance = appearance
+        
         //BackButton
         navigationItem.hidesBackButton = true
         if navigationController?.viewControllers.first != self {

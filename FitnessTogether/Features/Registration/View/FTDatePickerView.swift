@@ -5,6 +5,7 @@ import Foundation
 public final class FTDatePickerView: UIButton, UIPopoverPresentationControllerDelegate {
     
     public var date: Date? { didSet { dateHasBeenUpdated() } }
+    public var isCorrectDate = true { didSet { setNeedsUpdateConfiguration() } }
     
     var calendarImageView = UIImageView()
     var dateFormat = "dd MMMM YYYY"
@@ -42,7 +43,10 @@ public final class FTDatePickerView: UIButton, UIPopoverPresentationControllerDe
         }), for: .touchUpInside)
     }
     
-    private func pushAlertDatePicker() {
+    public func pushAlertDatePicker() {
+        isCorrectDate = true
+        superview?.endEditing(true)
+        
         let vc = UIViewController()
         vc.modalPresentationStyle = .popover
         vc.popoverPresentationController?.permittedArrowDirections = [.up]
@@ -93,12 +97,12 @@ public final class FTDatePickerView: UIButton, UIPopoverPresentationControllerDe
         var configuration = configuration ?? UIButton.Configuration.plain()
         configuration.contentInsets = DC.Layout.insets.nsInsets
         configuration.attributedTitle = getAttributedTitle()
-        configuration.baseForegroundColor = makeGrayIfNeeded(isActive ? .label : .systemGray4)
+        configuration.baseForegroundColor = chooseColor(isActive ? .label : .systemGray4)
         
         calendarImageView.tintColor = configuration.baseForegroundColor
          
         configuration.background.strokeWidth = 2
-        configuration.background.strokeColor = makeGrayIfNeeded(isActive ? .ftOrange : .systemGray4)
+        configuration.background.strokeColor = chooseColor(isActive ? .ftOrange : .systemGray4)
         configuration.background.cornerRadius = DC.Size.buttonCornerRadius
         
         self.configuration = configuration
@@ -124,12 +128,14 @@ public final class FTDatePickerView: UIButton, UIPopoverPresentationControllerDe
         return text
     }
     
-    private func makeGrayIfNeeded(_ color: UIColor) -> UIColor {
+    private func chooseColor(_ color: UIColor) -> UIColor {
+        if isCorrectDate == false { return .systemRed }
         let isOverlapsed = viewController?.isOverlapsed ?? false
         return isOverlapsed ? .systemGray4 : color
     }
     
     private func dateHasBeenUpdated() {
         setNeedsUpdateConfiguration()
+        self.sendActions(for: .valueChanged)
     }
 }

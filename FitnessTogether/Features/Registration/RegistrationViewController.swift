@@ -2,7 +2,7 @@
 import UIKit
 import OutlineTextfield
 
-public final class RegistrationViewController: FTViewController {
+public final class RegistrationViewController: FTViewController, RegistrationStateDelegate {
     
     var delegate: RegistrationViewControllerDelegate?
     var model: RegistrationModel!
@@ -29,20 +29,30 @@ public final class RegistrationViewController: FTViewController {
         goToNextState()
     }
     
-    let direction = AnimationDirection.up
     private func goToNextState() {
         currentState += 1
+        states[currentState].delegate = self
         let subviews = states[currentState].viewsToPresent()
-        removeAllSubviews(direction: .right, completion: { [weak self] in
-            let but = UIButton.ftPlain(title: "чисто чекнуть")
+        removeAllStackSubviews(direction: .right, completion: { [weak self] in
             self?.addSpacing(.fractional(0.1))
-            self?.addStackSubviews(subviews + [but], direction: .left)
-            but.addAction(UIAction(handler: { _ in
-                self?.goToNextState()
-            }), for: .touchUpInside)
+            self?.addStackSubviews(subviews, direction: .left)
         })
     }
+    
+    public func registrationStateGoNext(_ state: any RegistrationState) {
+        print("next")
+    }
+    
+    public func registrationState(_ state: any RegistrationState, needInertView view: UIView, after afterView: UIView) {
+        guard let index = stackView.arrangedSubviews.firstIndex(of: afterView) else { return }
+        stackView.insertArrangedSubview(view, at: index + 1)
+    }
 
+    public func registrationState(_ state: any RegistrationState, needRemoveView view: UIView) {
+        stackView.removeArrangedSubview(view)
+        view.removeFromSuperview()
+    }
+    
 }
 
 public protocol RegistrationViewControllerDelegate {

@@ -13,7 +13,18 @@ public extension UIView {
     }
     
     func constraintHeight(_ height: CGFloat) {
-        self.heightAnchor.constraint(equalToConstant: height).isActive = true
+        self.translatesAutoresizingMaskIntoConstraints = false
+        if let constraint = self.constraints.first(where: { $0.identifier == "heightConstraint" }) {
+            constraint.constant = height
+            updateConstraints()
+            superview?.layoutIfNeeded()
+            setNeedsDisplay()
+        }
+        else {
+            let constraint = heightAnchor.constraint(equalToConstant: height)
+            constraint.identifier = "heightConstraint"
+            constraint.isActive = true
+        }
     }
     
     static func spaceView(_ height: CGFloat) -> UIView {

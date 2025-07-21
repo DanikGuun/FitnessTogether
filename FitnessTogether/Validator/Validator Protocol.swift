@@ -1,0 +1,17 @@
+
+import Foundation
+
+public protocol Validator {
+    
+    func isValidFirstName(_ string: String?) -> ValidatorResult
+    func isValidLastName(_ string: String?) -> ValidatorResult
+    func isValidDateOfBirth(_ string: Date?) -> ValidatorResult
+    func isValidEmail(_ string: String?) -> ValidatorResult
+    func isValidPassword(_ string: String?) -> ValidatorResult
+    
+}
+
+public enum ValidatorResult {
+    case valid
+    case invalid(message: String?)
+}
