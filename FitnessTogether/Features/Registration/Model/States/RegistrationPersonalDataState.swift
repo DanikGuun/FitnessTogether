@@ -13,13 +13,13 @@ public final class RegistrationPersonalDataState: BaseRegistrationState, UITextF
         return [titleLabel, UIView.spaceView(20), firstNameTextField, lastNameTextField, datePickerView, nextButton, infoLabel]
     }
     
-    public override func apply(user: inout FTUser) {
-        user.firstName = firstNameTextField.text ?? ""
-        user.lastName = lastNameTextField.text ?? ""
+    public override func apply(userRegister: inout FTUserRegister) {
+        userRegister.firstName = firstNameTextField.text ?? ""
+        userRegister.lastName = lastNameTextField.text ?? ""
     }
     
     //MARK: - UI
-    public override func setupViews() {
+    internal override func setupViews() {
         setupTitleLabel()
         setupFirstNameTextField()
         setupLastNameTextField()
@@ -28,21 +28,19 @@ public final class RegistrationPersonalDataState: BaseRegistrationState, UITextF
         setupInfoLabel()
     }
     
-    public override func setupTitleLabel() {
+    internal override func setupTitleLabel() {
         super.setupTitleLabel()
         titleLabel.text = "Заполните данные о себе"
     }
     
     private func setupFirstNameTextField() {
         firstNameTextField.constraintHeight(DC.Size.buttonHeight)
-        firstNameTextField.placeholder = "Имя"
         firstNameTextField.delegate = self
         firstNameTextField.addAction(UIAction(handler: checkNextButtonAvailable), for: .editingChanged)
     }
     
     private func setupLastNameTextField() {
         lastNameTextField.constraintHeight(DC.Size.buttonHeight)
-        lastNameTextField.placeholder = "Фамилия"
         lastNameTextField.delegate = self
         lastNameTextField.addAction(UIAction(handler: checkNextButtonAvailable), for: .editingChanged)
     }
@@ -52,19 +50,12 @@ public final class RegistrationPersonalDataState: BaseRegistrationState, UITextF
         datePickerView.addAction(UIAction(handler: checkNextButtonAvailable), for: .valueChanged)
     }
     
-    
-    public override func isAllFieldsFilled() -> Bool {
-        return !(firstNameTextField.text?.isEmpty ?? true ||
-                 lastNameTextField.text?.isEmpty ?? true ||
-                 datePickerView.date == nil)
-    }
-    
     //MARK: - TextField Delegate
-    public func TextFieldDidBeginEditing(_ TextField: UITextField) {
+    internal func TextFieldDidBeginEditing(_ TextField: UITextField) {
         (TextField as? OutlinedTextField)?.isError = false
     }
     
-    public func TextFieldShouldReturn(_ TextField: UITextField) -> Bool {
+    internal func TextFieldShouldReturn(_ TextField: UITextField) -> Bool {
         if TextField == firstNameTextField {
             let _ = lastNameTextField.becomeFirstResponder()
         }
@@ -77,7 +68,7 @@ public final class RegistrationPersonalDataState: BaseRegistrationState, UITextF
     }
     
     //MARK: - Validation
-    public override func validateValues() -> Bool {
+    internal override func validateValues() -> Bool {
         let firstName = validateFirstName()
         let lastName = validateLastName()
         let dateOfBirth = validateDateOfBirth()
@@ -104,6 +95,12 @@ public final class RegistrationPersonalDataState: BaseRegistrationState, UITextF
         let isValid = updateFieldInConsistWithValidate(datePickerView, result: result)
         datePickerView.isCorrectDate = isValid
         return isValid
+    }
+    
+    internal override func isAllFieldsFilled() -> Bool {
+        return !(firstNameTextField.text?.isEmpty ?? true ||
+                 lastNameTextField.text?.isEmpty ?? true ||
+                 datePickerView.date == nil)
     }
 
 }

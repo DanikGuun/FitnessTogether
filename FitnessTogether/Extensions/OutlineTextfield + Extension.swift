@@ -41,12 +41,13 @@ public extension OutlinedTextField {
             outlinedPlaceholderFont: DC.Font.TextField,
             outlineCornerRadius: DC.Size.buttonCornerRadius-3
         )
-        let TextField = OutlinedTextField()
-        TextField.placeholderBehavior = .hide
-        TextField.standartAppearance = standartAppearance
-        TextField.activeAppearance = activeAppearance
-        TextField.errorAppearance = errorAppearance
-        return TextField
+        let textField = OutlinedTextField()
+        textField.placeholder = placeholder
+        textField.placeholderBehavior = .hide
+        textField.standartAppearance = standartAppearance
+        textField.activeAppearance = activeAppearance
+        textField.errorAppearance = errorAppearance
+        return textField
     }
     
 }

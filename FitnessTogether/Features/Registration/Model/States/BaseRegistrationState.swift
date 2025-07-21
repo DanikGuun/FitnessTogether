@@ -24,35 +24,35 @@ open class BaseRegistrationState: NSObject, RegistrationState {
         return []
     }
     
-    public func apply(user: inout FTUser) {
+    public func apply(userRegister: inout FTUserRegister) {
     }
     
     //MARK: - UI
-    public func setupViews() { //Override
+    internal func setupViews() { //Override
         setupTitleLabel()
         setupNextButton()
         setupInfoLabel()
     }
     
-    public func setupTitleLabel() { //Override для надписи
+    internal func setupTitleLabel() { //Override для надписи
         titleLabel.font = DC.Font.headline
     }
     
-    public func setupNextButton() {
+    internal func setupNextButton() {
         nextButton.isEnabled = false
         nextButton.constraintHeight(DC.Size.buttonHeight)
         nextButton.addAction(UIAction(handler: nextButtonPressed), for: .touchUpInside)
     }
     
-    public func checkNextButtonAvailable(_ action: UIAction?) {
+    internal func checkNextButtonAvailable(_ action: UIAction?) {
         nextButton.isEnabled = isAllFieldsFilled()
     }
     
-    public func isAllFieldsFilled() -> Bool { //Override
+    internal func isAllFieldsFilled() -> Bool { //Override
         return true
     }
     
-    public func setupInfoLabel() {
+    internal func setupInfoLabel() {
         infoLabel.text = "Регистрируясь, вы соглашаетесь с условиями\nиспользования приложения и политикой конфиденциальности"
         infoLabel.textColor = .systemGray4
         infoLabel.textAlignment = .center
@@ -62,18 +62,18 @@ open class BaseRegistrationState: NSObject, RegistrationState {
     
     
     //MARK: - Actions
-    public func nextButtonPressed(_ action: UIAction?) {
+    internal func nextButtonPressed(_ action: UIAction?) {
         if validateValues() {
             delegate?.registrationStateGoNext(self)
         }
     }
     
     //MARK: - Validation
-    public func validateValues() -> Bool { //Override
+    internal func validateValues() -> Bool { //Override
         return true
     }
     
-    public func updateFieldInConsistWithValidate(_ field: UIView, result: ValidatorResult) -> Bool {
+    internal func updateFieldInConsistWithValidate(_ field: UIView, result: ValidatorResult) -> Bool {
         
         var isValid: Bool = false
         var incorrectMessage: String? = ""

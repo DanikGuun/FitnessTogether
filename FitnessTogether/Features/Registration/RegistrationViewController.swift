@@ -7,7 +7,7 @@ public final class RegistrationViewController: FTViewController, RegistrationSta
     var delegate: RegistrationViewControllerDelegate?
     var model: RegistrationModel!
     
-    var user = FTUser()
+    var userRegister = FTUserRegister()
     private var states: [RegistrationState] = []
     private var currentState = -1
     
@@ -41,7 +41,7 @@ public final class RegistrationViewController: FTViewController, RegistrationSta
     }
     
     public func registrationStateGoNext(_ state: any RegistrationState) {
-        state.apply(user: &user)
+        state.apply(userRegister: &userRegister)
         goToNextState()
     }
     

@@ -25,16 +25,16 @@ final class RegistrationPersonalDataStateTests: XCTestCase {
     }
     
     func test_Applying() {
-        var user = FTUser()
+        var userRegister = FTUserRegister()
         let name = "TestName"
         let surname = "TestSurname"
         
         state.firstNameTextField.text = name
         state.lastNameTextField.text = surname
-        state.apply(user: &user)
+        state.apply(userRegister: &userRegister)
         
-        XCTAssertEqual(user.firstName, name)
-        XCTAssertEqual(user.lastName, surname)
+        XCTAssertEqual(userRegister.firstName, name)
+        XCTAssertEqual(userRegister.lastName, surname)
     }
     
     //MARK: - Next Button

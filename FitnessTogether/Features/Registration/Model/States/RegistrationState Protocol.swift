@@ -5,7 +5,7 @@ import FTDomainData
 public protocol RegistrationState {
     var delegate: RegistrationStateDelegate? { get set }
     func viewsToPresent() -> [UIView]
-    func apply(user: inout FTUser)
+    func apply(userRegister: inout FTUserRegister)
 }
 
 public protocol RegistrationStateDelegate {
