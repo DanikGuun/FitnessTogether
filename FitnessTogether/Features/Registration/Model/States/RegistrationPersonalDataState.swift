@@ -8,6 +8,7 @@ public final class RegistrationPersonalDataState: RegistrationState {
     var titleLabel = UILabel()
     var nameTextfield = OutlinedTextfield.ftTextfield(placeholder: "Имя")
     var surnameTextfield = OutlinedTextfield.ftTextfield(placeholder: "Фамилия")
+    var datePickerView = FTDatePickerView()
     var nextButton = UIButton.ftFilled(title: "Далее")
     var infoLabel = UILabel()
     
@@ -17,7 +18,7 @@ public final class RegistrationPersonalDataState: RegistrationState {
     
     
     public func viewsToPresent() -> [UIView] {
-        return [titleLabel, UIView.spaceView(20), nameTextfield, surnameTextfield, nextButton, infoLabel]
+        return [titleLabel, UIView.spaceView(20), nameTextfield, surnameTextfield, datePickerView, nextButton, infoLabel]
     }
     
     public func apply(user: inout FTUser) {
@@ -27,9 +28,10 @@ public final class RegistrationPersonalDataState: RegistrationState {
     
     private func setupViews() {
         setupTitleLabel()
-        nameTextfield.constrintHeight(DC.Size.buttonHeight)
-        surnameTextfield.constrintHeight(DC.Size.buttonHeight)
-        nextButton.constrintHeight(DC.Size.buttonHeight)
+        nameTextfield.constraintHeight(DC.Size.buttonHeight)
+        surnameTextfield.constraintHeight(DC.Size.buttonHeight)
+        datePickerView.constraintHeight(DC.Size.buttonHeight)
+        nextButton.constraintHeight(DC.Size.buttonHeight)
         setupInfoLabel()
     }
     

@@ -8,6 +8,7 @@ public struct DC {
         public static let leadingInset: CGFloat = 25
         public static let trailingInser: CGFloat = 25
         public static let spacing: CGFloat = 12
+        public static let insets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 10)
     }
     
     public struct Size {

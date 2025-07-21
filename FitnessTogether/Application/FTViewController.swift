@@ -39,11 +39,6 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
         setupNavigationBar()
     }
     
-    public override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-        super.touchesBegan(touches, with: event)
-        print(123)
-    }
-    
     public func addStackSubview(_ subview: UIView, height: CGFloat? = nil, spaceAfter: SpaceKind = .fixed(DC.Layout.spacing)) {
         if let height {
             subview.heightAnchor.constraint(equalToConstant: height).isActive = true

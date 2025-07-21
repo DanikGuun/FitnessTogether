@@ -11,10 +11,11 @@ final class AuthCoordinatorTests: XCTestCase {
     
     override func setUp() {
         window = UIWindow(frame: .zero)
-        window.makeKeyAndVisible()
         factory = MockAuthVCFactory()
         coordinator = AuthCoordinator(window: window, factory: factory)
         coordinator.needAnimate = false
+        window.rootViewController = coordinator.mainVC
+        window.makeKeyAndVisible()
         super.setUp()
     }
     

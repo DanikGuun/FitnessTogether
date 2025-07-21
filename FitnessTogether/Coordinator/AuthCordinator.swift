@@ -18,8 +18,6 @@ public final class AuthCoordinator: NSObject, Coordinator {
         super.init()
         let startVC = factory.makeAuthVC(delegate: self)
         self.navigationVC = UINavigationController(rootViewController: startVC)
-        window.rootViewController = navigationVC
-        window.makeKeyAndVisible()
     }
     
     
