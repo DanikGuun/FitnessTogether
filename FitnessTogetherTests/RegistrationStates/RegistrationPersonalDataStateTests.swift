@@ -29,8 +29,8 @@ final class RegistrationPersonalDataStateTests: XCTestCase {
         let name = "TestName"
         let surname = "TestSurname"
         
-        state.firstNameTextfield.text = name
-        state.lastNameTextfield.text = surname
+        state.firstNameTextField.text = name
+        state.lastNameTextField.text = surname
         state.apply(user: &user)
         
         XCTAssertEqual(user.firstName, name)
@@ -45,11 +45,11 @@ final class RegistrationPersonalDataStateTests: XCTestCase {
     func test_NextButton_ActiveAfterFullData() {
         XCTAssertFalse(state.nextButton.isEnabled)
         
-        state.firstNameTextfield.text = "Test"
+        state.firstNameTextField.text = "Test"
         state.checkNextButtonAvailable(nil)
         XCTAssertFalse(state.nextButton.isEnabled)
         
-        state.lastNameTextfield.text = "Test"
+        state.lastNameTextField.text = "Test"
         state.checkNextButtonAvailable(nil)
         XCTAssertFalse(state.nextButton.isEnabled)
 
@@ -59,14 +59,14 @@ final class RegistrationPersonalDataStateTests: XCTestCase {
     }
     
     func test_NextButton_ActiveAfterEmptingData() {
-        state.firstNameTextfield.text = "Test"
-        state.lastNameTextfield.text = "Test"
+        state.firstNameTextField.text = "Test"
+        state.lastNameTextField.text = "Test"
         state.datePickerView.date = Date()
         
         state.checkNextButtonAvailable(nil)
         XCTAssertTrue(state.nextButton.isEnabled)
         
-        state.firstNameTextfield.text = ""
+        state.firstNameTextField.text = ""
         state.checkNextButtonAvailable(nil)
         XCTAssertFalse(state.nextButton.isEnabled)
     }

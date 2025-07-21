@@ -11,7 +11,7 @@
 		568E98852E28F0FF007144F7 /* FTApi in Frameworks */ = {isa = PBXBuildFile; productRef = 568E98842E28F0FF007144F7 /* FTApi */; };
 		568E988A2E28F226007144F7 /* FTApi in Frameworks */ = {isa = PBXBuildFile; productRef = 568E98892E28F226007144F7 /* FTApi */; };
 		568E988D2E28F23A007144F7 /* FTApi in Frameworks */ = {isa = PBXBuildFile; productRef = 568E988C2E28F23A007144F7 /* FTApi */; };
-		56AB17312E2BE6F10029FC76 /* OutlineTextfield in Frameworks */ = {isa = PBXBuildFile; productRef = 56AB17302E2BE6F10029FC76 /* OutlineTextfield */; };
+		56D856D02E2E80E7007AB0F3 /* OutlineTextField in Frameworks */ = {isa = PBXBuildFile; productRef = 56D856CF2E2E80E7007AB0F3 /* OutlineTextField */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -96,7 +96,7 @@
 				568E988D2E28F23A007144F7 /* FTApi in Frameworks */,
 				567F1C662E2A680B00A32C0A /* SnapKit in Frameworks */,
 				568E98852E28F0FF007144F7 /* FTApi in Frameworks */,
-				56AB17312E2BE6F10029FC76 /* OutlineTextfield in Frameworks */,
+				56D856D02E2E80E7007AB0F3 /* OutlineTextField in Frameworks */,
 				568E988A2E28F226007144F7 /* FTApi in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -163,7 +163,7 @@
 				568E98892E28F226007144F7 /* FTApi */,
 				568E988C2E28F23A007144F7 /* FTApi */,
 				567F1C652E2A680B00A32C0A /* SnapKit */,
-				56AB17302E2BE6F10029FC76 /* OutlineTextfield */,
+				56D856CF2E2E80E7007AB0F3 /* OutlineTextField */,
 			);
 			productName = FitnessTogether;
 			productReference = 568E984C2E28E9C8007144F7 /* FitnessTogether.app */;
@@ -248,7 +248,7 @@
 			packageReferences = (
 				568E988B2E28F23A007144F7 /* XCLocalSwiftPackageReference "../FTApi" */,
 				567F1C642E2A680B00A32C0A /* XCRemoteSwiftPackageReference "SnapKit" */,
-				56AB172F2E2BE6F10029FC76 /* XCLocalSwiftPackageReference "../Библиотеки/OutlineTextfield" */,
+				56D856CE2E2E80E7007AB0F3 /* XCLocalSwiftPackageReference "../Библиотеки/OutlineTextField" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 568E984D2E28E9C8007144F7 /* Products */;
@@ -620,9 +620,9 @@
 			isa = XCLocalSwiftPackageReference;
 			relativePath = ../FTApi;
 		};
-		56AB172F2E2BE6F10029FC76 /* XCLocalSwiftPackageReference "../Библиотеки/OutlineTextfield" */ = {
+		56D856CE2E2E80E7007AB0F3 /* XCLocalSwiftPackageReference "../Библиотеки/OutlineTextField" */ = {
 			isa = XCLocalSwiftPackageReference;
-			relativePath = "../Библиотеки/OutlineTextfield";
+			relativePath = "../Библиотеки/OutlineTextField";
 		};
 /* End XCLocalSwiftPackageReference section */
 
@@ -655,9 +655,9 @@
 			isa = XCSwiftPackageProductDependency;
 			productName = FTApi;
 		};
-		56AB17302E2BE6F10029FC76 /* OutlineTextfield */ = {
+		56D856CF2E2E80E7007AB0F3 /* OutlineTextField */ = {
 			isa = XCSwiftPackageProductDependency;
-			productName = OutlineTextfield;
+			productName = OutlineTextField;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

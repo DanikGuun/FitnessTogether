@@ -1,7 +1,6 @@
 
 import UIKit
 import FTDomainData
-import OutlineTextfield
 
 public final class RegistrationViewController: FTViewController, RegistrationStateDelegate {
     

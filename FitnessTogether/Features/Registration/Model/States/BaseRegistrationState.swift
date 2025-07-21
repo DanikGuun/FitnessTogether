@@ -1,7 +1,6 @@
 
 import UIKit
 import FTDomainData
-import OutlineTextfield
 
 open class BaseRegistrationState: NSObject, RegistrationState {
     

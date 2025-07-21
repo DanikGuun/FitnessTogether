@@ -1,52 +1,52 @@
 
-import OutlineTextfield
 import UIKit
+import OutlineTextField
 
-public extension OutlinedTextfield {
+public extension OutlinedTextField {
     
-    static func ftTextfield(placeholder: String = "") -> OutlinedTextfield {
-        let standartAppearance = OutlineTextfieldAppearance(
+    static func ftTextField(placeholder: String = "") -> OutlinedTextField {
+        let standartAppearance = OutlineTextFieldAppearance(
             insets: UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 10),
             textColor: .label,
             placeholderColor: .systemGray4,
             lineWidth: 2,
-            font: DC.Font.textfield,
-            placeholderFont: DC.Font.textfield,
+            font: DC.Font.TextField,
+            placeholderFont: DC.Font.TextField,
             outlineColor: .systemGray4,
             outlinedPlaceholderColor: .systemGray4,
-            outlinedPlaceholderFont: DC.Font.textfield,
+            outlinedPlaceholderFont: DC.Font.TextField,
             outlineCornerRadius: DC.Size.buttonCornerRadius-3
         )
-        let activeAppearance = OutlineTextfieldAppearance(
+        let activeAppearance = OutlineTextFieldAppearance(
             insets: UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 10),
             textColor: .label,
             placeholderColor: .systemGray4,
             lineWidth: 2,
-            font: DC.Font.textfield,
-            placeholderFont: DC.Font.textfield,
+            font: DC.Font.TextField,
+            placeholderFont: DC.Font.TextField,
             outlineColor: .ftOrange,
             outlinedPlaceholderColor: .ftOrange,
-            outlinedPlaceholderFont: DC.Font.textfield,
+            outlinedPlaceholderFont: DC.Font.TextField,
             outlineCornerRadius: DC.Size.buttonCornerRadius-3
         )
-        let errorAppearance = OutlineTextfieldAppearance(
+        let errorAppearance = OutlineTextFieldAppearance(
             insets: UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 10),
             textColor: .systemRed,
             placeholderColor: .systemRed,
             lineWidth: 2,
-            font: DC.Font.textfield,
-            placeholderFont: DC.Font.textfield,
+            font: DC.Font.TextField,
+            placeholderFont: DC.Font.TextField,
             outlineColor: .systemRed,
             outlinedPlaceholderColor: .systemRed,
-            outlinedPlaceholderFont: DC.Font.textfield,
+            outlinedPlaceholderFont: DC.Font.TextField,
             outlineCornerRadius: DC.Size.buttonCornerRadius-3
         )
-        let textfield = OutlinedTextfield()
-        textfield.placeholderBehavior = .hide
-        textfield.standartAppearance = standartAppearance
-        textfield.activeAppearance = activeAppearance
-        textfield.errorAppearance = errorAppearance
-        return textfield
+        let TextField = OutlinedTextField()
+        TextField.placeholderBehavior = .hide
+        TextField.standartAppearance = standartAppearance
+        TextField.activeAppearance = activeAppearance
+        TextField.errorAppearance = errorAppearance
+        return TextField
     }
     
 }

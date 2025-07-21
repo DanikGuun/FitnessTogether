@@ -111,7 +111,7 @@ public final class FTDatePickerView: UIButton, UIPopoverPresentationControllerDe
     private func getAttributedTitle() -> AttributedString {
         let text = getTitle()
         let attributes = AttributeContainer([
-            .font: DC.Font.textfield
+            .font: DC.Font.TextField
         ])
         let string = AttributedString(text, attributes: attributes)
         return string
