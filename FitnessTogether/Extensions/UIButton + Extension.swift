@@ -5,6 +5,7 @@ public extension UIButton {
     
     static func ftFilled(title: String = "") -> UIButton {
         let button = UIButton(configuration: .filled())
+        button.constraintHeight(DC.Size.buttonHeight)
         let attributes = AttributeContainer([
             .font: DC.Font.roboto(weight: .semibold, size: 16)
         ])
@@ -20,6 +21,7 @@ public extension UIButton {
     
     static func ftPlain(title: String = "") -> UIButton {
         let button = UIButton(configuration: .plain())
+        button.constraintHeight(DC.Size.buttonHeight)
         let attributes = AttributeContainer([
             .font: DC.Font.roboto(weight: .semibold, size: 16)
         ])
@@ -34,6 +36,5 @@ public extension UIButton {
         
         return button
     }
-    
     
 }

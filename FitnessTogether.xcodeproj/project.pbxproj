@@ -53,6 +53,7 @@
 				RegistrationStates/MockValidator.swift,
 				RegistrationStates/RegistrationCredintalsStateTests.swift,
 				RegistrationStates/RegistrationPersonalDataStateTests.swift,
+				RegistrationStates/RegistrationRoleStateTests.swift,
 			);
 			target = 568E984B2E28E9C8007144F7 /* FitnessTogether */;
 		};
@@ -64,6 +65,7 @@
 				RegistrationStates/MockValidator.swift,
 				RegistrationStates/RegistrationCredintalsStateTests.swift,
 				RegistrationStates/RegistrationPersonalDataStateTests.swift,
+				RegistrationStates/RegistrationRoleStateTests.swift,
 			);
 			target = 568E98612E28E9C9007144F7 /* FitnessTogetherTests */;
 		};

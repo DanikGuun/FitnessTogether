@@ -51,7 +51,7 @@ public final class RegistrationPersonalDataState: BaseRegistrationState, UITextF
     }
     
     //MARK: - TextField Delegate
-    internal func TextFieldDidBeginEditing(_ TextField: UITextField) {
+    public func textFieldDidBeginEditing(_ TextField: UITextField) {
         (TextField as? OutlinedTextField)?.isError = false
     }
     
@@ -60,11 +60,11 @@ public final class RegistrationPersonalDataState: BaseRegistrationState, UITextF
         return true
     }
     
-    internal func TextFieldShouldReturn(_ TextField: UITextField) -> Bool {
-        if TextField == firstNameTextField {
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == firstNameTextField {
             let _ = lastNameTextField.becomeFirstResponder()
         }
-        if TextField == lastNameTextField {
+        if textField == lastNameTextField {
             lastNameTextField.endEditing(true)
             datePickerView.pushAlertDatePicker()
             

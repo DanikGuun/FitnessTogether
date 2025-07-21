@@ -11,8 +11,9 @@ public final class BaseRegistrationModel: RegistrationModel {
     public func getStates() -> [any RegistrationState] {
         let validator = BaseValidator()
         return [
-            RegistrationCredintalsState(validator: validator),
-            RegistrationPersonalDataState(validator: validator)
+            RegistrationRoleState(validator: validator),
+            RegistrationPersonalDataState(validator: validator),
+            RegistrationCredintalsState(validator: validator)
         ]
     }
     

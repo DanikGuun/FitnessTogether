@@ -28,13 +28,15 @@ open class BaseRegistrationState: NSObject, RegistrationState {
     }
     
     //MARK: - UI
-    internal func setupViews() { //Override
+    //Override
+    internal func setupViews() {
         setupTitleLabel()
         setupNextButton()
         setupInfoLabel()
     }
     
-    internal func setupTitleLabel() { //Override для надписи
+    //Override для надписи
+    internal func setupTitleLabel() {
         titleLabel.font = DC.Font.headline
     }
     
@@ -48,7 +50,8 @@ open class BaseRegistrationState: NSObject, RegistrationState {
         nextButton.isEnabled = isAllFieldsFilled()
     }
     
-    internal func isAllFieldsFilled() -> Bool { //Override
+    //Override
+    internal func isAllFieldsFilled() -> Bool {
         return true
     }
     
@@ -69,7 +72,8 @@ open class BaseRegistrationState: NSObject, RegistrationState {
     }
     
     //MARK: - Validation
-    internal func validateValues() -> Bool { //Override
+    //Override
+    internal func validateValues() -> Bool {
         return false
     }
     
