@@ -9,8 +9,10 @@ public protocol RegistrationModel {
 public final class BaseRegistrationModel: RegistrationModel {
     
     public func getStates() -> [any RegistrationState] {
+        let validator = BaseValidator()
         return [
-            RegistrationPersonalDataState(validator: BaseValidator())
+            RegistrationCredintalsState(validator: validator),
+            RegistrationPersonalDataState(validator: validator)
         ]
     }
     

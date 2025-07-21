@@ -1,5 +1,6 @@
 
 import UIKit
+import FTDomainData
 import OutlineTextfield
 
 public final class RegistrationViewController: FTViewController, RegistrationStateDelegate {
@@ -7,6 +8,7 @@ public final class RegistrationViewController: FTViewController, RegistrationSta
     var delegate: RegistrationViewControllerDelegate?
     var model: RegistrationModel!
     
+    var user = FTUser()
     private var states: [RegistrationState] = []
     private var currentState = -1
     
@@ -40,7 +42,8 @@ public final class RegistrationViewController: FTViewController, RegistrationSta
     }
     
     public func registrationStateGoNext(_ state: any RegistrationState) {
-        print("next")
+        state.apply(user: &user)
+        goToNextState()
     }
     
     public func registrationState(_ state: any RegistrationState, needInertView view: UIView, after afterView: UIView) {
