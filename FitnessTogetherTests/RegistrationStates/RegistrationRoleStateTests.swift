@@ -12,7 +12,7 @@ final class RegistrationRoleStateTests: XCTestCase {
     override func setUp() {
         super.setUp()
         delegate = MockRegistrationDelegate()
-        state = RegistrationRoleState(validator: MockValidator())
+        state = RegistrationRoleState()
         state.delegate = delegate
     }
     

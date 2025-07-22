@@ -60,15 +60,23 @@ final class RegistrationCoachInfoStateTests: XCTestCase {
     }
     
     func test_NextButton_DisabledWhenEmpty() {
-        validator.isValidJobTime = false
-        
-        state.jobTimeTextField.text = "abc"
-        state.organizationTextField.text = "Fitness Club"
+        state.jobTimeTextField.text = ""
+        state.organizationTextField.text = "Fitness"
         state.descriptionTextView.text = ""
         
         state.checkNextButtonAvailable(nil)
         
         XCTAssertFalse(state.nextButton.isEnabled)
+    }
+    
+    func test_NextButton_Enabled_WithoutDescritpion() {
+        state.jobTimeTextField.text = "alsdjf"
+        state.organizationTextField.text = "alsdjf"
+        state.descriptionTextView.text = ""
+        
+        state.checkNextButtonAvailable(nil)
+        
+        XCTAssertTrue(state.nextButton.isEnabled)
     }
     
     func test_NextButton_InactiveAfterEmptingData() {

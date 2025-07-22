@@ -15,8 +15,9 @@ public final class RegistrationCredintalsState: BaseRegistrationState, UITextFie
     
     private var isBusy = false
     
-    convenience init(validator: any Validator, emailConfirmer: any EmailConfirmer) {
-        self.init(validator: validator)
+    init(validator: any Validator, emailConfirmer: any EmailConfirmer) {
+        super.init()
+        self.validator = validator
         self.emailConfirmer = emailConfirmer
     }
     

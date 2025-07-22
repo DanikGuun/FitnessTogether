@@ -20,7 +20,7 @@ public final class BaseRegistrationModel: RegistrationModel {
         self.states = [
             RegistrationPersonalDataState(validator: validator),
             RegistrationCredintalsState(validator: validator, emailConfirmer: emailConfirmer),
-            RegistrationRoleState(validator: validator),
+            RegistrationRoleState(),
             RegistrationCoachInfoState(validator: validator)
         ]
     }

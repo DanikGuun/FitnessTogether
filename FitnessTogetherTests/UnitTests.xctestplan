@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "2247ACC1-53F6-49F1-8AE8-3F56DBC818F5",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:FitnessTogether.xcodeproj",
+        "identifier" : "568E98612E28E9C9007144F7",
+        "name" : "FitnessTogetherTests"
+      }
+    }
+  ],
+  "version" : 1
+}

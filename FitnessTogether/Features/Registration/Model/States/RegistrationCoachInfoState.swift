@@ -8,6 +8,11 @@ public final class RegistrationCoachInfoState: BaseRegistrationState, UITextFiel
     var organizationTextField = OutlinedTextField.ftTextField(placeholder: "Организация")
     var descriptionTextView = PlaceholderTextView.ftTextView(placeholder: "О себе (не более 200 символов)")
     
+    public init(validator: Validator) {
+        super.init()
+        self.validator = validator
+    }
+    
     public override func viewsToPresent() -> [UIView] {
         descriptionTextView.constraintHeight(150)
         return [titleLabel, jobTimeTextField, organizationTextField, descriptionTextView, nextButton, infoLabel]

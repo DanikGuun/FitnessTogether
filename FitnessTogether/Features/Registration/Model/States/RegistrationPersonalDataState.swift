@@ -9,6 +9,11 @@ public final class RegistrationPersonalDataState: BaseRegistrationState, UITextF
     var lastNameTextField = OutlinedTextField.ftTextField(placeholder: "Фамилия")
     var datePickerView = FTDatePickerView()
     
+    public init(validator: Validator) {
+        super.init()
+        self.validator = validator
+    }
+    
     public override func viewsToPresent() -> [UIView] {
         return [titleLabel, UIView.spaceView(20), firstNameTextField, lastNameTextField, datePickerView, nextButton, infoLabel]
     }

@@ -5,7 +5,7 @@ import FTDomainData
 open class BaseRegistrationState: NSObject, RegistrationState {
     
     public var delegate: (any RegistrationStateDelegate)?
-    public var validator: Validator
+    public var validator: (any Validator)!
     
     //некорректные вьюшки и подписи для них
     private var incorrectDataLabels: [UIView: UIView] = [:]
@@ -14,8 +14,7 @@ open class BaseRegistrationState: NSObject, RegistrationState {
     var nextButton = UIButton.ftFilled(title: "Далее")
     var infoLabel = UILabel()
     
-    public init(validator: Validator) {
-        self.validator = validator
+    public override init() {
         super.init()
         setupViews()
     }
