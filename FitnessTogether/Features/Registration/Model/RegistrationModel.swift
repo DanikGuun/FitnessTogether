@@ -5,7 +5,7 @@ public protocol RegistrationModel {
     var userRegister: FTUserRegister { get set }
     var stepCount: Int { get }
     func goNext() -> (any RegistrationState)?
-    func register(user: FTUser)
+    func register(user: FTUserRegister)
 }
 
 public final class BaseRegistrationModel: RegistrationModel {
@@ -13,36 +13,37 @@ public final class BaseRegistrationModel: RegistrationModel {
     public var userRegister = FTUserRegister()
     public let stepCount = 3
     
-    let validator: any Validator
-    let emailConfirmer: (any EmailConfirmer)!
-    
     private var states: [any RegistrationState]
     private var currentState = -1
     
     public init(validator: any Validator, emailConfirmer: any EmailConfirmer) {
-        self.validator = validator
-        self.emailConfirmer = emailConfirmer
         self.states = [
             RegistrationPersonalDataState(validator: validator),
             RegistrationCredintalsState(validator: validator, emailConfirmer: emailConfirmer),
-            RegistrationRoleState(validator: validator)
+            RegistrationRoleState(validator: validator),
+            RegistrationCoachInfoState(validator: validator)
         ]
     }
     
     public func goNext() -> (any RegistrationState)? {
         currentState += 1
-        if currentState < states.count {
-            return states[currentState]
-        }
-        else if userRegister.role == .coach {
-            return RegistrationCoachInfoState(validator: validator)
-        }
-        return nil
+        let state = getCorrectNextState()
+        return state
     }
     
-    public func register(user: FTUser) {
+    private func getCorrectNextState() -> (any RegistrationState)? {
+        guard currentState < states.count else { return nil }
+        if currentState == 3 { //после регистрации переходить к доп инфе коуча или нет
+            switch userRegister.role {
+            case .client, .admin: return nil
+            case .coach: break
+            }
+        }
+        return states[currentState]
+    }
+    
+    public func register(user: FTUserRegister) {
         
     }
-    
     
 }

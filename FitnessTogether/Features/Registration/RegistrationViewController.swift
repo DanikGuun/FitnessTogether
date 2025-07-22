@@ -30,14 +30,15 @@ public final class RegistrationViewController: FTViewController, RegistrationSta
     }
     
     private func goToNextState() {
-        currentStep += 1
-        var state = model.goNext()
-        state?.delegate = self
-        let subviews = state?.viewsToPresent() ?? []
+        guard let state = model.goNext() else { print("Vse hotovo"); return }
+        state.delegate = self
+        
         removeAllStackSubviews(direction: .right, completion: { [weak self] in
             self?.addSpacing(.fractional(0.1))
-            self?.addStackSubviews(subviews, direction: .left)
+            self?.addStackSubviews(state.viewsToPresent(), direction: .left)
         })
+        
+        currentStep += 1
         updateStepLabel()
     }
     
@@ -53,7 +54,7 @@ public final class RegistrationViewController: FTViewController, RegistrationSta
     }
     
     private func updateStepLabel() {
-        stepLabel.text = "\(currentStep) из \(model.stepCount) шагов"
+        stepLabel.text = "\(currentStep) из \(max(currentStep, model.stepCount)) шагов"
     }
     
     public func registrationStateGoNext(_ state: any RegistrationState) {

@@ -2,7 +2,7 @@
 import UIKit
 import FTDomainData
 
-public protocol RegistrationState {
+public protocol RegistrationState: AnyObject {
     var delegate: RegistrationStateDelegate? { get set }
     func viewsToPresent() -> [UIView]
     func apply(userRegister: inout FTUserRegister)

@@ -42,7 +42,7 @@ public final class RegistrationCoachInfoState: BaseRegistrationState, UITextFiel
             let _ = organizationTextField.becomeFirstResponder()
         }
         else if textField == organizationTextField {
-            descriptionTextView.becomeFirstResponder()
+            let _ = descriptionTextView.becomeFirstResponder()
         }
         return true
     }
@@ -72,8 +72,7 @@ public final class RegistrationCoachInfoState: BaseRegistrationState, UITextFiel
     
     override func isAllFieldsFilled() -> Bool {
         return !(jobTimeTextField.text?.isEmpty ?? true ||
-                 organizationTextField.text?.isEmpty ?? true ||
-                 descriptionTextView.text?.isEmpty ?? true)
+                 organizationTextField.text?.isEmpty ?? true)
     }
     
 }

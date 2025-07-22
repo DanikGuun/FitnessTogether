@@ -7,12 +7,14 @@ final class RegistrationCredintalsStateTests: XCTestCase {
     
     var delegate: MockRegistrationDelegate!
     var validator: MockValidator!
+    fileprivate var emailConfirmer: MockEmailConfirmer!
     var state: RegistrationCredintalsState!
     
     override func setUp() {
         delegate = MockRegistrationDelegate()
         validator = MockValidator()
-        state = RegistrationCredintalsState(validator: validator)
+        emailConfirmer = MockEmailConfirmer()
+        state = RegistrationCredintalsState(validator: validator, emailConfirmer: emailConfirmer)
         state.delegate = delegate
         super.setUp()
     }
@@ -20,6 +22,7 @@ final class RegistrationCredintalsStateTests: XCTestCase {
     override func tearDown() {
         delegate = nil
         validator = nil
+        emailConfirmer = nil
         state = nil
         super.tearDown()
     }
@@ -85,6 +88,14 @@ final class RegistrationCredintalsStateTests: XCTestCase {
         
         let wasCalled = delegate.goNextCalled
         XCTAssertTrue(wasCalled)
+    }
+    
+    func test_email_AlreadyExists_NotTriggerNext() {
+        emailConfirmer.isCorrect = false
+        
+        state.nextButtonPressed(nil)
+        
+        XCTAssertFalse(delegate.goNextCalled)
     }
     
     //MARK: - Email
@@ -240,3 +251,10 @@ final class RegistrationCredintalsStateTests: XCTestCase {
     }
 }
 
+fileprivate class MockEmailConfirmer: EmailConfirmer {
+    var isCorrect = true
+    
+    func confirmEmail(_ email: String, completion: ((ValidatorResult) -> ())?) {
+        isCorrect ? completion?(.valid) : completion?(.invalid(message: ""))
+    }
+}
