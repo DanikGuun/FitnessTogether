@@ -32,4 +32,15 @@ public class BaseValidator: Validator {
         return isValid ? .valid : .invalid(message: "Пароли не совпадают")
     }
     
+    public func isValidJobTime(_ time: Double?) -> ValidatorResult {
+        guard let time else { return .invalid(message: "Опыт работы не может быть отрицательным") }
+        if time > 0 { return .valid }
+        return .invalid(message: "Опыт работы не может быть отрицательным")
+    }
+    
+    public func isValidDescription(_ string: String?) -> ValidatorResult {
+        let correctLength = string?.count ?? 0 <= 200
+        return correctLength ? .valid : .invalid(message: "Длина описания не должна превышать 200 символов")
+    }
+    
 }

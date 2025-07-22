@@ -10,11 +10,11 @@ public extension OutlinedTextField {
             textColor: .label,
             placeholderColor: .systemGray4,
             lineWidth: 2,
-            font: DC.Font.TextField,
-            placeholderFont: DC.Font.TextField,
+            font: DC.Font.textField,
+            placeholderFont: DC.Font.textField,
             outlineColor: .systemGray4,
             outlinedPlaceholderColor: .systemGray4,
-            outlinedPlaceholderFont: DC.Font.TextField,
+            outlinedPlaceholderFont: DC.Font.textField,
             outlineCornerRadius: DC.Size.buttonCornerRadius-3
         )
         let activeAppearance = OutlineTextFieldAppearance(
@@ -22,11 +22,11 @@ public extension OutlinedTextField {
             textColor: .label,
             placeholderColor: .systemGray4,
             lineWidth: 2,
-            font: DC.Font.TextField,
-            placeholderFont: DC.Font.TextField,
+            font: DC.Font.textField,
+            placeholderFont: DC.Font.textField,
             outlineColor: .ftOrange,
             outlinedPlaceholderColor: .ftOrange,
-            outlinedPlaceholderFont: DC.Font.TextField,
+            outlinedPlaceholderFont: DC.Font.textField,
             outlineCornerRadius: DC.Size.buttonCornerRadius-3
         )
         let errorAppearance = OutlineTextFieldAppearance(
@@ -34,15 +34,16 @@ public extension OutlinedTextField {
             textColor: .systemRed,
             placeholderColor: .systemRed,
             lineWidth: 2,
-            font: DC.Font.TextField,
-            placeholderFont: DC.Font.TextField,
+            font: DC.Font.textField,
+            placeholderFont: DC.Font.textField,
             outlineColor: .systemRed,
             outlinedPlaceholderColor: .systemRed,
-            outlinedPlaceholderFont: DC.Font.TextField,
+            outlinedPlaceholderFont: DC.Font.textField,
             outlineCornerRadius: DC.Size.buttonCornerRadius-3
         )
         let textField = OutlinedTextField()
         textField.placeholder = placeholder
+        textField.constraintHeight(DC.Size.buttonHeight)
         textField.placeholderBehavior = .hide
         textField.standartAppearance = standartAppearance
         textField.activeAppearance = activeAppearance

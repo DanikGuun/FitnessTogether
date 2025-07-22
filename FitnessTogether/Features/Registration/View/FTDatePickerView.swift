@@ -69,6 +69,7 @@ public final class FTDatePickerView: UIButton, UIPopoverPresentationControllerDe
         datePicker.preferredDatePickerStyle = .wheels
         datePicker.locale = Locale.actual
         datePicker.maximumDate = Date().addingTimeInterval(-3600 * 24 * 365 * 5) //5 лет
+        datePicker.minimumDate = Date().addingTimeInterval(-3600 * 24 * 365 * 90)
         datePicker.addAction(UIAction(handler: { [weak self] _ in
             self?.date = datePicker.date
         }), for: .valueChanged)
@@ -111,7 +112,7 @@ public final class FTDatePickerView: UIButton, UIPopoverPresentationControllerDe
     private func getAttributedTitle() -> AttributedString {
         let text = getTitle()
         let attributes = AttributeContainer([
-            .font: DC.Font.TextField
+            .font: DC.Font.textField
         ])
         let string = AttributedString(text, attributes: attributes)
         return string

@@ -7,10 +7,8 @@ public final class RegistrationViewController: FTViewController, RegistrationSta
     var delegate: RegistrationViewControllerDelegate?
     var model: RegistrationModel!
     
-    var userRegister = FTUserRegister()
-    private var states: [RegistrationState] = []
-    private var currentState = -1
     private var stepLabel = UILabel()
+    private var currentStep = 0
     
     //MARK: - Lifecycle
     public convenience init(model: RegistrationModel) {
@@ -27,15 +25,15 @@ public final class RegistrationViewController: FTViewController, RegistrationSta
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        states = model.getStates()
         goToNextState()
         setupStepLabel()
     }
     
     private func goToNextState() {
-        currentState += 1
-        states[currentState].delegate = self
-        let subviews = states[currentState].viewsToPresent()
+        currentStep += 1
+        var state = model.goNext()
+        state?.delegate = self
+        let subviews = state?.viewsToPresent() ?? []
         removeAllStackSubviews(direction: .right, completion: { [weak self] in
             self?.addSpacing(.fractional(0.1))
             self?.addStackSubviews(subviews, direction: .left)
@@ -55,11 +53,11 @@ public final class RegistrationViewController: FTViewController, RegistrationSta
     }
     
     private func updateStepLabel() {
-        stepLabel.text = "\(currentState + 1) из \(states.count) шагов"
+        stepLabel.text = "\(currentStep) из \(model.stepCount) шагов"
     }
     
     public func registrationStateGoNext(_ state: any RegistrationState) {
-        state.apply(userRegister: &userRegister)
+        state.apply(userRegister: &model.userRegister)
         goToNextState()
     }
     
