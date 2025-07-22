@@ -19,7 +19,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let coordintor = AuthCoordinator(window: window!, factory: factory)
         window?.rootViewController = coordintor.mainVC
         window?.makeKeyAndVisible()
-        coordintor.authViewControllerGoToRegister(authViewController: UIViewController())
+        coordintor.authViewControllerGoToLogin(authViewController: UIViewController())
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

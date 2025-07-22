@@ -30,7 +30,10 @@ public final class RegistrationViewController: FTViewController, RegistrationSta
     }
     
     private func goToNextState() {
-        guard let state = model.goNext() else { print("Vse hotovo"); return }
+        guard let state = model.goNext() else {
+            delegate?.registrationViewControllerDidFinish(self)
+            return
+        }
         state.delegate = self
         
         removeAllStackSubviews(direction: .right, completion: { [weak self] in

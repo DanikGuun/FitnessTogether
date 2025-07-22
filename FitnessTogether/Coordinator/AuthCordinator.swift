@@ -66,7 +66,7 @@ extension AuthCoordinator: RegistrationViewControllerDelegate {
 extension AuthCoordinator: LoginViewControllerDelegate {
     
     public func loginViewControllerDidLogin(_ loginViewController: UIViewController) {
-        
+        print("login finish")
     }
     
 }

@@ -27,7 +27,8 @@ public final class BaseAuthViewControllerFactory: AuthViewControllerFactory {
     }
     
     public func makeLoginVC(delegate: LoginViewControllerDelegate?) -> UIViewController {
-        let vc = LoginViewController()
+        let model = BaseLoginModel(userInterface: ftManager.user)
+        let vc = LoginViewController(model: model)
         vc.delegate = delegate
         return vc
     }
