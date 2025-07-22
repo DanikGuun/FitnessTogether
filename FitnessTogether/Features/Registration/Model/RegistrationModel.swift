@@ -47,9 +47,12 @@ public final class BaseRegistrationModel: RegistrationModel {
     
     public func register(user: FTUserRegister) {
         userInterface.register(data: user, completion: { [weak self] result in
-            if case .success = result {
+            switch result {
+            case .success(_):
                 let loginData = FTUserLogin(email: user.email, password: user.password)
                 self?.userInterface.login(data: loginData, completion: nil)
+            case .failure(let error):
+                print(error.description)
             }
         })
     }

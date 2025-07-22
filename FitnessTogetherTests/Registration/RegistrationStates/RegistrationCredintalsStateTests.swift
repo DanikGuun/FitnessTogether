@@ -30,11 +30,14 @@ final class RegistrationCredintalsStateTests: XCTestCase {
     func test_Applying() {
         var userRegister = FTUserRegister()
         let email = "test@example.com"
+        let password = "password"
         
         state.emailTextField.text = email
+        state.passwordTextField.text = password
         state.apply(userRegister: &userRegister)
         
         XCTAssertEqual(userRegister.email, email)
+        XCTAssertEqual(userRegister.password, password)
     }
     
     //MARK: - Next Button

@@ -26,7 +26,8 @@ public final class RegistrationCredintalsState: BaseRegistrationState, UITextFie
     }
     
     public override func apply(userRegister: inout FTUserRegister) {
-        userRegister.email = emailTextField.text ?? ""
+        userRegister.email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
+        userRegister.password = passwordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
     }
     
     //MARK: - UI
@@ -46,6 +47,8 @@ public final class RegistrationCredintalsState: BaseRegistrationState, UITextFie
     
     private func setupEmailTextField() {
         emailTextField.constraintHeight(DC.Size.buttonHeight)
+        emailTextField.autocapitalizationType = .none
+        emailTextField.autocorrectionType = .no
         emailTextField.delegate = self
         emailTextField.addAction(UIAction(handler: checkNextButtonAvailable), for: .editingChanged)
     }

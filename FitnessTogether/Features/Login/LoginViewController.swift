@@ -53,6 +53,8 @@ public final class LoginViewController: FTViewController, UITextFieldDelegate {
     private func setupEmailTextField() {
         addStackSubview(emailTextField)
         emailTextField.delegate = self
+        emailTextField.autocapitalizationType = .none
+        emailTextField.autocorrectionType = .no
     }
     
     private func setupPasswordTextField() {
