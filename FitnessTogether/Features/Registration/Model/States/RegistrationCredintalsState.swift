@@ -5,11 +5,20 @@ import FTDomainData
 
 public final class RegistrationCredintalsState: BaseRegistrationState, UITextFieldDelegate {
 
+    var emailConfirmer: (any EmailConfirmer)!
+    
     var emailTextField = OutlinedTextField.ftTextField(placeholder: "Электронная почта")
     var passwordTextField = OutlinedTextField.ftTextField(placeholder: "Пароль")
     var confirmPasswordTextField = OutlinedTextField.ftTextField(placeholder: "Повтор пароля")
     var passwordVisibleButton = UIButton(configuration: .plain())
     var confirmPasswordVisibleButton = UIButton(configuration: .plain())
+    
+    private var isBusy = false
+    
+    convenience init(validator: any Validator, emailConfirmer: any EmailConfirmer) {
+        self.init(validator: validator)
+        self.emailConfirmer = emailConfirmer
+    }
     
     public override func viewsToPresent() -> [UIView] {
         return [titleLabel, UIView.spaceView(20), emailTextField, passwordTextField, confirmPasswordTextField, nextButton, infoLabel]
@@ -132,6 +141,29 @@ public final class RegistrationCredintalsState: BaseRegistrationState, UITextFie
             nextButtonPressed(nil)
         }
         return true
+    }
+    
+    //MARK: - Custom NextButton для проверки почты
+    override func nextButtonPressed(_ action: UIAction?) {
+        if validateValues() && !isBusy {
+            activityIndicator(true)
+            emailConfirmer.confirmEmail(emailTextField.text ?? "", completion: { [weak self] result in
+                guard let self else { return }
+                self.activityIndicator(false)
+                let isValid = self.updateFieldInConsistWithValidate(self.emailTextField, result: result)
+                emailTextField.isError = !isValid
+                if isValid {
+                    self.delegate?.registrationStateGoNext(self)
+                }
+            })
+        }
+    }
+    
+    private func activityIndicator(_ show: Bool) {
+        isBusy = show
+        var conf = nextButton.configuration
+        conf?.showsActivityIndicator = show
+        nextButton.configuration = conf
     }
     
     //MARK: - Validation

@@ -18,7 +18,7 @@ public final class BaseAuthViewControllerFactory: AuthViewControllerFactory {
     }
     
     public func makeRegistrationVC(delegate: RegistrationViewControllerDelegate?) -> UIViewController {
-        let model = BaseRegistrationModel()
+        let model = BaseRegistrationModel(validator: BaseValidator(), emailConfirmer: BaseEmailConfirmer())
         let vc = RegistrationViewController(model: model)
         vc.delegate = delegate
         return vc
