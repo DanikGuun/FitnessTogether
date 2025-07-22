@@ -11,6 +11,8 @@ public protocol AuthViewControllerFactory {
 
 public final class BaseAuthViewControllerFactory: AuthViewControllerFactory {
     
+    let ftManager: any FTManager = FTManagerAPI()
+    
     public func makeAuthVC(delegate: AuthViewControllerDelegate?) -> UIViewController {
         let vc = AuthViewController()
         vc.delegate = delegate
@@ -18,7 +20,7 @@ public final class BaseAuthViewControllerFactory: AuthViewControllerFactory {
     }
     
     public func makeRegistrationVC(delegate: RegistrationViewControllerDelegate?) -> UIViewController {
-        let model = BaseRegistrationModel(validator: BaseValidator(), emailConfirmer: BaseEmailConfirmer())
+        let model = BaseRegistrationModel(userInterface: ftManager.user, validator: BaseValidator(), emailConfirmer: BaseEmailConfirmer())
         let vc = RegistrationViewController(model: model)
         vc.delegate = delegate
         return vc

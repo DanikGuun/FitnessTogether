@@ -11,12 +11,14 @@ public protocol RegistrationModel {
 public final class BaseRegistrationModel: RegistrationModel {
     
     public var userRegister = FTUserRegister()
-    public let stepCount = 3
+    let userInterface: any FTUserInterface
     
     private var states: [any RegistrationState]
     private var currentState = -1
+    public let stepCount = 3
     
-    public init(validator: any Validator, emailConfirmer: any EmailConfirmer) {
+    public init(userInterface: any FTUserInterface, validator: any Validator, emailConfirmer: any EmailConfirmer) {
+        self.userInterface = userInterface
         self.states = [
             RegistrationPersonalDataState(validator: validator),
             RegistrationCredintalsState(validator: validator, emailConfirmer: emailConfirmer),
@@ -28,6 +30,7 @@ public final class BaseRegistrationModel: RegistrationModel {
     public func goNext() -> (any RegistrationState)? {
         currentState += 1
         let state = getCorrectNextState()
+        if state == nil { register(user: userRegister) }
         return state
     }
     
@@ -43,7 +46,12 @@ public final class BaseRegistrationModel: RegistrationModel {
     }
     
     public func register(user: FTUserRegister) {
-        
+        userInterface.register(data: user, completion: { [weak self] result in
+            if case .success = result {
+                let loginData = FTUserLogin(email: user.email, password: user.password)
+                self?.userInterface.login(data: loginData, completion: nil)
+            }
+        })
     }
     
 }

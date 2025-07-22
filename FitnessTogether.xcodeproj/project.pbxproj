@@ -32,6 +32,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		563A4A3C2E2FEFF100C2686A /* UnitTestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = UnitTestPlan.xctestplan; sourceTree = "<group>"; };
 		568E984C2E28E9C8007144F7 /* FitnessTogether.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FitnessTogether.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		568E98622E28E9C9007144F7 /* FitnessTogetherTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FitnessTogetherTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		568E986C2E28E9C9007144F7 /* FitnessTogetherUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FitnessTogetherUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -49,12 +50,13 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Coordinator/AuthCoordinatorTests.swift,
-				RegistrationStates/MockRegistrationDelegate.swift,
-				RegistrationStates/MockValidator.swift,
-				RegistrationStates/RegistrationCoachInfoStateTests.swift,
-				RegistrationStates/RegistrationCredintalsStateTests.swift,
-				RegistrationStates/RegistrationPersonalDataStateTests.swift,
-				RegistrationStates/RegistrationRoleStateTests.swift,
+				Registration/RegistrationModelTests.swift,
+				Registration/RegistrationStates/MockRegistrationDelegate.swift,
+				Registration/RegistrationStates/MockValidator.swift,
+				Registration/RegistrationStates/RegistrationCoachInfoStateTests.swift,
+				Registration/RegistrationStates/RegistrationCredintalsStateTests.swift,
+				Registration/RegistrationStates/RegistrationPersonalDataStateTests.swift,
+				Registration/RegistrationStates/RegistrationRoleStateTests.swift,
 			);
 			target = 568E984B2E28E9C8007144F7 /* FitnessTogether */;
 		};
@@ -62,12 +64,13 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Coordinator/AuthCoordinatorTests.swift,
-				RegistrationStates/MockRegistrationDelegate.swift,
-				RegistrationStates/MockValidator.swift,
-				RegistrationStates/RegistrationCoachInfoStateTests.swift,
-				RegistrationStates/RegistrationCredintalsStateTests.swift,
-				RegistrationStates/RegistrationPersonalDataStateTests.swift,
-				RegistrationStates/RegistrationRoleStateTests.swift,
+				Registration/RegistrationModelTests.swift,
+				Registration/RegistrationStates/MockRegistrationDelegate.swift,
+				Registration/RegistrationStates/MockValidator.swift,
+				Registration/RegistrationStates/RegistrationCoachInfoStateTests.swift,
+				Registration/RegistrationStates/RegistrationCredintalsStateTests.swift,
+				Registration/RegistrationStates/RegistrationPersonalDataStateTests.swift,
+				Registration/RegistrationStates/RegistrationRoleStateTests.swift,
 			);
 			target = 568E98612E28E9C9007144F7 /* FitnessTogetherTests */;
 		};
@@ -131,6 +134,7 @@
 		568E98432E28E9C7007144F7 = {
 			isa = PBXGroup;
 			children = (
+				563A4A3C2E2FEFF100C2686A /* UnitTestPlan.xctestplan */,
 				568E984E2E28E9C8007144F7 /* FitnessTogether */,
 				56AB17802E2BF9980029FC76 /* FitnessTogetherTests */,
 				568E986F2E28E9C9007144F7 /* FitnessTogetherUITests */,
