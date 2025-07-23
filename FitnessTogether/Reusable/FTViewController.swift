@@ -29,7 +29,7 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
     
     public var isScrollEnable = true { didSet { scrollView.isScrollEnabled = isScrollEnable } }
     public let stackView = UIStackView()
-    private let scrollView = UIScrollView()
+    public let scrollView = UIScrollView()
     private let titleLabel = UILabel()
     
     public override func viewDidLoad() {
@@ -41,7 +41,7 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
     
     public func addStackSubview(_ subview: UIView, height: CGFloat? = nil, spaceAfter: SpaceKind = .fixed(DC.Layout.spacing)) {
         if let height {
-            subview.heightAnchor.constraint(equalToConstant: height).isActive = true
+            subview.constraintHeight(height)
         }
         stackView.addArrangedSubview(subview)
         

@@ -1,0 +1,79 @@
+ 
+import UIKit
+
+public class CoachTrainsCollectionView: UIView, CoachTrainsView, UICollectionViewDelegate, UICollectionViewDataSource {
+    public var items: [CoachTrainItem] = [] { didSet { collectionView.reloadData() } }
+    public var needShowTitleIfEmpty: Bool = true
+    
+    private var collectionView = UICollectionView(frame: .zero, collectionViewLayout: CoachTrainsCollectionView.makeLayout())
+    
+    //MARK: - Lifecycle
+    public convenience init(){
+        self.init(frame: .zero)
+    }
+    public override init(frame: CGRect) {
+        super.init(frame: frame)
+        setup()
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
+    
+    private func setup() {
+        setupCollectionView()
+    }
+    
+    private func setupCollectionView() {
+        addSubview(collectionView)
+        collectionView.snp.makeConstraints { maker in
+            maker.edges.equalToSuperview()
+        }
+        
+        collectionView.isScrollEnabled = false
+        collectionView.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collectionView.delegate = self
+        collectionView.dataSource = self
+    }
+    
+    public func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return items.count
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        cell.contentConfiguration = getCellConfiguration(for: indexPath)
+        return cell
+    }
+    
+    private func getCellConfiguration(for indexPath: IndexPath) -> CoachTrainsCellConfiguration {
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "dd.MM.yyyy"
+        
+        let item = items[indexPath.item]
+        var conf = CoachTrainsCellConfiguration()
+        conf.image = item.image
+        conf.title = item.name
+        conf.subtitle = dateFormatter.string(from: item.date)
+        return conf
+    }
+    
+    private static func makeLayout() -> UICollectionViewCompositionalLayout {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(60))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        
+        let section = NSCollectionLayoutSection(group: group)
+        section.interGroupSpacing = 10
+        
+        let layout = UICollectionViewCompositionalLayout(section: section)
+        return layout
+    }
+    
+}

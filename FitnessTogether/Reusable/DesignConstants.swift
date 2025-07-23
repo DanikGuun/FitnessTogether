@@ -17,6 +17,8 @@ public struct DC {
     }
     
     public struct Font {
+        public static let cellTitle = DC.Font.roboto(weight: .medium, size: 16)
+        public static let cellSubtitle = DC.Font.roboto(weight: .semibold, size: 12)
         public static let headline = DC.Font.roboto(weight: .medium, size: 20)
         public static let textField = DC.Font.roboto(weight: .medium, size: 15)
         public static let additionalInfo = DC.Font.roboto(weight: .regular, size: 12)

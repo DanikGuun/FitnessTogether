@@ -13,4 +13,13 @@ public extension UILabel {
         return label
     }
     
+    static func headline(_ title: String?) -> UILabel {
+        let label = UILabel()
+        label.font = DC.Font.headline
+        label.text = title
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }
+    
 }
