@@ -11,7 +11,7 @@ internal class MockValidator: Validator {
     var isValidEmail = true
     var isValidPassword = true
     var isValidConfirmPassword = true
-    var isValidJobTime = true
+    var isValidWorkExperience = true
     var isValidDescription = true
     var errorMessage: String? = "error"
     
@@ -40,8 +40,8 @@ internal class MockValidator: Validator {
         return isValidConfirmPassword ? .valid : .invalid(message: errorMessage)
     }
     
-    func isValidJobTime(_ time: Double?) -> ValidatorResult {
-        return isValidJobTime ? .valid : .invalid(message: errorMessage)
+    func isValidWorkExperience(_ time: Double?) -> ValidatorResult {
+        return isValidWorkExperience ? .valid : .invalid(message: errorMessage)
     }
     
     func isValidDescription(_ string: String?) -> ValidatorResult {

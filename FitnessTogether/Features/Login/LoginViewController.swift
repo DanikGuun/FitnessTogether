@@ -14,6 +14,9 @@ public final class LoginViewController: FTViewController, UITextFieldDelegate {
     private let passwordVisibilityButton = UIButton(configuration: .plain())
     private let loginButton = UIButton.ftFilled(title: "Войти")
     private let incorrectLabel = UILabel.incorrectData("Неверый Email или пароль")
+    private let motivationLabel = UILabel()
+    
+    private var isBusy = false
     
     //MARK: - Lifecycle
     public convenience init(model: LoginModel!) {
@@ -42,6 +45,7 @@ public final class LoginViewController: FTViewController, UITextFieldDelegate {
         setupPasswordTextField()
         setupPasswordVisibilityButton()
         setupLoginButton()
+        setupMotivationLabel()
     }
     
     private func setupTitleLabel() {
@@ -100,6 +104,23 @@ public final class LoginViewController: FTViewController, UITextFieldDelegate {
         loginButton.isEnabled = !(emailTextField.text?.isEmpty ?? true || passwordTextField.text?.isEmpty ?? true)
     }
     
+    private func setLoginButtonBusy(_ busy: Bool) {
+        loginButton.configuration?.showsActivityIndicator = busy
+        isBusy = busy
+    }
+    
+    private func setupMotivationLabel() {
+        view.addSubview(motivationLabel)
+        motivationLabel.snp.makeConstraints { maker in
+            maker.centerX.equalToSuperview()
+            maker.bottom.equalToSuperview().inset(75)
+        }
+        
+        motivationLabel.font = DC.Font.roboto(weight: .regular, size: 15)
+        motivationLabel.textColor = .secondaryLabel
+        motivationLabel.text = model.motivationTitles.randomElement()
+    }
+    
     //MARK: - TextField Delegate
 
     public func textFieldDidBeginEditing(_ textField: UITextField) {
@@ -129,11 +150,17 @@ public final class LoginViewController: FTViewController, UITextFieldDelegate {
     
     //MARK: - Other
     private func onLoginButtonPressed(_ action: UIAction?) {
+        guard isBusy == false else { return }
+        setLoginButtonBusy(true)
+        
         let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let password = passwordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
         let userLogin = FTUserLogin(email: email, password: password)
+        
         model.login(userLogin: userLogin, completion: { [weak self] result in
             guard let self else { return }
+            setLoginButtonBusy(false)
+            
             if case .success = result {
                 delegate?.loginViewControllerDidLogin(self)
             }

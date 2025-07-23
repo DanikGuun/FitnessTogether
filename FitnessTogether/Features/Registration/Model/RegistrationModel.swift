@@ -20,10 +20,10 @@ public final class BaseRegistrationModel: RegistrationModel {
     public init(userInterface: any FTUserInterface, validator: any Validator, emailConfirmer: any EmailConfirmer) {
         self.userInterface = userInterface
         self.states = [
+            RegistrationCoachInfoState(validator: validator),
             RegistrationPersonalDataState(validator: validator),
             RegistrationCredintalsState(validator: validator, emailConfirmer: emailConfirmer),
-            RegistrationRoleState(),
-            RegistrationCoachInfoState(validator: validator)
+            RegistrationRoleState()
         ]
     }
     

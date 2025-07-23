@@ -32,7 +32,7 @@ public class BaseValidator: Validator {
         return isValid ? .valid : .invalid(message: "Пароли не совпадают")
     }
     
-    public func isValidJobTime(_ time: Double?) -> ValidatorResult {
+    public func isValidWorkExperience(_ time: Double?) -> ValidatorResult {
         guard let time else { return .invalid(message: "Опыт работы не может быть отрицательным") }
         if time > 0 { return .valid }
         return .invalid(message: "Опыт работы не может быть отрицательным")

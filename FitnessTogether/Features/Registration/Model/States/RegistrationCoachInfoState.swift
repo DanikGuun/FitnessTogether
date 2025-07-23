@@ -1,10 +1,11 @@
 
 import UIKit
+import FTDomainData
 import OutlineTextField
 
 public final class RegistrationCoachInfoState: BaseRegistrationState, UITextFieldDelegate, UITextViewDelegate {
     
-    var jobTimeTextField = OutlinedTextField.ftTextField(placeholder: "Опыт работы")
+    var workExperienceTextField = OutlinedTextField.ftTextField(placeholder: "Опыт работы")
     var organizationTextField = OutlinedTextField.ftTextField(placeholder: "Организация")
     var descriptionTextView = PlaceholderTextView.ftTextView(placeholder: "О себе (не более 200 символов)")
     
@@ -13,15 +14,21 @@ public final class RegistrationCoachInfoState: BaseRegistrationState, UITextFiel
         self.validator = validator
     }
     
+    public override func apply(userRegister: inout FTUserRegister) {
+        userRegister.workExperience = workExperienceTextField.text?.doubleValue
+        userRegister.organization = organizationTextField.text
+        userRegister.description = descriptionTextView.text
+    }
+    
     public override func viewsToPresent() -> [UIView] {
         descriptionTextView.constraintHeight(150)
-        return [titleLabel, jobTimeTextField, organizationTextField, descriptionTextView, nextButton, infoLabel]
+        return [titleLabel, workExperienceTextField, organizationTextField, descriptionTextView, nextButton, infoLabel]
     }
     
     override func setupViews() {
         super.setupViews()
-        setupTextField(jobTimeTextField)
-        jobTimeTextField.keyboardType = .decimalPad
+        setupTextField(workExperienceTextField)
+        workExperienceTextField.keyboardType = .decimalPad
         setupTextField(organizationTextField)
         setupSescriptionTextView()
     }
@@ -43,7 +50,7 @@ public final class RegistrationCoachInfoState: BaseRegistrationState, UITextFiel
     
     //MARK: - TextField Delegate
     public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
-        if textField == jobTimeTextField {
+        if textField == workExperienceTextField {
             let _ = organizationTextField.becomeFirstResponder()
         }
         else if textField == organizationTextField {
@@ -55,16 +62,16 @@ public final class RegistrationCoachInfoState: BaseRegistrationState, UITextFiel
     //MARK: - Validation
     
     override func validateValues() -> Bool {
-        let jobTime = validateJobTime()
+        let jobTime = validateWorkExperience()
         let description = validateDescription()
         return jobTime && description
     }
     
-    private func validateJobTime() -> Bool {
-        let time = Double(jobTimeTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? "")
-        let result = validator.isValidJobTime(time)
-        let isValid = updateFieldInConsistWithValidate(jobTimeTextField, result: result)
-        jobTimeTextField.isError = !isValid
+    private func validateWorkExperience() -> Bool {
+        let time = workExperienceTextField.text?.doubleValue
+        let result = validator.isValidWorkExperience(time)
+        let isValid = updateFieldInConsistWithValidate(workExperienceTextField, result: result)
+        workExperienceTextField.isError = !isValid
         return isValid
     }
     
@@ -76,7 +83,7 @@ public final class RegistrationCoachInfoState: BaseRegistrationState, UITextFiel
     }
     
     override func isAllFieldsFilled() -> Bool {
-        return !(jobTimeTextField.text?.isEmpty ?? true ||
+        return !(workExperienceTextField.text?.isEmpty ?? true ||
                  organizationTextField.text?.isEmpty ?? true)
     }
     

@@ -24,22 +24,22 @@ final class RegistrationCoachInfoStateTests: XCTestCase {
     }
     
     // MARK: - Applying Data
-//    func test_Applying_SetsCoachData() {
-//        var userRegister = FTUserRegister()
-//        let jobTime = "5.5"
-//        let organization = "Fitness Club"
-//        let description = "Experienced coach"
-//        
-//        state.jobTimeTextField.text = jobTime
-//        state.organizationTextField.text = organization
-//        state.descriptionTextView.text = description
-//        
-//        state.apply(userRegister: &userRegister)
-//        
-//        XCTAssertEqual(userRegister.coachJobTime, Double(jobTime))
-//        XCTAssertEqual(userRegister.coachOrganization, organization)
-//        XCTAssertEqual(userRegister.description, description)
-//    }
+    func test_Applying_SetsCoachData() {
+        var userRegister = FTUserRegister()
+        let jobTime = "5,5"
+        let organization = "Fitness Club"
+        let description = "Experienced coach"
+        
+        state.workExperienceTextField.text = jobTime
+        state.organizationTextField.text = organization
+        state.descriptionTextView.text = description
+        
+        state.apply(userRegister: &userRegister)
+        
+        XCTAssertEqual(userRegister.workExperience, jobTime.doubleValue)
+        XCTAssertEqual(userRegister.organization, organization)
+        XCTAssertEqual(userRegister.description, description)
+    }
     
     // MARK: - Next Button
     func test_NextButton_StartInactive() {
@@ -47,10 +47,10 @@ final class RegistrationCoachInfoStateTests: XCTestCase {
     }
     
     func test_NextButton_ActiveWhenAllFieldsValid() {
-        validator.isValidJobTime = true
+        validator.isValidWorkExperience = true
         validator.isValidDescription = true
         
-        state.jobTimeTextField.text = "5"
+        state.workExperienceTextField.text = "5,5"
         state.organizationTextField.text = "Fitness Club"
         state.descriptionTextView.text = "About me"
         
@@ -60,7 +60,7 @@ final class RegistrationCoachInfoStateTests: XCTestCase {
     }
     
     func test_NextButton_DisabledWhenEmpty() {
-        state.jobTimeTextField.text = ""
+        state.workExperienceTextField.text = ""
         state.organizationTextField.text = "Fitness"
         state.descriptionTextView.text = ""
         
@@ -70,7 +70,7 @@ final class RegistrationCoachInfoStateTests: XCTestCase {
     }
     
     func test_NextButton_Enabled_WithoutDescritpion() {
-        state.jobTimeTextField.text = "alsdjf"
+        state.workExperienceTextField.text = "alsdjf"
         state.organizationTextField.text = "alsdjf"
         state.descriptionTextView.text = ""
         
@@ -80,14 +80,14 @@ final class RegistrationCoachInfoStateTests: XCTestCase {
     }
     
     func test_NextButton_InactiveAfterEmptingData() {
-        state.jobTimeTextField.text = "test@example.com"
+        state.workExperienceTextField.text = "test@example.com"
         state.organizationTextField.text = "password"
         state.descriptionTextView.text = "password"
         
         state.checkNextButtonAvailable(nil)
         XCTAssertTrue(state.nextButton.isEnabled)
         
-        state.jobTimeTextField.text = ""
+        state.workExperienceTextField.text = ""
         state.checkNextButtonAvailable(nil)
         XCTAssertFalse(state.nextButton.isEnabled)
     }
@@ -102,7 +102,7 @@ final class RegistrationCoachInfoStateTests: XCTestCase {
     }
     
     func test_NextButton_ValidData_TriggersNextStep() {
-        validator.isValidJobTime = true
+        validator.isValidWorkExperience = true
         validator.isValidDescription = true
         
         state.nextButtonPressed(nil)
@@ -111,18 +111,18 @@ final class RegistrationCoachInfoStateTests: XCTestCase {
         XCTAssertTrue(wasCalled)
     }
     
-    // MARK: - JobTime TextField Validation
-    func test_JobTime_Valid_NoErrorDisplayed() {
-        validator.isValidJobTime = true
-        state.jobTimeTextField.text = "3.5"
+    // MARK: - WorkExperience TextField Validation
+    func test_WorkExperience_Valid_NoErrorDisplayed() {
+        validator.isValidWorkExperience = true
+        state.workExperienceTextField.text = "3,5"
         
         state.nextButtonPressed(nil)
         
         XCTAssertNil(delegate.lastViewInserted)
     }
     
-    func test_JobTime_Invalid_ErrorDisplayed() {
-        validator.isValidJobTime = false
+    func test_WorkExperience_Invalid_ErrorDisplayed() {
+        validator.isValidWorkExperience = false
         validator.errorMessage = "Invalid experience"
         
         state.nextButtonPressed(nil)
@@ -130,18 +130,18 @@ final class RegistrationCoachInfoStateTests: XCTestCase {
         XCTAssertNotNil(delegate.lastViewInserted)
     }
     
-    func test_JobTime_ValidAfterInvalid_RemovesError() {
-        validator.isValidJobTime = false
+    func test_WorkExperience_ValidAfterInvalid_RemovesError() {
+        validator.isValidWorkExperience = false
         state.nextButtonPressed(nil)
         
-        validator.isValidJobTime = true
+        validator.isValidWorkExperience = true
         state.nextButtonPressed(nil)
         
         XCTAssertNotNil(delegate.lastViewRemoved)
     }
     
-    func test_JobTime_DoubleInvalid_DoesNotDuplicateError() {
-        validator.isValidJobTime = false
+    func test_WorkExperience_DoubleInvalid_DoesNotDuplicateError() {
+        validator.isValidWorkExperience = false
         
         state.nextButtonPressed(nil)
         let firstError = delegate.lastViewInserted
@@ -152,8 +152,8 @@ final class RegistrationCoachInfoStateTests: XCTestCase {
         XCTAssertNil(delegate.lastViewInserted)
     }
     
-    func test_JobTime_Invaild_EmptyMessage_DoesNotDisplayError() {
-        validator.isValidJobTime = false
+    func test_WorkExperience_Invaild_EmptyMessage_DoesNotDisplayError() {
+        validator.isValidWorkExperience = false
         validator.errorMessage = nil
         
         state.nextButtonPressed(nil)
