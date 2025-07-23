@@ -23,7 +23,7 @@ public final class BaseRegistrationModel: RegistrationModel {
             RegistrationCoachInfoState(validator: validator),
             RegistrationPersonalDataState(validator: validator),
             RegistrationCredintalsState(validator: validator, emailConfirmer: emailConfirmer),
-            RegistrationRoleState()
+            RegistrationRoleState(),
         ]
     }
     
@@ -46,11 +46,15 @@ public final class BaseRegistrationModel: RegistrationModel {
     }
     
     public func register(user: FTUserRegister) {
+        let state = states[currentState]
+        state.setNextButtonBusy(false)
         userInterface.register(data: user, completion: { [weak self] result in
             switch result {
             case .success(_):
                 let loginData = FTUserLogin(email: user.email, password: user.password)
-                self?.userInterface.login(data: loginData, completion: nil)
+                self?.userInterface.login(data: loginData, completion: { _ in
+                    state.setNextButtonBusy(true)
+                })
             case .failure(let error):
                 print(error.description)
             }

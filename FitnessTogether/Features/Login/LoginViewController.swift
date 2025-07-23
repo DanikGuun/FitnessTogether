@@ -16,8 +16,6 @@ public final class LoginViewController: FTViewController, UITextFieldDelegate {
     private let incorrectLabel = UILabel.incorrectData("Неверый Email или пароль")
     private let motivationLabel = UILabel()
     
-    private var isBusy = false
-    
     //MARK: - Lifecycle
     public convenience init(model: LoginModel!) {
         self.init(nibName: nil, bundle: nil)
@@ -106,7 +104,7 @@ public final class LoginViewController: FTViewController, UITextFieldDelegate {
     
     private func setLoginButtonBusy(_ busy: Bool) {
         loginButton.configuration?.showsActivityIndicator = busy
-        isBusy = busy
+        loginButton.isEnabled = busy
     }
     
     private func setupMotivationLabel() {
@@ -150,7 +148,6 @@ public final class LoginViewController: FTViewController, UITextFieldDelegate {
     
     //MARK: - Other
     private func onLoginButtonPressed(_ action: UIAction?) {
-        guard isBusy == false else { return }
         setLoginButtonBusy(true)
         
         let email = emailTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""

@@ -150,10 +150,10 @@ public final class RegistrationCredintalsState: BaseRegistrationState, UITextFie
     //MARK: - Custom NextButton для проверки почты
     override func nextButtonPressed(_ action: UIAction?) {
         if validateValues() && !isBusy {
-            activityIndicator(true)
+            setNextButtonBusy(false)
             emailConfirmer.confirmEmail(emailTextField.text ?? "", completion: { [weak self] result in
                 guard let self else { return }
-                self.activityIndicator(false)
+                self.setNextButtonBusy(true)
                 let isValid = self.updateFieldInConsistWithValidate(self.emailTextField, result: result)
                 emailTextField.isError = !isValid
                 if isValid {
@@ -163,12 +163,6 @@ public final class RegistrationCredintalsState: BaseRegistrationState, UITextFie
         }
     }
     
-    private func activityIndicator(_ show: Bool) {
-        isBusy = show
-        var conf = nextButton.configuration
-        conf?.showsActivityIndicator = show
-        nextButton.configuration = conf
-    }
     
     //MARK: - Validation
     override func validateValues() -> Bool {

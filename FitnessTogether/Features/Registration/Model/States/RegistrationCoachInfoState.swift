@@ -46,6 +46,7 @@ public final class RegistrationCoachInfoState: BaseRegistrationState, UITextFiel
     //MARK: - TextView Delegate
     public func textViewDidChange(_ textView: UITextView) {
         checkNextButtonAvailable(nil)
+        textView.layoutSubviews()
     }
     
     //MARK: - TextField Delegate

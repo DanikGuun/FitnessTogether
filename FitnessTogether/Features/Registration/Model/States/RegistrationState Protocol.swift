@@ -6,6 +6,7 @@ public protocol RegistrationState: AnyObject {
     var delegate: RegistrationStateDelegate? { get set }
     func viewsToPresent() -> [UIView]
     func apply(userRegister: inout FTUserRegister)
+    func setNextButtonBusy(_ available: Bool)
 }
 
 public protocol RegistrationStateDelegate {

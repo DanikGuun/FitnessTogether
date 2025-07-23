@@ -69,6 +69,11 @@ open class BaseRegistrationState: NSObject, RegistrationState {
             delegate?.registrationStateGoNext(self)
         }
     }
+
+    public func setNextButtonBusy(_ busy: Bool) {
+        nextButton.configuration?.showsActivityIndicator = !busy
+        nextButton.isEnabled = busy
+    }
     
     //MARK: - Validation
     //Override
