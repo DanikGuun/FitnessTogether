@@ -83,7 +83,7 @@ public final class LoginViewController: FTViewController, UITextFieldDelegate {
     }
     
     private func passwordVisibleButtonConfigurationUpdateHandler(_ button: UIButton) {
-        let imageName = button.isSelected ? "Eye Striked" : "Eye"
+        let imageName = button.isSelected ? "eye.striked" : "eye"
         let superTextFieldIsEdiding = (button.superview as? OutlinedTextField)?.isActiveState ?? false
         var conf = button.configuration
         conf?.image = UIImage(named: imageName)

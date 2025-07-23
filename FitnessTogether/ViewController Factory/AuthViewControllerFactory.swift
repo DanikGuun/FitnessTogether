@@ -2,11 +2,9 @@
 import UIKit
 
 public protocol AuthViewControllerFactory {
-    
     func makeAuthVC(delegate: AuthViewControllerDelegate?) -> UIViewController
     func makeRegistrationVC(delegate: RegistrationViewControllerDelegate?) -> UIViewController
     func makeLoginVC(delegate: LoginViewControllerDelegate?) -> UIViewController
-    
 }
 
 public final class BaseAuthViewControllerFactory: AuthViewControllerFactory {

@@ -10,18 +10,15 @@ public final class BaseCoachCoordinator: CoachCoordinator {
     
     private var navigationVC: UINavigationController
     private var tabBarVC: UITabBarController
+    private let factory: CoachViewControllerFactory
     
     
-    init() {
-        self.tabBarVC = UITabBarController()
+    init(factory: CoachViewControllerFactory) {
+        self.factory = factory
+        self.tabBarVC = factory.makeTabBarVC()
         self.navigationVC = UINavigationController(rootViewController: tabBarVC)
-        setup()
     }
-    
-    private func setup() {
-        
-    }
-    
+
     public func show(_ viewController: UIViewController) {
         navigationVC.pushViewController(viewController, animated: needAnimate)
     }
