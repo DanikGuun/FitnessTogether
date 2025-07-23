@@ -16,7 +16,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         window = UIWindow(windowScene: scene)
         
         let factory = BaseAuthViewControllerFactory()
-        let coordintor = AuthCoordinator(window: window!, factory: factory)
+        let coordintor = BaseAuthCoordinator(factory: factory)
         window?.rootViewController = coordintor.mainVC
         window?.makeKeyAndVisible()
         coordintor.authViewControllerGoToLogin(authViewController: UIViewController())

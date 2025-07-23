@@ -1,19 +1,18 @@
 
 import UIKit
 
-public final class AuthCoordinator: NSObject, Coordinator {
+public final class BaseAuthCoordinator: NSObject, AuthCoordinator {
 
-    public var currentVC: UIViewController? { getCurrnetVC(base: window.rootViewController) }
+    public var delegate: (any AuthCoordinatorDelegate)?
+    public var currentVC: UIViewController? { getCurrnetVC(base: mainVC) }
     public var mainVC: UIViewController { navigationVC }
     public var needAnimate = true
     
     private var navigationVC: UINavigationController!
     private let factory: AuthViewControllerFactory
-    private let window: UIWindow
     
-    init(window: UIWindow, factory: AuthViewControllerFactory) {
+    init(factory: AuthViewControllerFactory) {
         self.factory = factory
-        self.window = window
         self.navigationVC = nil
         super.init()
         let startVC = factory.makeAuthVC(delegate: self)
@@ -40,7 +39,7 @@ public final class AuthCoordinator: NSObject, Coordinator {
     
 }
 
-extension AuthCoordinator: AuthViewControllerDelegate {
+extension BaseAuthCoordinator: AuthViewControllerDelegate {
     
     public func authViewControllerGoToRegister(authViewController: UIViewController) {
         let vc = factory.makeRegistrationVC(delegate: self)
@@ -52,21 +51,20 @@ extension AuthCoordinator: AuthViewControllerDelegate {
         show(vc)
     }
     
-    
 }
 
-extension AuthCoordinator: RegistrationViewControllerDelegate {
+extension BaseAuthCoordinator: RegistrationViewControllerDelegate {
     
     public func registrationViewControllerDidFinish(_ controller: UIViewController) {
-        
+        delegate?.authCoordinatorDidFinishAuth(self)
     }
     
 }
 
-extension AuthCoordinator: LoginViewControllerDelegate {
+extension BaseAuthCoordinator: LoginViewControllerDelegate {
     
     public func loginViewControllerDidLogin(_ loginViewController: UIViewController) {
-        print("login finish")
+        delegate?.authCoordinatorDidFinishAuth(self)
     }
     
 }

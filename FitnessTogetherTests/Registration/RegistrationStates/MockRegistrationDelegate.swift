@@ -19,9 +19,7 @@ internal class MockRegistrationDelegate: RegistrationStateDelegate {
         lastViewInserted = view
     }
     
-    func registrationState(_ state: RegistrationState, needReplaceView view: UIView, with otherView: UIView) {
-        
-    }
+    func registrationState(_ state: RegistrationState, needReplaceView view: UIView, with otherView: UIView) {}
     
     func registrationState(_ state: RegistrationState, needRemoveView view: UIView) {
         lastViewRemoved = view

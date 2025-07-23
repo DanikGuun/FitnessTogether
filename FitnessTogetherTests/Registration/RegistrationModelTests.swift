@@ -33,48 +33,7 @@ final class RegistrationModelTests: XCTestCase {
     
 }
 
-fileprivate class MockUserInterface: FTUserInterface {
-    var token: String? = nil
-    var hasPreviousLogin: Bool = false
-    
-    var lastRegisterData: FTDomainData.FTUserRegister?
-    var lastLoginData: FTDomainData.FTUserLogin?
-    
-    func register(data: FTDomainData.FTUserRegister, completion: FTDomainData.FTCompletion<Data>) {
-        lastRegisterData = data
-        completion?(.success(Data()))
-    }
-    
-    func login(data: FTDomainData.FTUserLogin, completion: FTDomainData.FTCompletion<Data>) {
-        lastLoginData = data
-        completion?(.success(Data()))
-    }
-    
-    func loginWithPreviousCredentials(completion: FTDomainData.FTCompletion<Data>) {
-        
-    }
-    
-    func logout(completion: FTDomainData.FTCompletion<Void>) {
-        
-    }
-    
-    func current(completion: FTDomainData.FTCompletion<FTDomainData.FTUser>) {
-        
-    }
-    
-    func addClientToCoach(clientId: String, completion: FTDomainData.FTCompletion<Void>) {
-        
-    }
-    
-    func getClients(completion: FTDomainData.FTCompletion<[FTDomainData.FTUser]>) {
-        
-    }
-    
-    
-}
 
 fileprivate class EmptyEmailConfirmer: EmailConfirmer {
-    func confirmEmail(_ email: String, completion: ((ValidatorResult) -> ())?) {
-        
-    }
+    func confirmEmail(_ email: String, completion: ((ValidatorResult) -> ())?) {}
 }

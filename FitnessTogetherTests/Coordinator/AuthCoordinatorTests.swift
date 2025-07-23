@@ -5,24 +5,23 @@ import XCTest
 
 final class AuthCoordinatorTests: XCTestCase {
     
+    fileprivate var delegate: MockAuthCoordinatorDelegate!
     fileprivate var factory: MockAuthVCFactory!
-    var coordinator: AuthCoordinator!
-    var window: UIWindow!
+    var coordinator: BaseAuthCoordinator!
     
     override func setUp() {
-        window = UIWindow(frame: .zero)
+        delegate = MockAuthCoordinatorDelegate()
         factory = MockAuthVCFactory()
-        coordinator = AuthCoordinator(window: window, factory: factory)
+        coordinator = BaseAuthCoordinator(factory: factory)
+        coordinator.delegate = delegate
         coordinator.needAnimate = false
-        window.rootViewController = coordinator.mainVC
-        window.makeKeyAndVisible()
         super.setUp()
     }
     
     override func tearDown() {
+        delegate = nil
         factory = nil
         coordinator = nil
-        window = nil
         super.tearDown()
     }
     
@@ -51,6 +50,16 @@ final class AuthCoordinatorTests: XCTestCase {
         vc.title = "controller"
         coordinator.show(vc)
         XCTAssertEqual(coordinator.currentVC?.title, vc.title)
+    }
+    
+    func test_LoginFinish_DidFinish() {
+        coordinator.loginViewControllerDidLogin(UIViewController())
+        XCTAssertTrue(delegate.didfinish)
+    }
+    
+    func test_RegistrationFinish_DidFinish() {
+        coordinator.registrationViewControllerDidFinish(UIViewController())
+        XCTAssertTrue(delegate.didfinish)
     }
     
 }
@@ -93,4 +102,12 @@ fileprivate class MockAuthVCFactory: AuthViewControllerFactory {
         case login
     }
     
+}
+
+fileprivate class MockAuthCoordinatorDelegate: AuthCoordinatorDelegate {
+    var didfinish = false
+    
+    func authCoordinatorDidFinishAuth(_ authCoordinator: any AuthCoordinator) {
+        didfinish = true
+    }
 }

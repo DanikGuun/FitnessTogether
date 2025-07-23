@@ -4,19 +4,24 @@ import Foundation
 public class BaseValidator: Validator {
     
     public func isValidFirstName(_ string: String?) -> ValidatorResult {
-        return .valid
+        return string?.count ?? 0 > 1 ? .valid : .invalid(message: "Имя должно быть длиннее 1 символа")
     }
     
     public func isValidLastName(_ string: String?) -> ValidatorResult {
-        return .valid
-    }
+        return string?.count ?? 0 > 1 ? .valid : .invalid(message: "Фамилия должна быть длиннее 1 символа")    }
     
     public func isValidDateOfBirth(_ date: Date?) -> ValidatorResult {
-        return .valid
+        let interval = date?.distance(to: Date()) ?? 0.0  //возраст
+        let minimumAge = 5*365*24*60*60.0
+        let maximumAge = 90*365*24*60*60.0
+        if interval > minimumAge && interval < maximumAge {
+            return .valid
+        }
+        return .invalid(message: "Вы должны быть старше 5 лет и младше 90 лет")
     }
     
     public func isValidEmail(_ string: String?) -> ValidatorResult {
-        let regex = try! Regex("[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,64}")
+        let regex = try! Regex("^[a-zA-Z0-9][a-zA-Z0-9._%+-]*@[a-zA-Z0-9][a-zA-Z0-9.-]*\\.[a-zA-Z]{2,64}$")
         let isValid = try! regex.wholeMatch(in: string ?? "") != nil
         return isValid ? .valid : .invalid(message: "Неверный формат email")
     }

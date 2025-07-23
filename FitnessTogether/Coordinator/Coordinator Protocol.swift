@@ -1,7 +1,7 @@
 
 import UIKit
 
-public protocol Coordinator {
+public protocol Coordinator: AnyObject {
     
     var currentVC: (UIViewController)? { get }
     var mainVC: UIViewController { get }
