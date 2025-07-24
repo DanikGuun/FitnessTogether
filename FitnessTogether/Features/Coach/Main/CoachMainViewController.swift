@@ -31,10 +31,11 @@ public final class CoachMainViewController: FTViewController {
     
     //MARK: - UI
     private func setupViews() {
-        addStackSubview(UILabel.headline("Ближайшие тренировки"))
+        addStackSubview(UILabel.headline("Тренировки на неделю"))
         setupTrainsCollectionView()
         setupDisclosureButton()
         setupAddWorkoutButton()
+        addSpacing(.fixed(50))
         updateItems()
     }
     
@@ -109,13 +110,15 @@ public final class CoachMainViewController: FTViewController {
     
     //MARK: - Data
     private func updateItems() {
-        model.getItems { _ in }
-        let items: [CoachTrainItem] = []
-        trainsCollection.items = items
-        setTrainCollectionDisclosed(disclosureButton.isSelected)
-        
-        let disclosureButtonHidden = items.count <= 4
-        setDisclosureButtonHidden(disclosureButtonHidden)
+        model.getItems { [weak self] items in
+            guard let self else { return }
+            
+            trainsCollection.items = items
+            setTrainCollectionDisclosed(disclosureButton.isSelected)
+            
+            let disclosureButtonHidden = items.count <= 4
+            setDisclosureButtonHidden(disclosureButtonHidden)
+        }
     }
 
 }

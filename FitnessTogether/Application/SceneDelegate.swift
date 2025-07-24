@@ -15,7 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         
-        let ftManager = FTManagerAPI()
+        let ftManager = OfflineManger()
         
         let factory = BaseCoachViewControllerFactory(ftManager: ftManager)
         let c2 = BaseCoachCoordinator(factory: factory)

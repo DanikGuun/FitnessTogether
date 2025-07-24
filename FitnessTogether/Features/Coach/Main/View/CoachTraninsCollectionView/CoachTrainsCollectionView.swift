@@ -2,11 +2,12 @@
 import UIKit
 
 public class CoachTrainsCollectionView: UIView, CoachTrainsView, UICollectionViewDelegate, UICollectionViewDataSource {
-    public var items: [CoachTrainItem] = [] { didSet { collectionView.reloadData(); superview?.layoutIfNeeded() } }
+    public var items: [CoachTrainItem] = [] { didSet { itemsHasUpdated() } }
     public var needShowTitleIfEmpty: Bool = true
-    public var contentSize: CGSize { return collectionView.contentSize }
+    public var contentSize: CGSize { getContentSize() }
     
     private var collectionView = UICollectionView(frame: .zero, collectionViewLayout: CoachTrainsCollectionView.makeLayout())
+    private var noDataLabel = UILabel()
     
     //MARK: - Lifecycle
     public convenience init(){
@@ -23,6 +24,7 @@ public class CoachTrainsCollectionView: UIView, CoachTrainsView, UICollectionVie
     
     private func setup() {
         setupCollectionView()
+        setupNoDataLabel()
     }
     
     //MARK: - CollectionView
@@ -62,6 +64,33 @@ public class CoachTrainsCollectionView: UIView, CoachTrainsView, UICollectionVie
         conf.title = item.name
         conf.subtitle = dateFormatter.string(from: item.date)
         return conf
+    }
+    
+    //MARK: - NoData Label
+    private func setupNoDataLabel() {
+        addSubview(noDataLabel)
+        noDataLabel.snp.makeConstraints { maker in
+            maker.top.leading.trailing.equalToSuperview().inset(DC.Layout.insets.top/2)
+        }
+        noDataLabel.numberOfLines = 0
+        noDataLabel.font = DC.Font.additionalInfo
+        noDataLabel.textColor = .systemGray4
+        noDataLabel.textAlignment = .center
+        noDataLabel.text = "Тренировок не запланировано"
+    }
+    
+    //MARK: - Other
+    private func itemsHasUpdated() {
+        collectionView.reloadData()
+        superview?.layoutIfNeeded()
+        noDataLabel.isHidden = items.count > 0
+    }
+    
+    private func getContentSize() -> CGSize {
+        if items.count < 1 {
+            return CGSize(width: bounds.width, height: noDataLabel.bounds.height*2)
+        }
+        return collectionView.contentSize
     }
     
     private static func makeLayout() -> UICollectionViewCompositionalLayout {

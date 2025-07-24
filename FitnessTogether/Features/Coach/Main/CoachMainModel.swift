@@ -89,9 +89,11 @@ public final class BaseCoachMainModel: CoachMainModel {
     }
     
     private func filterWorkouts(_ workouts: [FTWorkout], coach: FTUser) -> [FTWorkout] {
+        var interval = Calendar.current.dateInterval(of: .weekOfYear, for: Date())!
+        interval.start = Date().addingTimeInterval(-2 * 3600)
         return workouts.filter { workout in
             workout.participants.first(where: { $0.userId == coach.id })?.role == .coach && //чтобы был тренер
-            workout.startDate ?? Date() > Date().addingTimeInterval(-7 * 24 * 60 * 60) //за последние 7 дней
+            interval.contains(workout.startDate ?? Date())
         }
     }
     
