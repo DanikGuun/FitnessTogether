@@ -58,7 +58,7 @@ class BaseAppCoordinatorTests: XCTestCase {
     
     func test_hasPreviousLogin_CoachRole_GotToCoachFlow() {
         ftManager._user.hasPreviousLogin = true
-        ftManager._user.user?.organization = "alsdkj"
+        ftManager._user.user?.role = .coach
         coordinator.start()
         
         XCTAssertTrue(coordinator.currentCoordinator === coachCoordinator)

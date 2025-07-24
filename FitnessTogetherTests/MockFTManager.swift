@@ -48,16 +48,23 @@ class MockUserInterface: FTUserInterface {
     
     func addClientToCoach(clientId: String, completion: FTDomainData.FTCompletion<Void>) {}
     
-    func getClients(completion: FTDomainData.FTCompletion<[FTDomainData.FTUser]>) {}
+    func getClients(completion: FTDomainData.FTCompletion<[FTDomainData.FTUser]>) {
+        let clients = user?.clients.map { $0.client } ?? []
+        completion?(.success(clients))
+    }
     
 }
 
 class MockWorkoutInterface: FTWorkoutInterface {
+    var workouts: [FTWorkout] = []
+    
     func create(data: FTDomainData.FTWorkoutCreate, completion: FTDomainData.FTCompletion<FTDomainData.FTWorkout>) {}
     
     func get(workoutId: String, completion: FTDomainData.FTCompletion<FTDomainData.FTWorkout>) {}
     
-    func getAll(completion: FTDomainData.FTCompletion<[FTDomainData.FTWorkout]>) {}
+    func getAll(completion: FTDomainData.FTCompletion<[FTDomainData.FTWorkout]>) {
+        completion?(.success(workouts))
+    }
     
     func edit(workoutId: String, newData data: FTDomainData.FTWorkoutCreate, completion: FTDomainData.FTCompletion<FTDomainData.FTWorkout>) {}
     

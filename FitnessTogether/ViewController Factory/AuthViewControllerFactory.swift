@@ -9,7 +9,11 @@ public protocol AuthViewControllerFactory {
 
 public final class BaseAuthViewControllerFactory: AuthViewControllerFactory {
     
-    let ftManager: any FTManager = FTManagerAPI()
+    let ftManager: any FTManager
+    
+    init(ftManager: any FTManager) {
+        self.ftManager = ftManager
+    }
     
     public func makeAuthVC(delegate: AuthViewControllerDelegate?) -> UIViewController {
         let vc = AuthViewController()

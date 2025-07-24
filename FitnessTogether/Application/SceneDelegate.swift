@@ -15,10 +15,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         
-        let factory = BaseCoachViewControllerFactory()
+        let ftManager = FTManagerAPI()
+        
+        let factory = BaseCoachViewControllerFactory(ftManager: ftManager)
         let c2 = BaseCoachCoordinator(factory: factory)
         
-        let f1 = BaseAuthViewControllerFactory()
+        let f1 = BaseAuthViewControllerFactory(ftManager: ftManager)
         let c1 = BaseAuthCoordinator(factory: f1)
         
         window?.rootViewController = c2.mainVC

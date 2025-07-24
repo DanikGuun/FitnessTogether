@@ -2,8 +2,9 @@
 import UIKit
 
 public class CoachTrainsCollectionView: UIView, CoachTrainsView, UICollectionViewDelegate, UICollectionViewDataSource {
-    public var items: [CoachTrainItem] = [] { didSet { collectionView.reloadData() } }
+    public var items: [CoachTrainItem] = [] { didSet { collectionView.reloadData(); superview?.layoutIfNeeded() } }
     public var needShowTitleIfEmpty: Bool = true
+    public var contentSize: CGSize { return collectionView.contentSize }
     
     private var collectionView = UICollectionView(frame: .zero, collectionViewLayout: CoachTrainsCollectionView.makeLayout())
     
@@ -24,6 +25,7 @@ public class CoachTrainsCollectionView: UIView, CoachTrainsView, UICollectionVie
         setupCollectionView()
     }
     
+    //MARK: - CollectionView
     private func setupCollectionView() {
         addSubview(collectionView)
         collectionView.snp.makeConstraints { maker in

@@ -3,6 +3,7 @@ import UIKit
 
 public protocol CoachTrainsView: UIView {
     var items: [CoachTrainItem] { get set }
+    var contentSize: CGSize { get }
     var needShowTitleIfEmpty: Bool { get set }
 }
 

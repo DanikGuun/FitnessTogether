@@ -10,6 +10,13 @@ public protocol CoachViewControllerFactory {
 }
 
 public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
+    
+    let ftManager: FTManager
+    
+    public init(ftManager: FTManager) {
+        self.ftManager = ftManager
+    }
+    
     public func makeTabBarVC() -> UITabBarController {
         let tabBarController = UITabBarController()
         
@@ -27,7 +34,8 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
     }
     
     public func makeMainVC() -> UIViewController {
-        let vc = CoachMainViewController()
+        let model = BaseCoachMainModel(ftManager: ftManager)
+        let vc = CoachMainViewController(model: model)
         vc.tabBarItem = UITabBarItem(title: "Главная", image: UIImage(named: "house"), selectedImage: UIImage(named: "house.fill"))
         return vc
     }
