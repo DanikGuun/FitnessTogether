@@ -23,7 +23,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let f1 = BaseAuthViewControllerFactory(ftManager: ftManager)
         let c1 = BaseAuthCoordinator(factory: f1)
         
-        window?.rootViewController = c2.mainVC
+        let f3 = BaseClientViewControllerFactory(ftManager: ftManager)
+        let c3 = BaseClientCoordinator(factory: f3)
+        
+        window?.rootViewController = c3.mainVC
         window?.makeKeyAndVisible()
     }
 

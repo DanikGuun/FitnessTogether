@@ -1,12 +1,12 @@
  
 import UIKit
 
-public class CoachTrainsCollectionView: UIView, CoachTrainsView, UICollectionViewDelegate, UICollectionViewDataSource {
+public class MainWorkoutCollectionView: UIView, MainWorkoutView, UICollectionViewDelegate, UICollectionViewDataSource {
     public var items: [WorkoutItem] = [] { didSet { itemsHasUpdated() } }
     public var needShowTitleIfEmpty: Bool = true
     public var contentSize: CGSize { getContentSize() }
     
-    private var collectionView = UICollectionView(frame: .zero, collectionViewLayout: CoachTrainsCollectionView.makeLayout())
+    private var collectionView = UICollectionView(frame: .zero, collectionViewLayout: MainWorkoutCollectionView.makeLayout())
     private var noDataLabel = UILabel()
     
     //MARK: - Lifecycle
@@ -54,15 +54,16 @@ public class CoachTrainsCollectionView: UIView, CoachTrainsView, UICollectionVie
         return cell
     }
     
-    private func getCellConfiguration(for indexPath: IndexPath) -> CoachTrainsCellConfiguration {
+    private func getCellConfiguration(for indexPath: IndexPath) -> MainWorkoutCellConfiguration {
         let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "dd.MM.yyyy"
+        dateFormatter.locale = Locale.actual
+        dateFormatter.dateFormat = "cccc, HH:mm"
         
         let item = items[indexPath.item]
-        var conf = CoachTrainsCellConfiguration()
+        var conf = MainWorkoutCellConfiguration()
         conf.image = item.image
         conf.title = item.title
-        conf.subtitle = dateFormatter.string(from: item.date)
+        conf.subtitle = dateFormatter.string(from: item.date).capitalized(with: .actual)
         return conf
     }
     
@@ -97,7 +98,7 @@ public class CoachTrainsCollectionView: UIView, CoachTrainsView, UICollectionVie
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(60))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(65))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         
         let section = NSCollectionLayoutSection(group: group)

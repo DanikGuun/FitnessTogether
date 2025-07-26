@@ -18,7 +18,7 @@ public class OfflineManger: FTManager {
     }
     
     private func setupWorkoutsList() {
-        let refDate = Calendar.current.dateInterval(of: .weekOfYear, for: Date())!.start
+        let refDate = Date()
         var clients: [FTUser] = []
         for name in ["Антон", "Егор", "Пиздюк"] {
             let client = FTUser(firstName: name, role: .client, id: name)
@@ -36,7 +36,7 @@ public class OfflineManger: FTManager {
             
             //его тренировки
             for _ in 0...15 {
-                let date = Calendar.current.date(byAdding: .day, value: Int.random(in: 0..<7), to: refDate)
+                let date = refDate//Calendar.current.date(byAdding: .day, value: Int.random(in: 0..<7), to: refDate)
                 var workout = FTWorkout(id: UUID().uuidString, startDate: date)
                 let client = clients.randomElement()!
                 let part1 = FTWorkoutParticipant(workoutId: workout.id, userId: client.id, role: .client)

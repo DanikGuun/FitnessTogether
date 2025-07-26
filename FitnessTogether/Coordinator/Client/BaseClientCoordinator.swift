@@ -9,10 +9,10 @@ public final class BaseClientCoordinator: ClientCoordinator {
     
     private var navigationVC: UINavigationController
     private var tabBarVC: UITabBarController
-    private let factory: CoachViewControllerFactory
+    private let factory: ClientViewControllerFactory
     
     
-    init(factory: CoachViewControllerFactory) {
+    init(factory: ClientViewControllerFactory) {
         self.factory = factory
         self.tabBarVC = factory.makeTabBarVC()
         self.navigationVC = UINavigationController(rootViewController: tabBarVC)

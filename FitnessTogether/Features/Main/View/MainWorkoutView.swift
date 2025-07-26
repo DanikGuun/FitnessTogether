@@ -1,7 +1,7 @@
 
 import UIKit
 
-public protocol CoachTrainsView: UIView {
+public protocol MainWorkoutView: UIView {
     var items: [WorkoutItem] { get set }
     var contentSize: CGSize { get }
     var needShowTitleIfEmpty: Bool { get set }

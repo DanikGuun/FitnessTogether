@@ -1,11 +1,11 @@
 
 import UIKit
 
-public final class CoachMainViewController: FTViewController {
+public final class MainWorkoutsViewController: FTViewController {
     
     var model: MainModel!
     
-    private var trainsCollection: CoachTrainsView = CoachTrainsCollectionView()
+    private var trainsCollection: MainWorkoutView = MainWorkoutCollectionView()
     private var disclosureButton = UIButton(configuration: .plain())
     private var disclosureImageView: UIImageView = UIImageView()
     

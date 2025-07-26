@@ -1,7 +1,7 @@
 
 import UIKit
 
-public class CoachTrainsCollectionCellContentView: UIView, UIContentView {
+public class MainWorkoutCollectionCellContentView: UIView, UIContentView {
     public var configuration: any UIContentConfiguration { didSet { updateConfiguration() } }
     
     private let titleLabel = UILabel()
@@ -16,20 +16,20 @@ public class CoachTrainsCollectionCellContentView: UIView, UIContentView {
         self.configuration = configuration
     }
     public override init(frame: CGRect) {
-        configuration = CoachTrainsCellConfiguration()
+        configuration = MainWorkoutCellConfiguration()
         super.init(frame: frame)
         setupViews()
     }
     
     required init?(coder: NSCoder) {
-        configuration = CoachTrainsCellConfiguration()
+        configuration = MainWorkoutCellConfiguration()
         super.init(coder: coder)
     }
     
     private func setupViews() {
         setupImageView()
-        setupTitleLabel()
         setupSubtitleLabel()
+        setupTitleLabel()
         DispatchQueue.main.async { [weak self] in self?.backgroundColor = .clear }
     }
     
@@ -37,29 +37,33 @@ public class CoachTrainsCollectionCellContentView: UIView, UIContentView {
         addSubview(imageView)
         imageView.snp.makeConstraints { [weak self] maker in
             guard let self = self else { return }
-            maker.leading.top.bottom.equalToSuperview()
+            maker.leading.equalToSuperview()
+            maker.top.bottom.equalToSuperview().inset(4)
             maker.width.equalTo(imageView.snp.height)
         }
+        
     }
     
     private func setupTitleLabel() {
         addSubview(titleLabel)
         titleLabel.snp.makeConstraints { [weak self] maker in
             guard let self = self else { return }
-            maker.leading.equalTo(imageView.snp.trailing).offset(8)
-            maker.trailing.bottom.equalToSuperview().inset(13)
+            maker.leading.equalTo(imageView.snp.trailing).offset(20)
+            maker.trailing.equalTo(subtitleLabel.snp.leading).offset(8)
+            maker.top.bottom.equalToSuperview()
         }
+        titleLabel.snp.contentHuggingHorizontalPriority = 750
         titleLabel.font = DC.Font.cellTitle
     }
     
     private func setupSubtitleLabel() {
         addSubview(subtitleLabel)
-        subtitleLabel.snp.makeConstraints { [weak self] maker in
-            guard let self = self else { return }
-            maker.leading.equalTo(titleLabel.snp.leading)
-            maker.trailing.top.equalToSuperview().inset(13)
+        subtitleLabel.snp.makeConstraints { maker in
+            maker.top.bottom.equalToSuperview()
+            maker.trailing.equalToSuperview().inset(35).priority(1000)
         }
-        subtitleLabel.font = DC.Font.cellSubtitle
+        subtitleLabel.snp.contentHuggingHorizontalPriority = 1000
+        subtitleLabel.font = DC.Font.cellTitle
         subtitleLabel.textColor = .secondaryLabel
     }
     
@@ -70,28 +74,31 @@ public class CoachTrainsCollectionCellContentView: UIView, UIContentView {
         subtitleLabel.text = conf.subtitle
     }
     
-    private func getConfiguration() -> CoachTrainsCellConfiguration {
-        if let conf = configuration as? CoachTrainsCellConfiguration {
+    private func getConfiguration() -> MainWorkoutCellConfiguration {
+        if let conf = configuration as? MainWorkoutCellConfiguration {
             return conf
         }
-        return CoachTrainsCellConfiguration()
+        return MainWorkoutCellConfiguration()
     }
     
     public override func draw(_ rect: CGRect) {
         super.draw(rect)
-        let inset: CGFloat = 1
         
+        let inset: CGFloat = 3
         let lineFrame = CGRect(
-            x: bounds.height/2,
-            y: lineWidth*2 + inset,
-            width: bounds.width - bounds.height/2 - lineWidth,
+            x: bounds.minX + inset,
+            y: bounds.minY + lineWidth*2 + inset,
+            width: bounds.width - lineWidth*4 - inset*2,
             height: bounds.height - lineWidth*4 - inset*2
         )
+        
+        let halfH = lineFrame.height/2
         let cornerRadius: CGFloat = 15
+        
         let path = UIBezierPath()
         UIColor.ftOrange.setStroke()
         
-        let start = CGPoint(x: lineFrame.minX, y: lineFrame.minY)
+        let start = CGPoint(x: lineFrame.minX + halfH, y: lineFrame.minY)
         path.move(to: start)
         
         let rightTopBefore = CGPoint(x: lineFrame.maxX - cornerRadius, y: lineFrame.minY)
@@ -108,8 +115,12 @@ public class CoachTrainsCollectionCellContentView: UIView, UIContentView {
         let rightBottomControl = CGPoint(x: lineFrame.maxX, y: lineFrame.maxY)
         path.addQuadCurve(to: rightBottomAfter, controlPoint: rightBottomControl)
         
-        let end = CGPoint(x: lineFrame.minX, y: lineFrame.maxY)
+        let end = CGPoint(x: lineFrame.minX + halfH, y: lineFrame.maxY)
         path.addLine(to: end)
+        
+        
+        let leftMiddlePoint = CGPoint(x: lineFrame.minX + halfH, y: lineFrame.midY)
+        path.addArc(withCenter: leftMiddlePoint, radius: halfH, startAngle: .pi/2, endAngle: .pi*3/2, clockwise: true)
         
         path.lineWidth = lineWidth
         path.stroke()

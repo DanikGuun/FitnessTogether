@@ -12,7 +12,7 @@ public final class ClientMainModel: BaseMainModel {
         let items: [WorkoutItem] = workouts.compactMap { workout in
             
             let image = UIImage(systemName: "person.crop.circle")
-            let title = workout.title
+            let title = workout.title.isEmpty ? "Названия нет" : workout.title
             let date = workout.startDate ?? Date()
             let item = WorkoutItem(image: image, name: title, date: date)
             return item
