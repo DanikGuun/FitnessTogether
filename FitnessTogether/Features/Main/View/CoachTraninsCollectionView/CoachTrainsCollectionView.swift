@@ -2,7 +2,7 @@
 import UIKit
 
 public class CoachTrainsCollectionView: UIView, CoachTrainsView, UICollectionViewDelegate, UICollectionViewDataSource {
-    public var items: [CoachTrainItem] = [] { didSet { itemsHasUpdated() } }
+    public var items: [WorkoutItem] = [] { didSet { itemsHasUpdated() } }
     public var needShowTitleIfEmpty: Bool = true
     public var contentSize: CGSize { getContentSize() }
     

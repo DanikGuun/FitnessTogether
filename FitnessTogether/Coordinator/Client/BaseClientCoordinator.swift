@@ -1,9 +1,8 @@
-
 import UIKit
 
-public final class BaseCoachCoordinator: CoachCoordinator {
+public final class BaseClientCoordinator: ClientCoordinator {
     
-    public var delegate: (any CoachCoordinatorDelegate)?
+    public var delegate: (any ClientCoordinatorDelegate)?
     public var currentVC: (UIViewController)? { mainVC.currentViewController }
     public var mainVC: UIViewController { navigationVC }
     public var needAnimate: Bool = true

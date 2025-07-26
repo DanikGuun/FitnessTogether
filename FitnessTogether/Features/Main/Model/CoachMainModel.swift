@@ -6,18 +6,18 @@ import UIKit
 public final class CoachMainModel: BaseMainModel {
 
     
-    public override func workoutsToItems(_ workouts: [FTWorkout], completion: @escaping ([CoachTrainItem]) -> Void) {
+    public override func workoutsToItems(_ workouts: [FTWorkout], completion: @escaping ([WorkoutItem]) -> Void) {
         
         ftManager.user.getClients(completion: { result in
             switch result {
                 
             case .success(let clients):
-                let items: [CoachTrainItem] = workouts.compactMap { [weak self] workout in
+                let items: [WorkoutItem] = workouts.compactMap { [weak self] workout in
                     guard let self else { return nil }
                     let image = UIImage(systemName: "person.crop.circle")
                     let name = getClientName(workout: workout, clients: clients)
                     let date = workout.startDate ?? Date()
-                    let item = CoachTrainItem(image: image, name: name, date: date)
+                    let item = WorkoutItem(image: image, name: name, date: date)
                     return item
                 }
                 completion(items)

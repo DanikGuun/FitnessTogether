@@ -3,7 +3,7 @@ import UIKit
 import FTDomainData
 
 public protocol MainModel {
-    func getItems(completion: @escaping ([CoachTrainItem]) -> Void)
+    func getItems(completion: @escaping ([WorkoutItem]) -> Void)
 }
 
 public class BaseMainModel: MainModel {
@@ -14,7 +14,7 @@ public class BaseMainModel: MainModel {
         self.ftManager = ftManager
     }
     
-    public func getItems(completion: @escaping ([CoachTrainItem]) -> Void) {
+    public func getItems(completion: @escaping ([WorkoutItem]) -> Void) {
         getNearestWorkouts(completion: { [weak self] workouts in
             guard let self else { return }
             
@@ -24,7 +24,7 @@ public class BaseMainModel: MainModel {
     }
     
     //To override
-    public func workoutsToItems(_ workouts: [FTWorkout], completion: @escaping ([CoachTrainItem]) -> Void) {
+    public func workoutsToItems(_ workouts: [FTWorkout], completion: @escaping ([WorkoutItem]) -> Void) {
         completion([])
     }
     

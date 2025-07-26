@@ -39,7 +39,7 @@ final class CoachMainModelTests: XCTestCase {
         ftManager._user.user = coach
         ftManager._workout.workouts = [workout]
         
-        var item: CoachTrainItem?
+        var item: WorkoutItem?
         model.getItems(completion: { items in
             item = items.first
         })

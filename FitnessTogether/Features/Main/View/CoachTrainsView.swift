@@ -2,12 +2,12 @@
 import UIKit
 
 public protocol CoachTrainsView: UIView {
-    var items: [CoachTrainItem] { get set }
+    var items: [WorkoutItem] { get set }
     var contentSize: CGSize { get }
     var needShowTitleIfEmpty: Bool { get set }
 }
 
-public struct CoachTrainItem {
+public struct WorkoutItem {
     var image: UIImage?
     var title: String
     var date: Date
