@@ -3,7 +3,7 @@ import UIKit
 
 public final class CoachMainViewController: FTViewController {
     
-    var model: CoachMainModel!
+    var model: MainModel!
     
     private var trainsCollection: CoachTrainsView = CoachTrainsCollectionView()
     private var disclosureButton = UIButton(configuration: .plain())
@@ -12,7 +12,7 @@ public final class CoachMainViewController: FTViewController {
     private let trainCollectionMaxHeight: CGFloat = 270
     
     //MARK: - Lifecycle
-    public convenience init(model: CoachMainModel) {
+    public convenience init(model: MainModel) {
         self.init(nibName: nil, bundle: nil)
         self.model = model
     }

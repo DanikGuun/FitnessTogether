@@ -61,7 +61,7 @@ public class CoachTrainsCollectionView: UIView, CoachTrainsView, UICollectionVie
         let item = items[indexPath.item]
         var conf = CoachTrainsCellConfiguration()
         conf.image = item.image
-        conf.title = item.name
+        conf.title = item.title
         conf.subtitle = dateFormatter.string(from: item.date)
         return conf
     }

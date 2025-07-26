@@ -9,12 +9,12 @@ public protocol CoachTrainsView: UIView {
 
 public struct CoachTrainItem {
     var image: UIImage?
-    var name: String
+    var title: String
     var date: Date
  
     init(image: UIImage? = nil, name: String = "", date: Date = Date()) {
         self.image = image
-        self.name = name
+        self.title = name
         self.date = date
     }
     

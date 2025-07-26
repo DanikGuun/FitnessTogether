@@ -4,14 +4,14 @@ import XCTest
 import FTDomainData
 @testable import FitnessTogether
 
-final class BaseCoachMainModelTests: XCTestCase {
+final class BaseMainModelTests: XCTestCase {
     
     var ftManager: MockFTManager!
-    var model: BaseCoachMainModel!
+    var model: BaseMainModel!
     
     override func setUp() {
         ftManager = MockFTManager()
-        model = BaseCoachMainModel(ftManager: ftManager)
+        model = BaseMainModel(ftManager: ftManager)
         super.setUp()
     }
     
@@ -23,34 +23,7 @@ final class BaseCoachMainModelTests: XCTestCase {
     
     let refDate = Date()
     
-    func test_DataToItem() {
-        let client = FTUser(firstName: "Client", role: .client, id: "ClientId")
-        var coach = FTUser(firstName: "Coach", role: .coach, id: "CoachId")
-        
-        let pair = FTClientCoachPair(clientId: client.id, client: client, coachId: coach.id, coach: coach)
-        coach.clients = [pair]
-        
-        var workout = FTWorkout(id: "workoutId", startDate: refDate)
-        
-        let workoutPaticipant1 = FTWorkoutParticipant(workoutId: workout.id, userId: client.id, role: .client)
-        let workoutPaticipant2 = FTWorkoutParticipant(workoutId: workout.id, userId: coach.id, role: .coach)
-        
-        workout.participants = [workoutPaticipant1, workoutPaticipant2]
-        
-        ftManager._user.user = coach
-        ftManager._workout.workouts = [workout]
-        
-        var item: CoachTrainItem?
-        model.getItems(completion: { items in
-            item = items.first
-        })
-        
-        XCTAssertEqual(item?.name, client.firstName)
-        XCTAssertEqual(item?.date, workout.startDate)
-        
-    }
-    
-    func test_GetItems_WorkoutOutOfDate_NextWeek() {
+    func test_GetWorkouts_WorkoutOutOfDate_NextWeek() {
         let client = FTUser(firstName: "Client", role: .client, id: "ClientId")
         var coach = FTUser(firstName: "Coach", role: .coach, id: "CoachId")
         
@@ -67,11 +40,10 @@ final class BaseCoachMainModelTests: XCTestCase {
         ftManager._user.user = coach
         ftManager._workout.workouts = [workout]
         
-        var item: CoachTrainItem?
-        model.getItems(completion: { items in
-            item = items.first
+        var item: FTWorkout?
+        model.getNearestWorkouts(completion: { workouts in
+            item = workouts.first
         })
-        
         XCTAssertNil(item)
     }
     
@@ -92,11 +64,10 @@ final class BaseCoachMainModelTests: XCTestCase {
         ftManager._user.user = coach
         ftManager._workout.workouts = [workout]
         
-        var item: CoachTrainItem?
-        model.getItems(completion: { items in
-            item = items.first
+        var item: FTWorkout?
+        model.getNearestWorkouts(completion: { workouts in
+            item = workouts.first
         })
-        
         XCTAssertNil(item)
     }
     
@@ -117,9 +88,9 @@ final class BaseCoachMainModelTests: XCTestCase {
         ftManager._user.user = coach
         ftManager._workout.workouts = [workout]
         
-        var item: CoachTrainItem?
-        model.getItems(completion: { items in
-            item = items.first
+        var item: FTWorkout?
+        model.getNearestWorkouts(completion: { workouts in
+            item = workouts.first
         })
         
         XCTAssertNil(item)
@@ -145,13 +116,13 @@ final class BaseCoachMainModelTests: XCTestCase {
         ftManager._user.user = coach
         ftManager._workout.workouts = [workout1, workout2]
         
-        var items: [CoachTrainItem] = []
-        model.getItems(completion: { _items in
-            items = _items
+        var items: [FTWorkout] = []
+        model.getNearestWorkouts(completion: { workouts in
+            items = workouts
         })
         
-        XCTAssertEqual(items[0].date, workout2.startDate)
-        XCTAssertEqual(items[1].date, workout1.startDate)
+        XCTAssertEqual(items[0].startDate, workout2.startDate)
+        XCTAssertEqual(items[1].startDate, workout1.startDate)
     }
     
     
