@@ -2,9 +2,9 @@
 import UIKit
 import FTDomainData
 
-public final class RegistrationViewController: FTStateViewController{
+public final class RegistrationViewController: FTStateViewController {
     
-    var delegate: RegistrationViewControllerDelegate?
+    var delegate: (any RegistrationViewControllerDelegate)?
     var model: RegistrationModel!
     
     private var stepLabel = UILabel()

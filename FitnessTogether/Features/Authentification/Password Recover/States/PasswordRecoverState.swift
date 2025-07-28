@@ -2,7 +2,12 @@
 import UIKit
 import FTDomainData
 
-open class BaseRegistrationState: NSObject, RegistrationState {
+public protocol PasswordRecoverState: ScreenState {
+    func apply()
+    func setNextButtonBusy(_ available: Bool)
+}
+
+open class BasePasswordRecoverState: NSObject, PasswordRecoverState {
     
     public var delegate: (any ScreenStateDelegate)?
     public var validator: (any Validator)!
@@ -12,18 +17,18 @@ open class BaseRegistrationState: NSObject, RegistrationState {
     
     var titleLabel = UILabel()
     var nextButton = UIButton.ftFilled(title: "Далее")
-    var infoLabel = UILabel()
     
     public override init() {
         super.init()
         setupViews()
     }
     
-    public func viewsToPresent() -> [UIView] {
-        return []
+    public func apply() {
+        
     }
     
-    public func apply(userRegister: inout FTUserRegister) {
+    public func viewsToPresent() -> [UIView] {
+        return [titleLabel, nextButton]
     }
     
     //MARK: - UI
@@ -31,7 +36,6 @@ open class BaseRegistrationState: NSObject, RegistrationState {
     internal func setupViews() {
         setupTitleLabel()
         setupNextButton()
-        setupInfoLabel()
     }
     
     //Override для надписи
@@ -53,15 +57,6 @@ open class BaseRegistrationState: NSObject, RegistrationState {
     internal func isAllFieldsFilled() -> Bool {
         return true
     }
-    
-    internal func setupInfoLabel() {
-        infoLabel.text = "Регистрируясь, вы соглашаетесь с условиями\nиспользования приложения и политикой конфиденциальности"
-        infoLabel.textColor = .systemGray4
-        infoLabel.textAlignment = .center
-        infoLabel.numberOfLines = 0
-        infoLabel.font = DC.Font.additionalInfo
-    }
-    
     
     //MARK: - Actions
     internal func nextButtonPressed(_ action: UIAction?) {
@@ -111,3 +106,4 @@ open class BaseRegistrationState: NSObject, RegistrationState {
     
 
 }
+

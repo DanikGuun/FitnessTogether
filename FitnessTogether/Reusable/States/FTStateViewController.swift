@@ -25,16 +25,16 @@ public class FTStateViewController: FTViewController, ScreenStateDelegate {
     public func viewStatesDidEnd() {}
     //
     
-    public func screenStateGoNext(_ state: any RegistrationState) {
+    public func screenStateGoNext(_ state: any ScreenState) {
         goToNextState()
     }
     
-    public func screenState(_ state: any RegistrationState, needInertView view: UIView, after afterView: UIView) {
+    public func screenState(_ state: any ScreenState, needInertView view: UIView, after afterView: UIView) {
         guard let index = stackView.arrangedSubviews.firstIndex(of: afterView) else { return }
         stackView.insertArrangedSubview(view, at: index + 1)
     }
 
-    public func screenState(_ state: any RegistrationState, needRemoveView view: UIView) {
+    public func screenState(_ state: any ScreenState, needRemoveView view: UIView) {
         stackView.removeArrangedSubview(view)
         view.removeFromSuperview()
     }
