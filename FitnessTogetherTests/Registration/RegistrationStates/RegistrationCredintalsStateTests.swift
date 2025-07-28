@@ -5,13 +5,13 @@ import FTDomainData
 
 final class RegistrationCredintalsStateTests: XCTestCase {
     
-    var delegate: MockRegistrationDelegate!
+    var delegate: MockScreenStateDelegate!
     var validator: MockValidator!
     fileprivate var emailConfirmer: MockEmailConfirmer!
     var state: RegistrationCredintalsState!
     
     override func setUp() {
-        delegate = MockRegistrationDelegate()
+        delegate = MockScreenStateDelegate()
         validator = MockValidator()
         emailConfirmer = MockEmailConfirmer()
         state = RegistrationCredintalsState(validator: validator, emailConfirmer: emailConfirmer)
@@ -256,6 +256,8 @@ final class RegistrationCredintalsStateTests: XCTestCase {
 
 fileprivate class MockEmailConfirmer: EmailConfirmer {
     var isCorrect = true
+    
+    func isEmailConsist(_ email: String, completion: ((ValidatorResult) -> ())?) {}
     
     func confirmEmail(_ email: String, completion: ((ValidatorResult) -> ())?) {
         isCorrect ? completion?(.valid) : completion?(.invalid(message: ""))

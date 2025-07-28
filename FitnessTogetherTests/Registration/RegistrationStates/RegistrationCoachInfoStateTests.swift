@@ -4,13 +4,13 @@ import FTDomainData
 
 final class RegistrationCoachInfoStateTests: XCTestCase {
     
-    private var delegate: MockRegistrationDelegate!
+    private var delegate: MockScreenStateDelegate!
     private var validator: MockValidator!
     private var state: RegistrationCoachInfoState!
     
     override func setUp() {
         super.setUp()
-        delegate = MockRegistrationDelegate()
+        delegate = MockScreenStateDelegate()
         validator = MockValidator()
         state = RegistrationCoachInfoState(validator: validator)
         state.delegate = delegate
@@ -200,6 +200,7 @@ final class RegistrationCoachInfoStateTests: XCTestCase {
         
         state.nextButtonPressed(nil)
         let firstError = delegate.lastViewInserted
+        XCTAssertNotNil(firstError)
         
         delegate.lastViewInserted = nil
         state.nextButtonPressed(nil)

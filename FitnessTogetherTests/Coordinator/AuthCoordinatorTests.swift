@@ -45,6 +45,13 @@ final class AuthCoordinatorTests: XCTestCase {
         XCTAssertEqual(title, "Registration")
     }
     
+    func test_GoTo_PasswordRecover() {
+        factory.authDelegate?.authViewControllerGoToRecoverPassword(authViewController: UIViewController())
+        XCTAssertEqual(factory.lastVCMaked, .passwordRecover)
+        let title = coordinator.currentVC?.title
+        XCTAssertEqual(title, "Password recover")
+    }
+    
     func test_show() {
         let vc = UIViewController()
         vc.title = "controller"
@@ -69,7 +76,8 @@ fileprivate class MockAuthVCFactory: AuthViewControllerFactory {
     var authDelegate: AuthViewControllerDelegate?
     var registrationDelegate: RegistrationViewControllerDelegate?
     var loginDelegate: LoginViewControllerDelegate?
-    
+    var passwordRecoverDelegate: PasswordRecoverControllerDelegate?
+
     var lastVCMaked: VCMaked?
         
     func makeAuthVC(delegate: (any AuthViewControllerDelegate)?) -> UIViewController {
@@ -95,11 +103,20 @@ fileprivate class MockAuthVCFactory: AuthViewControllerFactory {
         vc.title = "Login"
         return vc
     }
+    
+    func makePasswordRecoveryVC(delegate: (any PasswordRecoverControllerDelegate)?) -> UIViewController {
+        passwordRecoverDelegate = delegate
+        lastVCMaked = .passwordRecover
+        let vc = UIViewController()
+        vc.title = "Password recover"
+        return vc
+    }
 
     fileprivate enum VCMaked {
         case auth
         case registration
         case login
+        case passwordRecover
     }
     
 }

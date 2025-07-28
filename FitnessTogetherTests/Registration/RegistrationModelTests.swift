@@ -23,8 +23,11 @@ final class RegistrationModelTests: XCTestCase {
     
     func test_RegisterLoginCall_AfterStates() {
         let register = FTUserRegister(email: "emzil", password: "pasword")
-        model.userRegister = register
-        for _ in 0...model.stepCount { let _ = model.goNext() }
+        for _ in 0...model.stepCount {
+            model.userRegister = register
+            let _ = model.goNext()
+        }
+        
         
         XCTAssertEqual(userInterface.lastRegisterData, register)
         XCTAssertEqual(userInterface.lastLoginData?.email, register.email)
@@ -35,5 +38,6 @@ final class RegistrationModelTests: XCTestCase {
 
 
 fileprivate class EmptyEmailConfirmer: EmailConfirmer {
+    func isEmailConsist(_ email: String, completion: ((ValidatorResult) -> ())?) {}
     func confirmEmail(_ email: String, completion: ((ValidatorResult) -> ())?) {}
 }

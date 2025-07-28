@@ -30,6 +30,7 @@ open class BaseFieldsScreenState: NSObject, ScreenState {
     //Override для надписи
     internal func setupTitleLabel() {
         titleLabel.font = DC.Font.headline
+        titleLabel.numberOfLines = 0
     }
     
     internal func setupNextButton() {
@@ -55,8 +56,8 @@ open class BaseFieldsScreenState: NSObject, ScreenState {
     }
 
     public func setNextButtonBusy(_ busy: Bool) {
-        nextButton.configuration?.showsActivityIndicator = !busy
-        nextButton.isEnabled = busy
+        nextButton.configuration?.showsActivityIndicator = busy
+        nextButton.isEnabled = !busy
     }
     
     //MARK: - Validation

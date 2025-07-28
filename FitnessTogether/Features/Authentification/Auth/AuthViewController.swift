@@ -14,9 +14,10 @@ public final class AuthViewController: FTViewController {
     
     private func setupUI() {
         setupLabel()
-        addSpacing(.fractional(0.67))
+        addSpacing(.fractional(0.66))
         setupRegistrationButton()
         setupLoginButton()
+        setupRecoverPasswordButton()
     }
     
     private func setupLabel() {
@@ -53,14 +54,35 @@ public final class AuthViewController: FTViewController {
         addStackSubview(button, height: DC.Size.buttonHeight)
     }
     
+    private func setupRecoverPasswordButton() {
+        
+        let attrs = AttributeContainer([
+            .font : DC.Font.additionalInfo,
+            .underlineStyle: NSUnderlineStyle.single.rawValue,
+            .foregroundColor: UIColor.systemGray
+        ])
+        let title = AttributedString("Забыли пароль?", attributes: attrs)
+        
+        let button = UIButton(configuration: .plain())
+        button.configuration?.attributedTitle = title
+        
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.delegate?.authViewControllerGoToRecoverPassword(authViewController: self)
+        }), for: .touchUpInside)
+        addStackSubview(button, height: 20)
+    }
+    
 }
 
 public protocol AuthViewControllerDelegate {
     func authViewControllerGoToRegister(authViewController: UIViewController)
     func authViewControllerGoToLogin(authViewController: UIViewController)
+    func authViewControllerGoToRecoverPassword(authViewController: UIViewController)
 }
 
 extension AuthViewControllerDelegate {
     public func authViewControllerGoToRegister(authViewController: UIViewController) {}
     public func authViewControllerGoToLogin(authViewController: UIViewController) {}
+    public func authViewControllerGoToRecoverPassword(authViewController: UIViewController) {}
 }

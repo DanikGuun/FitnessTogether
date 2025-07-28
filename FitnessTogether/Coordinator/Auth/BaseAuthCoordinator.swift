@@ -51,6 +51,11 @@ extension BaseAuthCoordinator: AuthViewControllerDelegate {
         show(vc)
     }
     
+    public func authViewControllerGoToRecoverPassword(authViewController: UIViewController) {
+        let vc = factory.makePasswordRecoveryVC(delegate: self)
+        show(vc)
+    }
+    
 }
 
 extension BaseAuthCoordinator: RegistrationViewControllerDelegate {
@@ -65,6 +70,14 @@ extension BaseAuthCoordinator: LoginViewControllerDelegate {
     
     public func loginViewControllerDidLogin(_ loginViewController: UIViewController) {
         delegate?.authCoordinatorDidFinishAuth(self)
+    }
+    
+}
+
+extension BaseAuthCoordinator: PasswordRecoverControllerDelegate {
+    
+    public func passwordRecoverDidFinish(_ controller: UIViewController) {
+        print("recover done")
     }
     
 }

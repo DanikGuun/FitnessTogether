@@ -6,12 +6,12 @@ import FTDomainData
 
 final class RegistrationRoleStateTests: XCTestCase {
     
-    var delegate: MockRegistrationDelegate!
+    var delegate: MockScreenStateDelegate!
     var state: RegistrationRoleState!
     
     override func setUp() {
         super.setUp()
-        delegate = MockRegistrationDelegate()
+        delegate = MockScreenStateDelegate()
         state = RegistrationRoleState()
         state.delegate = delegate
     }

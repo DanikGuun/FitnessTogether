@@ -5,12 +5,12 @@ import FTDomainData
 
 final class RegistrationPersonalDataStateTests: XCTestCase {
     
-    var delegate: MockRegistrationDelegate!
+    var delegate: MockScreenStateDelegate!
     var validator: MockValidator!
     var state: RegistrationPersonalDataState!
     
     override func setUp() {
-        delegate = MockRegistrationDelegate()
+        delegate = MockScreenStateDelegate()
         validator = MockValidator()
         state = RegistrationPersonalDataState(validator: validator)
         state.delegate = delegate
