@@ -9,6 +9,7 @@ public final class RegistrationViewController: FTStateViewController {
     
     private var stepLabel = UILabel()
     private var currentStep = 0
+    private var isRegistrationCompleted = false
     
     //MARK: - Lifecycle
     public convenience init(model: RegistrationModel) {
@@ -29,21 +30,6 @@ public final class RegistrationViewController: FTStateViewController {
         setupStepLabel()
     }
     
-    public override func viewStatesDidEnd() {
-        delegate?.registrationViewControllerDidFinish(self)
-    }
-    
-    public override func getNextState() -> (any ScreenState)? {
-        return model.goNext()
-    }
-    
-    public override func goToNextState() {
-        super.goToNextState()
-        
-        currentStep += 1
-        updateStepLabel()
-    }
-    
     private func setupStepLabel() {
         view.addSubview(stepLabel)
         stepLabel.snp.makeConstraints { maker in
@@ -56,7 +42,33 @@ public final class RegistrationViewController: FTStateViewController {
     }
     
     private func updateStepLabel() {
+        guard isRegistrationCompleted == false else { return }
         stepLabel.text = "\(currentStep) из \(max(currentStep, model.stepCount)) шагов"
+    }
+    
+    public override func viewStatesDidEnd() {
+        model.register(user: model.userRegister, completion: { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(_):
+                delegate?.registrationViewControllerDidFinish(self)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        })
+    }
+    
+    public override func getNextState() -> (any ScreenState)? {
+        let state = model.goNext()
+        isRegistrationCompleted = state == nil
+        return state
+    }
+    
+    public override func goToNextState() {
+        super.goToNextState()
+        
+        currentStep += 1
+        updateStepLabel()
     }
     
 }

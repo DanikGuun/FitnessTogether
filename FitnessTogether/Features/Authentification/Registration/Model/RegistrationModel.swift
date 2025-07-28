@@ -5,7 +5,7 @@ public protocol RegistrationModel {
     var userRegister: FTUserRegister { get set }
     var stepCount: Int { get }
     func goNext() -> (any RegistrationState)?
-    func register(user: FTUserRegister)
+    func register(user: FTUserRegister, completion: @escaping (Result<Void, Error>) -> ())
 }
 
 public final class BaseRegistrationModel: RegistrationModel {
@@ -29,9 +29,7 @@ public final class BaseRegistrationModel: RegistrationModel {
     
     public func goNext() -> (any RegistrationState)? {
         applyStateData()
-        currentState += 1
         let state = getCorrectNextState()
-        if state == nil { register(user: userRegister) }
         return state
     }
     
@@ -43,27 +41,38 @@ public final class BaseRegistrationModel: RegistrationModel {
     
     private func getCorrectNextState() -> (any RegistrationState)? {
         guard currentState < states.count else { return nil }
-        if currentState == 3 { //после регистрации переходить к доп инфе коуча или нет
+        if currentState == 2 { //после регистрации переходить к доп инфе коуча или нет
             switch userRegister.role {
             case .client, .admin: return nil
             case .coach: break
             }
         }
+        currentState += 1
         return states[currentState]
     }
     
-    public func register(user: FTUserRegister) {
+    public func register(user: FTUserRegister, completion: @escaping (Result<Void, Error>) -> Void) {
         let state = states[currentState]
         state.setNextButtonBusy(true)
         userInterface.register(data: user, completion: { [weak self] result in
             switch result {
             case .success(_):
+                
                 let loginData = FTUserLogin(email: user.email, password: user.password)
                 self?.userInterface.login(data: loginData, completion: { _ in
                     state.setNextButtonBusy(false)
+                    
+                    switch result {
+                    case .success(_):
+                        completion(.success(Void()))
+                    case .failure(let error):
+                        completion(.failure(error))
+                    }
                 })
+                
             case .failure(let error):
                 print(error.description)
+                completion(.failure(error))
             }
         })
     }

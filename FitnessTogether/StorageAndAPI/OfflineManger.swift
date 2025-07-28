@@ -63,9 +63,13 @@ public class OfflineUserInterface: FTUserInterface {
         
     }
     
-    public func register(data: FTUserRegister, completion: FTCompletion<Data>) { }
+    public func register(data: FTUserRegister, completion: FTCompletion<Data>) {
+        completion?(.success(Data()))
+    }
     
-    public func login(data: FTUserLogin, completion: FTCompletion<Data>) { }
+    public func login(data: FTUserLogin, completion: FTCompletion<Data>) {
+        completion?(.success(Data()))
+    }
     
     public func loginWithPreviousCredentials(completion: FTCompletion<Data>) { }
     

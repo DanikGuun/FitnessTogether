@@ -10,6 +10,7 @@ open class BaseFieldsScreenState: NSObject, ScreenState {
     
     var titleLabel = UILabel()
     var nextButton = UIButton.ftFilled(title: "Далее")
+    var isNextButtonBusy = false
     
     public override init() {
         super.init()
@@ -50,12 +51,13 @@ open class BaseFieldsScreenState: NSObject, ScreenState {
     
     //MARK: - Actions
     internal func nextButtonPressed(_ action: UIAction?) {
-        if validateValues() {
+        if validateValues() && !isNextButtonBusy {
             delegate?.screenStateGoNext(self)
         }
     }
 
     public func setNextButtonBusy(_ busy: Bool) {
+        self.isNextButtonBusy = busy
         nextButton.configuration?.showsActivityIndicator = busy
         nextButton.isEnabled = !busy
     }

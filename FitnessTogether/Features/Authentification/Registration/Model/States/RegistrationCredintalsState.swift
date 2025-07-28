@@ -13,7 +13,6 @@ public final class RegistrationCredintalsState: BaseRegistrationState, UITextFie
     var passwordVisibleButton = UIButton(configuration: .plain())
     var confirmPasswordVisibleButton = UIButton(configuration: .plain())
     
-    private var isBusy = false
     
     init(validator: any Validator, emailConfirmer: any EmailConfirmer) {
         super.init()
@@ -149,7 +148,7 @@ public final class RegistrationCredintalsState: BaseRegistrationState, UITextFie
     
     //MARK: - Custom NextButton для проверки почты
     override func nextButtonPressed(_ action: UIAction?) {
-        if validateValues() && !isBusy {
+        if validateValues() && !isNextButtonBusy {
             setNextButtonBusy(true)
             emailConfirmer.confirmEmail(emailTextField.text ?? "", completion: { [weak self] result in
                 guard let self else { return }
