@@ -28,10 +28,17 @@ public final class BaseRegistrationModel: RegistrationModel {
     }
     
     public func goNext() -> (any RegistrationState)? {
+        applyStateData()
         currentState += 1
         let state = getCorrectNextState()
         if state == nil { register(user: userRegister) }
         return state
+    }
+    
+    private func applyStateData() {
+        guard currentState >= 0, currentState <= states.count else { return }
+        let state = states[currentState]
+        state.apply(userRegister: &userRegister)
     }
     
     private func getCorrectNextState() -> (any RegistrationState)? {

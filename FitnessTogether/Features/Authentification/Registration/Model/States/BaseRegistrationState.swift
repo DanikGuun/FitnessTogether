@@ -4,7 +4,7 @@ import FTDomainData
 
 open class BaseRegistrationState: NSObject, RegistrationState {
     
-    public var delegate: (any RegistrationStateDelegate)?
+    public var delegate: (any ScreenStateDelegate)?
     public var validator: (any Validator)!
     
     //некорректные вьюшки и подписи для них
@@ -66,7 +66,7 @@ open class BaseRegistrationState: NSObject, RegistrationState {
     //MARK: - Actions
     internal func nextButtonPressed(_ action: UIAction?) {
         if validateValues() {
-            delegate?.registrationStateGoNext(self)
+            delegate?.screenStateGoNext(self)
         }
     }
 
@@ -96,13 +96,13 @@ open class BaseRegistrationState: NSObject, RegistrationState {
         //если валидное, удаляем лейбл если есть
         if isValid {
             if let label = incorrectDataLabels[field] {
-                delegate?.registrationState(self, needRemoveView: label)
+                delegate?.screenState(self, needRemoveView: label)
             }
         }
         //чтобы не добавлять второй раз и при пустом
         else if incorrectDataLabels[field] == nil, let incorrectMessage {
             let label = UILabel.incorrectData(incorrectMessage)
-            delegate?.registrationState(self, needInertView: label, after: field)
+            delegate?.screenState(self, needInertView: label, after: field)
             incorrectDataLabels[field] = label
         }
         

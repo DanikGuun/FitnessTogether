@@ -26,7 +26,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let f3 = BaseClientViewControllerFactory(ftManager: ftManager)
         let c3 = BaseClientCoordinator(factory: f3)
         
-        window?.rootViewController = c3.mainVC
+        window?.rootViewController = c1.mainVC
         window?.makeKeyAndVisible()
     }
 

@@ -2,7 +2,7 @@
 import UIKit
 import FTDomainData
 
-public final class RegistrationViewController: FTViewController, RegistrationStateDelegate {
+public final class RegistrationViewController: FTStateViewController{
     
     var delegate: RegistrationViewControllerDelegate?
     var model: RegistrationModel!
@@ -29,17 +29,16 @@ public final class RegistrationViewController: FTViewController, RegistrationSta
         setupStepLabel()
     }
     
-    private func goToNextState() {
-        guard let state = model.goNext() else {
-            delegate?.registrationViewControllerDidFinish(self)
-            return
-        }
-        state.delegate = self
-        
-        removeAllStackSubviews(direction: .right, completion: { [weak self] in
-            self?.addSpacing(.fractional(0.1))
-            self?.addStackSubviews(state.viewsToPresent(), direction: .left)
-        })
+    public override func viewStatesDidEnd() {
+        delegate?.registrationViewControllerDidFinish(self)
+    }
+    
+    public override func getNextState() -> (any ScreenState)? {
+        return model.goNext()
+    }
+    
+    public override func goToNextState() {
+        super.goToNextState()
         
         currentStep += 1
         updateStepLabel()
@@ -58,21 +57,6 @@ public final class RegistrationViewController: FTViewController, RegistrationSta
     
     private func updateStepLabel() {
         stepLabel.text = "\(currentStep) из \(max(currentStep, model.stepCount)) шагов"
-    }
-    
-    public func registrationStateGoNext(_ state: any RegistrationState) {
-        state.apply(userRegister: &model.userRegister)
-        goToNextState()
-    }
-    
-    public func registrationState(_ state: any RegistrationState, needInertView view: UIView, after afterView: UIView) {
-        guard let index = stackView.arrangedSubviews.firstIndex(of: afterView) else { return }
-        stackView.insertArrangedSubview(view, at: index + 1)
-    }
-
-    public func registrationState(_ state: any RegistrationState, needRemoveView view: UIView) {
-        stackView.removeArrangedSubview(view)
-        view.removeFromSuperview()
     }
     
 }

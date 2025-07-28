@@ -157,7 +157,7 @@ public final class RegistrationCredintalsState: BaseRegistrationState, UITextFie
                 let isValid = self.updateFieldInConsistWithValidate(self.emailTextField, result: result)
                 emailTextField.isError = !isValid
                 if isValid {
-                    self.delegate?.registrationStateGoNext(self)
+                    self.delegate?.screenStateGoNext(self)
                 }
             })
         }
