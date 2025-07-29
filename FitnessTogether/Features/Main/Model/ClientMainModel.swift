@@ -6,13 +6,12 @@ import UIKit
 
 public final class ClientMainModel: BaseMainModel {
 
-    
     public override func workoutsToItems(_ workouts: [FTWorkout], completion: @escaping ([WorkoutItem]) -> Void) {
         
         let items: [WorkoutItem] = workouts.compactMap { workout in
             
             let image = UIImage(systemName: "person.crop.circle")
-            let title = workout.title.isEmpty ? "Названия нет" : workout.title
+            let title = workout.workoutKind.title
             let date = workout.startDate ?? Date()
             let item = WorkoutItem(image: image, name: title, date: date)
             return item
