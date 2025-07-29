@@ -76,27 +76,6 @@ public final class RegistrationCredintalsState: BaseRegistrationState, UITextFie
         button.addAction(UIAction(handler: passwordVisibleButtonPressed), for: .touchUpInside)
     }
     
-    private func setupPasswordVisibleButton() {
-        passwordVisibleButton.changesSelectionAsPrimaryAction = true
-        passwordVisibleButton.configurationUpdateHandler = passwordVisibleButtonConfigurationUpdateHandler
-        passwordTextField.addSubview(passwordVisibleButton)
-        passwordVisibleButton.snp.makeConstraints { maker in
-            maker.top.bottom.trailing.equalToSuperview().inset(DC.Layout.insets.right)
-        }
-        passwordVisibleButton.addAction(UIAction(handler: passwordVisibleButtonPressed), for: .touchUpInside)
-    }
-    
-    private func setupConfirmPasswordVisibleButton() {
-        confirmPasswordVisibleButton.changesSelectionAsPrimaryAction = true
-        confirmPasswordVisibleButton.configurationUpdateHandler = passwordVisibleButtonConfigurationUpdateHandler
-        confirmPasswordTextField.addSubview(confirmPasswordVisibleButton)
-        confirmPasswordVisibleButton.snp.makeConstraints { maker in
-            maker.top.bottom.trailing.equalToSuperview().inset(DC.Layout.insets.right)
-        }
-        confirmPasswordVisibleButton.addAction(UIAction(handler: passwordVisibleButtonPressed), for: .touchUpInside)
-
-    }
-    
     private func passwordVisibleButtonConfigurationUpdateHandler(_ button: UIButton) {
         let imageName = button.isSelected ? "eye.striked" : "eye"
         let superTextFieldIsEdiding = (button.superview as? OutlinedTextField)?.isActiveState ?? false

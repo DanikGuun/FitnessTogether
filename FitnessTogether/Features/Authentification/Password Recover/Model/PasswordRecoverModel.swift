@@ -1,9 +1,11 @@
 
+import Foundation
+
 public protocol PasswordRecoverModel {
     var stepCount: Int { get }
     //тут будет структура сброса
     func goNext() -> (any PasswordRecoverState)?
-    func resetPassword()
+    func resetPassword(completion: ((Result<Void, Error>) -> ())?)
 }
 
 public final class BasePasswordRecoverModel: PasswordRecoverModel {
@@ -14,8 +16,9 @@ public final class BasePasswordRecoverModel: PasswordRecoverModel {
     
     init(validator: any Validator, emailConfirmer: any EmailConfirmer) {
         self.states = [
-            PasswordRecoverCodeState(emailConfirmer: emailConfirmer),
+            PasswordRecoverNewPasswordState(validator: validator),
             PasswordRecoverEmailState(validator: validator, emailConfirmer: emailConfirmer),
+            PasswordRecoverCodeState(emailConfirmer: emailConfirmer),
         ]
     }
     
@@ -31,14 +34,26 @@ public final class BasePasswordRecoverModel: PasswordRecoverModel {
     }
     
     private func getNextState() -> (any PasswordRecoverState)? {
+        guard currentStep + 1 >= 0, currentStep + 1 < states.count else { return nil }
         currentStep += 1
-        guard currentStep >= 0, currentStep < states.count else { return nil }
         return states[currentStep]
     }
     
-    public func resetPassword() {
-        
+    public func resetPassword(completion: ((Result<Void, Error>) -> ())?) {
+        let state = getCurrentState()
+        state?.setNextButtonBusy(true)
+        DispatchQueue.global().async {
+            sleep(3)
+            DispatchQueue.main.sync {
+                state?.setNextButtonBusy(false)
+                completion?(.success(Void()))
+            }
+        }
     }
     
+    private func getCurrentState() -> (any PasswordRecoverState)? {
+        guard currentStep >= 0, currentStep < states.count else { return nil }
+        return states[currentStep]
+    }
     
 }

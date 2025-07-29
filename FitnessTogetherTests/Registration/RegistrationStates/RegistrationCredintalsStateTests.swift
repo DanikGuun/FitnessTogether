@@ -14,6 +14,7 @@ final class RegistrationCredintalsStateTests: XCTestCase {
         delegate = MockScreenStateDelegate()
         validator = MockValidator()
         emailConfirmer = MockEmailConfirmer()
+        emailConfirmer.isEmailExists = false
         state = RegistrationCredintalsState(validator: validator, emailConfirmer: emailConfirmer)
         state.delegate = delegate
         super.setUp()
@@ -85,6 +86,7 @@ final class RegistrationCredintalsStateTests: XCTestCase {
     
     func test_NextButton_ValidData_TriggersNextStep() {
         validator.isValidEmail = true
+        emailConfirmer.isEmailExists = false
         validator.isValidPassword = true
         
         state.nextButtonPressed(nil)
@@ -104,6 +106,7 @@ final class RegistrationCredintalsStateTests: XCTestCase {
     //MARK: - Email
     func test_Email_Valid_DelegateDoesNotRequestToAddIncorrectLabel() {
         validator.isValidEmail = true
+        emailConfirmer.isEmailExists = false
         state.nextButtonPressed(nil)
         let incorrectLabel = delegate.lastViewInserted
         XCTAssertNil(incorrectLabel)
@@ -203,15 +206,14 @@ final class RegistrationCredintalsStateTests: XCTestCase {
     
     //MARK: - Confirm Password
     func test_ConfirmPassword_Valid_DelegateDoesNotRequestToAddIncorrectLabel() {
-        // Здесь нужно добавить логику валидации подтверждения пароля в MockValidator
         validator.isValidPassword = true
+        validator.isValidConfirmPassword = true
         state.nextButtonPressed(nil)
         let incorrectLabel = delegate.lastViewInserted
         XCTAssertNil(incorrectLabel)
     }
     
     func test_ConfirmPassword_Invalid_DelegateRequestToAddIncorrectLabel() {
-        // Здесь нужно добавить логику валидации подтверждения пароля в MockValidator
         validator.isValidPassword = false
         state.nextButtonPressed(nil)
         let incorrectLabel = delegate.lastViewInserted

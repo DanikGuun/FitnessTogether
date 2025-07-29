@@ -75,7 +75,7 @@ final class PasswordRecoverEmailStateTests: XCTestCase {
 
     func test_Email_Valid_NoIncorrectLabelRequested() {
         validator.isValidEmail = true
-        emailConfirmer.isEmailExists = false
+        emailConfirmer.isEmailExists = true
         state.emailTextField.text = "test@example.com"
         
         state.nextButtonPressed(nil)

@@ -25,6 +25,20 @@ public final class PasswordRecoverViewController: FTStateViewController {
         goToNextState()
     }
     
+    public override func viewStatesDidEnd() {
+        model.resetPassword(completion: { [weak self] result in
+            guard let self else { return }
+            switch result {
+                
+            case .success(_):
+                delegate?.passwordRecoverDidFinish(self)
+                
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        })
+    }
+    
     public override func getNextState() -> (any ScreenState)? {
         return model.goNext()
     }
