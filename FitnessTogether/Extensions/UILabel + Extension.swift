@@ -22,4 +22,12 @@ public extension UILabel {
         return label
     }
     
+    static func secondary(_ title: String?) -> UILabel {
+        let label = UILabel()
+        label.font = DC.Font.roboto(weight: .regular, size: 15)
+        label.textColor = UIColor.systemGray3
+        label.textAlignment = .center
+        return label
+    }
+    
 }

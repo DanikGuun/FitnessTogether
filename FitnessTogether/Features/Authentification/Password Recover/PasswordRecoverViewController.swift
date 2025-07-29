@@ -6,6 +6,9 @@ public final class PasswordRecoverViewController: FTStateViewController {
     var delegate: (any PasswordRecoverControllerDelegate)?
     var model: PasswordRecoverModel!
     
+    let stepLabel = UILabel.secondary(nil)
+    private var step: Int = 0
+    
     //MARK: - Lifecycle
     public convenience init(model: PasswordRecoverModel) {
         self.init(nibName: nil, bundle: nil)
@@ -22,6 +25,7 @@ public final class PasswordRecoverViewController: FTStateViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         title = "Восстановление пароля"
+        setupStepLabel()
         goToNextState()
     }
     
@@ -37,6 +41,25 @@ public final class PasswordRecoverViewController: FTStateViewController {
                 print(error.localizedDescription)
             }
         })
+    }
+    
+    private func setupStepLabel() {
+        view.addSubview(stepLabel)
+        stepLabel.snp.makeConstraints { maker in
+            maker.centerX.equalToSuperview()
+            maker.bottom.equalToSuperview().inset(90)
+        }
+    }
+    
+    private func updateStepLabel() {
+        let text = "Шаг \(step) из \(max(step, model.stepCount))"
+        stepLabel.text = text
+    }
+    
+    public override func goToNextState() {
+        super.goToNextState()
+        step += 1
+        updateStepLabel()
     }
     
     public override func getNextState() -> (any ScreenState)? {

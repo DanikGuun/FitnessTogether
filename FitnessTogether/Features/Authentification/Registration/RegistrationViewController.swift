@@ -7,7 +7,7 @@ public final class RegistrationViewController: FTStateViewController {
     var delegate: (any RegistrationViewControllerDelegate)?
     var model: RegistrationModel!
     
-    private var stepLabel = UILabel()
+    private var stepLabel = UILabel.secondary(nil)
     private var currentStep = 0
     private var isRegistrationCompleted = false
     
@@ -36,9 +36,6 @@ public final class RegistrationViewController: FTStateViewController {
             maker.centerX.equalToSuperview()
             maker.bottom.equalToSuperview().inset(90)
         }
-        
-        stepLabel.font = DC.Font.roboto(weight: .regular, size: 15)
-        stepLabel.textColor = UIColor.systemGray3
     }
     
     private func updateStepLabel() {

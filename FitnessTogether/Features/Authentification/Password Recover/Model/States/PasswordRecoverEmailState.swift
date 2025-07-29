@@ -6,7 +6,7 @@ public final class PasswordRecoverEmailState: BaseFieldsScreenState, PasswordRec
 
     let emailTextField = OutlinedTextField.ftTextField(placeholder: "Email")
     
-    private var emailConfirmer: any EmailConfirmer
+    private var recoverManager: any PasswordRecoverNetworkManager
     
     public override func viewsToPresent() -> [UIView] {
         return [titleLabel, UIView.spaceView(24), emailTextField, nextButton]
@@ -16,8 +16,8 @@ public final class PasswordRecoverEmailState: BaseFieldsScreenState, PasswordRec
         
     }
     
-    public init(validator: Validator, emailConfirmer: any EmailConfirmer) {
-        self.emailConfirmer = emailConfirmer
+    public init(validator: Validator, recoverManager: any PasswordRecoverNetworkManager) {
+        self.recoverManager = recoverManager
         super.init()
         self.validator = validator
     }
@@ -41,13 +41,15 @@ public final class PasswordRecoverEmailState: BaseFieldsScreenState, PasswordRec
     
     override func nextButtonPressed(_ action: UIAction?) {
         if validateValues() {
+            let email = emailTextField.text ?? ""
             setNextButtonBusy(true)
-            emailConfirmer.isEmailExist(emailTextField.text ?? "") { [weak self] result in
+            recoverManager.isEmailExist(email) { [weak self] result in
                 guard let self else { return }
                 setNextButtonBusy(false)
                 let isValid = updateFieldInConsistWithValidate(emailTextField, result: result)
                 if isValid {
                     delegate?.screenStateGoNext(self)
+                    recoverManager.sendEmailCode(email, completion: { _ in })
                 }
             }
         }

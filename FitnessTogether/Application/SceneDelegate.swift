@@ -28,8 +28,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         window?.rootViewController = c1.mainVC
         window?.makeKeyAndVisible()
-        c1.authViewControllerGoToLogin(UIViewController())
-        c1.loginViewControllerGoToRecoverPassword(UIViewController())
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

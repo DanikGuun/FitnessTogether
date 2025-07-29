@@ -6,10 +6,10 @@ public final class PasswordRecoverCodeState: BaseFieldsScreenState, PasswordReco
     let codeTextField = FTEmailCodeTextField()
     let sendCodeAgainButton: UIButton = UIButton.secondaryButton(title: "Отправить код повторно")
     
-    let emailConfirmer: EmailConfirmer
+    let recoverManager: PasswordRecoverNetworkManager
     
-    init(emailConfirmer: EmailConfirmer) {
-        self.emailConfirmer = emailConfirmer
+    init(recoverManager: PasswordRecoverNetworkManager) {
+        self.recoverManager = recoverManager
     }
     
     public func apply() {
@@ -27,7 +27,7 @@ public final class PasswordRecoverCodeState: BaseFieldsScreenState, PasswordReco
     public override func setupViews() {
         super.setupViews()
         setupCodeTextField()
-        sendCodeAgainButton.addAction(UIAction(handler: sendCodeAgainButtonPressed), for: .touchUpInside)
+        setupSendCodeAgainButton()
     }
     
     override func setupTitleLabel() {
@@ -45,19 +45,26 @@ public final class PasswordRecoverCodeState: BaseFieldsScreenState, PasswordReco
         checkNextButtonAvailable(nil)
     }
     
+    private func setupSendCodeAgainButton() {
+        sendCodeAgainButton.addAction(UIAction(handler: sendCodeAgainButtonPressed), for: .touchUpInside)
+    }
+    
+    func sendCodeAgainButtonPressed(_ action: UIAction?) {
+        setNextButtonBusy(true)
+        recoverManager.sendEmailCodeAgain(completion: { [weak self] _ in
+            self?.setNextButtonBusy(false)
+        })
+    }
+    
     override func isAllFieldsFilled() -> Bool {
         return codeTextField.isAllCharactersFilled
     }
     
     //MARK: - Other
-    private func sendCodeAgainButtonPressed(_ action: UIAction?) {
-        setNextButtonBusy(true)
-        
-    }
     
     override func nextButtonPressed(_ action: UIAction?) {
         setNextButtonBusy(true)
-        emailConfirmer.isEmailCodeValid(codeTextField.text, completion: { [weak self] result in
+        recoverManager.isEmailCodeValid(codeTextField.text, completion: { [weak self] result in
             guard let self else { return }
             
             setNextButtonBusy(false)

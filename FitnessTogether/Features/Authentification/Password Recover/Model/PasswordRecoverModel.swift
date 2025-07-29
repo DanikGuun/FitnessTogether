@@ -15,9 +15,10 @@ public final class BasePasswordRecoverModel: PasswordRecoverModel {
     private var states: [(any PasswordRecoverState)] = []
     
     init(validator: any Validator, emailConfirmer: any EmailConfirmer) {
+        let recoverManager = PasswordRecoverNetwork()
         self.states = [
-            PasswordRecoverCodeState(emailConfirmer: emailConfirmer),
-            PasswordRecoverEmailState(validator: validator, emailConfirmer: emailConfirmer),
+            PasswordRecoverEmailState(validator: validator, recoverManager: recoverManager),
+            PasswordRecoverCodeState(recoverManager: recoverManager),
             PasswordRecoverNewPasswordState(validator: validator),
         ]
     }

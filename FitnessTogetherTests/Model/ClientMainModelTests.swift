@@ -30,7 +30,7 @@ final class ClientMainModelTests: XCTestCase {
         let pair = FTClientCoachPair(clientId: client.id, client: client, coachId: coach.id, coach: coach)
         coach.clients = [pair]
         
-        var workout = FTWorkout(id: "workoutId", title: "www", startDate: refDate)
+        var workout = FTWorkout(id: "workoutId", startDate: refDate, workoutKind: .force)
         
         let workoutPaticipant1 = FTWorkoutParticipant(workoutId: workout.id, userId: client.id, role: .client)
         let workoutPaticipant2 = FTWorkoutParticipant(workoutId: workout.id, userId: coach.id, role: .coach)
@@ -45,7 +45,7 @@ final class ClientMainModelTests: XCTestCase {
             item = items.first
         })
         
-        XCTAssertEqual(item?.title, workout.title)
+        XCTAssertEqual(item?.title, FTWorkoutKind.force.title)
         XCTAssertEqual(item?.date, workout.startDate)
     }
     

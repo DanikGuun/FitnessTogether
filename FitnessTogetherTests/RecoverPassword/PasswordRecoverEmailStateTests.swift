@@ -5,22 +5,22 @@ import FTDomainData
 final class PasswordRecoverEmailStateTests: XCTestCase {
     var delegate: MockScreenStateDelegate!
     var validator: MockValidator!
-    var emailConfirmer: MockEmailConfirmer!
+    var recoverManager: MockRecoverNetworkManager!
     var state: PasswordRecoverEmailState!
 
     override func setUp() {
         super.setUp()
         delegate = MockScreenStateDelegate()
         validator = MockValidator()
-        emailConfirmer = MockEmailConfirmer()
-        state = PasswordRecoverEmailState(validator: validator, emailConfirmer: emailConfirmer)
+        recoverManager = MockRecoverNetworkManager()
+        state = PasswordRecoverEmailState(validator: validator, recoverManager: recoverManager)
         state.delegate = delegate
     }
 
     override func tearDown() {
         delegate = nil
         validator = nil
-        emailConfirmer = nil
+        recoverManager = nil
         state = nil
         super.tearDown()
     }
@@ -62,20 +62,22 @@ final class PasswordRecoverEmailStateTests: XCTestCase {
     }
 
     func test_NextButton_ValidData_TriggersNextStep() {
-        emailConfirmer.isEmailExists = true
+        recoverManager._isEmailExist = true
         state.emailTextField.text = "test@example.com"
         
         state.nextButtonPressed(nil)
         
         let wasCalled = delegate.goNextCalled
+        let emailWasSend = recoverManager.sendEmailCodeCalled
         XCTAssertTrue(wasCalled, "Делегат должен быть вызван, если данные валидны.")
+        XCTAssertTrue(emailWasSend)
     }
 
     // MARK: - Email TextField
 
     func test_Email_Valid_NoIncorrectLabelRequested() {
         validator.isValidEmail = true
-        emailConfirmer.isEmailExists = true
+        recoverManager._isEmailExist = true
         state.emailTextField.text = "test@example.com"
         
         state.nextButtonPressed(nil)
@@ -85,7 +87,7 @@ final class PasswordRecoverEmailStateTests: XCTestCase {
     }
 
     func test_Email_Exists_IncorrectLabelRequested() {
-        emailConfirmer.isEmailExists = true
+        recoverManager._isEmailExist = true
         
         state.nextButtonPressed(nil)
         
@@ -95,13 +97,12 @@ final class PasswordRecoverEmailStateTests: XCTestCase {
 
     func test_Email_Valid_After_NotValid_AddsAndRemovesIncorrectLabel() {
 
-        emailConfirmer.isEmailExists = false
-        state.emailTextField.text = "valid@example.com"
+        recoverManager._isEmailExist = false
         state.nextButtonPressed(nil)
-        XCTAssertNotNil(delegate.lastViewInserted, "Метка ошибки не должна быть добавлена для валидного email.")
+        XCTAssertNotNil(delegate.lastViewInserted, "Метка ошибки должна быть добавлена для несуществующего email.")
 
-        emailConfirmer.isEmailExists = true
-        emailConfirmer.errorMessage = "Неверный формат email"
+        recoverManager._isEmailExist = true
+        recoverManager.errorMessage = "Неверный формат email"
         state.emailTextField.text = "invalid-email"
         state.nextButtonPressed(nil)
         XCTAssertNotNil(delegate.lastViewRemoved, "Метка ошибки должна быть добавлена для невалидного email.")
@@ -111,8 +112,8 @@ final class PasswordRecoverEmailStateTests: XCTestCase {
     }
 
     func test_Email_DoubleNotValid_DoesNotAddDoubleLabel() {
-        emailConfirmer.isEmailExists = false
-        emailConfirmer.errorMessage = "Неверный формат email"
+        recoverManager._isEmailExist = false
+        recoverManager.errorMessage = "Неверный формат email"
 
         state.nextButtonPressed(nil)
         let incorrectLabel1 = delegate.lastViewInserted

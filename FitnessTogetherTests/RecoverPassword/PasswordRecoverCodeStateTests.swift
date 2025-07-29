@@ -5,20 +5,20 @@ import FTDomainData
 
 final class PasswordRecoverCodeStateTests: XCTestCase {
     var delegate: MockScreenStateDelegate!
-    fileprivate var emailConfirmer: MockEmailConfirmer!
+    fileprivate var recoverManager: MockRecoverNetworkManager!
     var state: PasswordRecoverCodeState!
 
     override func setUp() {
         super.setUp()
         delegate = MockScreenStateDelegate()
-        emailConfirmer = MockEmailConfirmer()
-        state = PasswordRecoverCodeState(emailConfirmer: emailConfirmer)
+        recoverManager = MockRecoverNetworkManager()
+        state = PasswordRecoverCodeState(recoverManager: recoverManager)
         state.delegate = delegate
     }
 
     override func tearDown() {
         delegate = nil
-        emailConfirmer = nil
+        recoverManager = nil
         state = nil
         super.tearDown()
     }
@@ -52,8 +52,8 @@ final class PasswordRecoverCodeStateTests: XCTestCase {
     }
 
     func test_NextButton_InvalidData_DoesNotTriggerNextStep() {
-        emailConfirmer.isCodeValid = false // Настраиваем mock
-        emailConfirmer.errorMessage = "Неверный код"
+        recoverManager._isEmailCodeValid = false // Настраиваем mock
+        recoverManager.errorMessage = "Неверный код"
         state.codeTextField.text = "00000" // Неверный код
 
         state.nextButtonPressed(nil) // Имитируем нажатие кнопки
@@ -64,7 +64,7 @@ final class PasswordRecoverCodeStateTests: XCTestCase {
     }
 
     func test_NextButton_ValidData_TriggersNextStep() {
-        emailConfirmer.isCodeValid = true // Настраиваем mock
+        recoverManager._isEmailCodeValid = true // Настраиваем mock
         state.codeTextField.text = "12345" // Верный код (по логике MockEmailConfirmer/BaseEmailConfirmer)
 
         state.nextButtonPressed(nil) // Имитируем нажатие кнопки
@@ -76,7 +76,7 @@ final class PasswordRecoverCodeStateTests: XCTestCase {
     // MARK: - Code TextField Validation
 
     func test_Code_Valid_NoIncorrectLabelRequested() {
-        emailConfirmer.isCodeValid = true
+        recoverManager._isEmailCodeValid = true
         state.codeTextField.text = "12345" // Верный код
 
         state.nextButtonPressed(nil) // Запускаем валидацию
@@ -86,8 +86,8 @@ final class PasswordRecoverCodeStateTests: XCTestCase {
     }
 
     func test_Code_Invalid_IncorrectLabelRequested() {
-        emailConfirmer.isCodeValid = false
-        emailConfirmer.errorMessage = "Неверный код подтверждения"
+        recoverManager._isEmailCodeValid = false
+        recoverManager.errorMessage = "Неверный код подтверждения"
         state.codeTextField.text = "00000" // Неверный код
 
         state.nextButtonPressed(nil) // Запускаем валидацию
@@ -98,22 +98,22 @@ final class PasswordRecoverCodeStateTests: XCTestCase {
 
     func test_Code_NotValid_After_Valid_AddsAndRemovesIncorrectLabel() {
         // Сначала делаем код валидным
-        emailConfirmer.isCodeValid = true
+        recoverManager._isEmailCodeValid = true
         state.codeTextField.text = "12345"
         state.nextButtonPressed(nil)
         XCTAssertFalse(state.codeTextField.isError, "Поле не должно быть в ошибке для валидного кода.")
         XCTAssertNil(delegate.lastViewInserted, "Метка ошибки не должна быть добавлена для валидного кода.")
 
         // Затем делаем невалидным
-        emailConfirmer.isCodeValid = false
-        emailConfirmer.errorMessage = "Неверный код"
+        recoverManager._isEmailCodeValid = false
+        recoverManager.errorMessage = "Неверный код"
         state.codeTextField.text = "00000"
         state.nextButtonPressed(nil)
         XCTAssertTrue(state.codeTextField.isError, "Поле должно быть в ошибке для невалидного кода.")
         XCTAssertNotNil(delegate.lastViewInserted, "Метка ошибки должна быть добавлена для невалидного кода.")
 
         // Снова делаем валидным
-        emailConfirmer.isCodeValid = true
+        recoverManager._isEmailCodeValid = true
         state.codeTextField.text = "12345"
         state.nextButtonPressed(nil)
         XCTAssertFalse(state.codeTextField.isError, "Поле не должно быть в ошибке после валидации правильного кода.")
@@ -122,8 +122,8 @@ final class PasswordRecoverCodeStateTests: XCTestCase {
     }
 
     func test_Code_DoubleNotValid_DoesNotAddDoubleLabel() {
-        emailConfirmer.isCodeValid = false
-        emailConfirmer.errorMessage = "Неверный код"
+        recoverManager._isEmailCodeValid = false
+        recoverManager.errorMessage = "Неверный код"
         state.codeTextField.text = "00000"
 
         state.nextButtonPressed(nil) // Первая попытка с невалидным кодом
@@ -137,8 +137,8 @@ final class PasswordRecoverCodeStateTests: XCTestCase {
     }
 
     func test_Code_NotValid_EmptyErrorMessage_DelegateNotRequestToAddIncorrectLabel() {
-        emailConfirmer.isCodeValid = false
-        emailConfirmer.errorMessage = nil
+        recoverManager._isEmailCodeValid = false
+        recoverManager.errorMessage = nil
 
         state.nextButtonPressed(nil)
 
@@ -146,6 +146,12 @@ final class PasswordRecoverCodeStateTests: XCTestCase {
         let incorrectLabel = delegate.lastViewInserted
         XCTAssertNil(incorrectLabel, "Делегат не должен запрашивать добавление метки ошибки, если сообщение об ошибке пустое (nil).")
     }
+    
+    func test_SendCodeAgain() {
+        state.sendCodeAgainButtonPressed(nil)
+        XCTAssertTrue(recoverManager.sendEmailCodeAgainCalled)
+    }
+    
 }
 
 
