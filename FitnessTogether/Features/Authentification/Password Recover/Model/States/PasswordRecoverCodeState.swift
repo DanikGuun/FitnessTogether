@@ -4,6 +4,7 @@ import UIKit
 public final class PasswordRecoverCodeState: BaseFieldsScreenState, PasswordRecoverState {
     
     let codeTextField = FTEmailCodeTextField()
+    let sendCodeAgainButton: UIButton = UIButton.secondaryButton(title: "Отправить код повторно")
     
     let emailConfirmer: EmailConfirmer
     
@@ -16,13 +17,17 @@ public final class PasswordRecoverCodeState: BaseFieldsScreenState, PasswordReco
     }
     
     public override func viewsToPresent() -> [UIView] {
-        return [titleLabel, UIView.spaceView(24), codeTextField, nextButton]
+        DispatchQueue.main.async { [weak self] in
+            self?.showCodeSendAlert()
+        }
+        return [titleLabel, UIView.spaceView(24), codeTextField, nextButton, sendCodeAgainButton]
     }
     
+    //MARK: - UI
     public override func setupViews() {
         super.setupViews()
         setupCodeTextField()
-        
+        sendCodeAgainButton.addAction(UIAction(handler: sendCodeAgainButtonPressed), for: .touchUpInside)
     }
     
     override func setupTitleLabel() {
@@ -44,6 +49,12 @@ public final class PasswordRecoverCodeState: BaseFieldsScreenState, PasswordReco
         return codeTextField.isAllCharactersFilled
     }
     
+    //MARK: - Other
+    private func sendCodeAgainButtonPressed(_ action: UIAction?) {
+        setNextButtonBusy(true)
+        
+    }
+    
     override func nextButtonPressed(_ action: UIAction?) {
         setNextButtonBusy(true)
         emailConfirmer.isEmailCodeValid(codeTextField.text, completion: { [weak self] result in
@@ -56,5 +67,20 @@ public final class PasswordRecoverCodeState: BaseFieldsScreenState, PasswordReco
                 delegate?.screenStateGoNext(self)
             }
         })
+    }
+    
+    
+    private func showCodeSendAlert() {
+        guard let parent = nextButton.viewController?.view else { return }
+        let controller = UIViewController()
+        controller.view.backgroundColor = .systemBackground
+        
+        let label = UILabel.headline("На указанный вами email отправлен код для входа в аккаунт")
+        controller.view.addSubview(label)
+        label.snp.makeConstraints { maker in
+            maker.edges.equalToSuperview().inset(20)
+        }
+        
+        nextButton.viewController?.presentPopover(controller, size: CGSize(width: parent.bounds.width, height: 200), sourceView: nextButton)
     }
 }

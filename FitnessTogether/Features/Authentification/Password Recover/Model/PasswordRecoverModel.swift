@@ -16,9 +16,9 @@ public final class BasePasswordRecoverModel: PasswordRecoverModel {
     
     init(validator: any Validator, emailConfirmer: any EmailConfirmer) {
         self.states = [
-            PasswordRecoverNewPasswordState(validator: validator),
-            PasswordRecoverEmailState(validator: validator, emailConfirmer: emailConfirmer),
             PasswordRecoverCodeState(emailConfirmer: emailConfirmer),
+            PasswordRecoverEmailState(validator: validator, emailConfirmer: emailConfirmer),
+            PasswordRecoverNewPasswordState(validator: validator),
         ]
     }
     

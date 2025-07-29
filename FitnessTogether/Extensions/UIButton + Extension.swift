@@ -37,4 +37,19 @@ public extension UIButton {
         return button
     }
     
+    static func secondaryButton(title: String) -> UIButton {
+        let attrs = AttributeContainer([
+            .font : DC.Font.additionalInfo,
+            .underlineStyle: NSUnderlineStyle.single.rawValue,
+            .foregroundColor: UIColor.systemGray
+        ])
+        let title = AttributedString(title, attributes: attrs)
+        
+        let button = UIButton(configuration: .plain())
+        button.configuration?.attributedTitle = title
+        button.constraintHeight(20)
+        
+        return button
+    }
+    
 }

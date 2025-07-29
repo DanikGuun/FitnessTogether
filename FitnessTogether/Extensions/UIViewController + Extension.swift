@@ -1,7 +1,7 @@
 
 import UIKit
 
-public extension UIViewController {
+extension UIViewController: UIPopoverPresentationControllerDelegate {
     
     var isOverlapsed: Bool {
         guard let vc = self.presentedViewController else { return false }
@@ -24,5 +24,23 @@ public extension UIViewController {
         }
         return base
     }
+    
+    func presentPopover(_ controller: UIViewController, size: CGSize, sourceView: UIView?) {
+        controller.modalPresentationStyle = .popover
+        controller.preferredContentSize = size
+        
+        guard let presentation = controller.popoverPresentationController else { return }
+        presentation.permittedArrowDirections = .init()
+        presentation.sourceView = sourceView
+        presentation.sourceRect = sourceView?.bounds ?? .zero
+        presentation.delegate = self
+        
+        self.navigationController?.present(controller, animated: true)
+    }
+    
+    public func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {
+        .none
+    }
+    
     
 }

@@ -109,21 +109,12 @@ public final class LoginViewController: FTViewController, UITextFieldDelegate {
     }
     
     private func setupRecoverPasswordButton() {
-        
-        let attrs = AttributeContainer([
-            .font : DC.Font.additionalInfo,
-            .underlineStyle: NSUnderlineStyle.single.rawValue,
-            .foregroundColor: UIColor.systemGray
-        ])
-        let title = AttributedString("Забыли пароль?", attributes: attrs)
-        
-        let button = UIButton(configuration: .plain())
-        button.configuration?.attributedTitle = title
-        
+        let button = UIButton.secondaryButton(title: "Забыли пароль?")
         button.addAction(UIAction(handler: { [weak self] _ in
             guard let self else { return }
             self.delegate?.loginViewControllerGoToRecoverPassword(self)
         }), for: .touchUpInside)
+        
         addStackSubview(button, height: 20)
     }
     
