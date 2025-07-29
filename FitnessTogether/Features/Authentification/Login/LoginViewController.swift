@@ -43,6 +43,7 @@ public final class LoginViewController: FTViewController, UITextFieldDelegate {
         setupPasswordTextField()
         setupPasswordVisibilityButton()
         setupLoginButton()
+        setupRecoverPasswordButton()
         setupMotivationLabel()
     }
     
@@ -105,6 +106,25 @@ public final class LoginViewController: FTViewController, UITextFieldDelegate {
     private func setLoginButtonBusy(_ busy: Bool) {
         loginButton.configuration?.showsActivityIndicator = busy
         loginButton.isEnabled = busy
+    }
+    
+    private func setupRecoverPasswordButton() {
+        
+        let attrs = AttributeContainer([
+            .font : DC.Font.additionalInfo,
+            .underlineStyle: NSUnderlineStyle.single.rawValue,
+            .foregroundColor: UIColor.systemGray
+        ])
+        let title = AttributedString("Забыли пароль?", attributes: attrs)
+        
+        let button = UIButton(configuration: .plain())
+        button.configuration?.attributedTitle = title
+        
+        button.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            self.delegate?.loginViewControllerGoToRecoverPassword(self)
+        }), for: .touchUpInside)
+        addStackSubview(button, height: 20)
     }
     
     private func setupMotivationLabel() {
@@ -180,9 +200,11 @@ public final class LoginViewController: FTViewController, UITextFieldDelegate {
 }
 
 public protocol LoginViewControllerDelegate {
+    func loginViewControllerGoToRecoverPassword(_ loginViewController: UIViewController)
     func loginViewControllerDidLogin(_ loginViewController: UIViewController)
 }
 
 public extension LoginViewControllerDelegate {
+    func loginViewControllerGoToRecoverPassword(_ loginViewController: UIViewController) {}
     func loginViewControllerDidLogin(_ loginViewController: UIViewController) {}
 }

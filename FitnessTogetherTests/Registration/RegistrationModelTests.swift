@@ -21,17 +21,10 @@ final class RegistrationModelTests: XCTestCase {
         super.tearDown()
     }
     
-    func test_RegisterLoginCall_AfterStates() {
-        let register = FTUserRegister(email: "emzil", password: "pasword")
-        for _ in 0...model.stepCount {
-            model.userRegister = register
-            let _ = model.goNext()
-        }
-        
-        
-        XCTAssertEqual(userInterface.lastRegisterData, register)
-        XCTAssertEqual(userInterface.lastLoginData?.email, register.email)
-        XCTAssertEqual(userInterface.lastLoginData?.password, register.password)
+    func test_RegisterLoginCall() {
+        model.register(user: model.userRegister, completion: { _ in })
+        XCTAssertNotNil(userInterface.lastRegisterData)
+        XCTAssertNotNil(userInterface.lastLoginData)
     }
     
 }

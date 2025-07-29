@@ -74,7 +74,8 @@ final class PasswordRecoverEmailStateTests: XCTestCase {
     // MARK: - Email TextField
 
     func test_Email_Valid_NoIncorrectLabelRequested() {
-        emailConfirmer.isEmailExists = true
+        validator.isValidEmail = true
+        emailConfirmer.isEmailExists = false
         state.emailTextField.text = "test@example.com"
         
         state.nextButtonPressed(nil)
@@ -83,8 +84,8 @@ final class PasswordRecoverEmailStateTests: XCTestCase {
         XCTAssertNil(incorrectLabel, "Делегат не должен запрашивать добавление метки ошибки для валидного email.")
     }
 
-    func test_Email_DoesNotExists_IncorrectLabelRequested() {
-        emailConfirmer.isEmailExists = false
+    func test_Email_Exists_IncorrectLabelRequested() {
+        emailConfirmer.isEmailExists = true
         
         state.nextButtonPressed(nil)
         
@@ -130,15 +131,15 @@ final class PasswordRecoverEmailStateTests: XCTestCase {
     }
 
     func test_Email_NotValid_EmptyErrorMessage_DelegateNotRequestToAddIncorrectLabel() {
-        emailConfirmer.isEmailExists = false
-        emailConfirmer.errorMessage = nil
-        state.emailTextField.text = "invalid-email"
+        validator.isValidEmail = false
+        validator.errorMessage = nil
         
         state.nextButtonPressed(nil)
         
         let incorrectLabel = delegate.lastViewInserted
         XCTAssertNil(incorrectLabel, "Делегат не должен запрашивать добавление метки ошибки, если сообщение об ошибке пустое.")
     }
+    
 }
 
 fileprivate class MockEmailConfirmer: EmailConfirmer {
@@ -147,7 +148,7 @@ fileprivate class MockEmailConfirmer: EmailConfirmer {
     var errorMessage: String?
     
     func isEmailConsist(_ email: String, completion: ((ValidatorResult) -> ())?) {
-        isEmailExists ? completion?(.valid) : completion?(.invalid(message: ""))
+        !isEmailExists ? completion?(.valid) : completion?(.invalid(message: ""))
     }
     func confirmEmail(_ email: String, completion: ((ValidatorResult) -> ())?) {}
 }

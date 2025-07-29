@@ -52,15 +52,15 @@ public final class BaseRegistrationModel: RegistrationModel {
     }
     
     public func register(user: FTUserRegister, completion: @escaping (Result<Void, Error>) -> Void) {
-        let state = states[currentState]
-        state.setNextButtonBusy(true)
+        let state = getCurrentState()
+        state?.setNextButtonBusy(true)
         userInterface.register(data: user, completion: { [weak self] result in
             switch result {
             case .success(_):
                 
                 let loginData = FTUserLogin(email: user.email, password: user.password)
                 self?.userInterface.login(data: loginData, completion: { _ in
-                    state.setNextButtonBusy(false)
+                    state?.setNextButtonBusy(false)
                     
                     switch result {
                     case .success(_):
@@ -75,6 +75,13 @@ public final class BaseRegistrationModel: RegistrationModel {
                 completion(.failure(error))
             }
         })
+    }
+    
+    private func getCurrentState() -> (any RegistrationState)? {
+        if currentState >= 0 && currentState < states.count {
+            return states[currentState]
+        }
+        return nil
     }
     
 }
