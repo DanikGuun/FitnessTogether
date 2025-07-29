@@ -32,14 +32,14 @@ final class AuthCoordinatorTests: XCTestCase {
     }
     
     func test_GoTo_Login() {
-        factory.authDelegate?.authViewControllerGoToLogin(authViewController: UIViewController())
+        factory.authDelegate?.authViewControllerGoToLogin(UIViewController())
         XCTAssertEqual(factory.lastVCMaked, .login)
         let title = coordinator.currentVC?.title
         XCTAssertEqual(title, "Login")
     }
     
     func test_GoTo_Registration() {
-        factory.authDelegate?.authViewControllerGoToRegister(authViewController: UIViewController())
+        factory.authDelegate?.authViewControllerGoToRegister(UIViewController())
         XCTAssertEqual(factory.lastVCMaked, .registration)
         let title = coordinator.currentVC?.title
         XCTAssertEqual(title, "Registration")
@@ -70,7 +70,7 @@ final class AuthCoordinatorTests: XCTestCase {
     }
     
     func test_RecoverPassword_DidDinish_PopRecoverVC() {
-        coordinator.authViewControllerGoToLogin(authViewController: UIViewController())
+        coordinator.authViewControllerGoToLogin(UIViewController())
         coordinator.loginViewControllerGoToRecoverPassword(UIViewController())
         XCTAssertEqual(coordinator.currentVC?.title, "Password recover")
         

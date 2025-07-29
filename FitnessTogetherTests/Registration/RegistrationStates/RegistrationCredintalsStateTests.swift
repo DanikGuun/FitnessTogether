@@ -94,7 +94,7 @@ final class RegistrationCredintalsStateTests: XCTestCase {
     }
     
     func test_email_AlreadyExists_NotTriggerNext() {
-        emailConfirmer.isCorrect = false
+        emailConfirmer.isEmailExists = true
         
         state.nextButtonPressed(nil)
         
@@ -251,15 +251,5 @@ final class RegistrationCredintalsStateTests: XCTestCase {
         
         let incorrectLabel = delegate.lastViewInserted
         XCTAssertNil(incorrectLabel)
-    }
-}
-
-fileprivate class MockEmailConfirmer: EmailConfirmer {
-    var isCorrect = true
-    
-    func isEmailConsist(_ email: String, completion: ((ValidatorResult) -> ())?) {}
-    
-    func confirmEmail(_ email: String, completion: ((ValidatorResult) -> ())?) {
-        isCorrect ? completion?(.valid) : completion?(.invalid(message: ""))
     }
 }

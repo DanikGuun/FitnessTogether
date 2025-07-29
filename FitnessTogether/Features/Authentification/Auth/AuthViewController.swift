@@ -39,7 +39,7 @@ public final class AuthViewController: FTViewController {
         let button = UIButton.ftFilled(title: "Зарегистрироваться")
         button.addAction(UIAction(handler: { [weak self] _ in
             guard let self else { return }
-            self.delegate?.authViewControllerGoToRegister(authViewController: self)
+            self.delegate?.authViewControllerGoToRegister(self)
         }), for: .touchUpInside)
         addStackSubview(button, height: DC.Size.buttonHeight)
     }
@@ -48,7 +48,7 @@ public final class AuthViewController: FTViewController {
         let button = UIButton.ftPlain(title: "Войти")
         button.addAction(UIAction(handler: { [weak self] _ in
             guard let self else { return }
-            self.delegate?.authViewControllerGoToLogin(authViewController: self)
+            self.delegate?.authViewControllerGoToLogin(self)
         }), for: .touchUpInside)
         addStackSubview(button, height: DC.Size.buttonHeight)
     }
@@ -56,11 +56,11 @@ public final class AuthViewController: FTViewController {
 }
 
 public protocol AuthViewControllerDelegate {
-    func authViewControllerGoToRegister(authViewController: UIViewController)
-    func authViewControllerGoToLogin(authViewController: UIViewController)
+    func authViewControllerGoToRegister(_ authViewController: UIViewController)
+    func authViewControllerGoToLogin(_ authViewController: UIViewController)
 }
 
 extension AuthViewControllerDelegate {
-    public func authViewControllerGoToRegister(authViewController: UIViewController) {}
-    public func authViewControllerGoToLogin(authViewController: UIViewController) {}
+    public func authViewControllerGoToRegister(_ authViewController: UIViewController) {}
+    public func authViewControllerGoToLogin(_ authViewController: UIViewController) {}
 }

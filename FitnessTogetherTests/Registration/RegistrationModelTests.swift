@@ -31,6 +31,7 @@ final class RegistrationModelTests: XCTestCase {
 
 
 fileprivate class EmptyEmailConfirmer: EmailConfirmer {
-    func isEmailConsist(_ email: String, completion: ((ValidatorResult) -> ())?) {}
-    func confirmEmail(_ email: String, completion: ((ValidatorResult) -> ())?) {}
+    func confirmEmail(_ email: String, completion: @escaping ((FitnessTogether.ValidatorResult) -> ())) {}
+    func isEmailExist(_ email: String, completion: @escaping ((FitnessTogether.ValidatorResult) -> ())) {}
+    func isEmailCodeValid(_ code: String, completion: @escaping ((FitnessTogether.ValidatorResult) -> ())) {}
 }

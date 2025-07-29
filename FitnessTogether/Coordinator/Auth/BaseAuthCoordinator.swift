@@ -41,12 +41,12 @@ public final class BaseAuthCoordinator: NSObject, AuthCoordinator {
 
 extension BaseAuthCoordinator: AuthViewControllerDelegate {
     
-    public func authViewControllerGoToRegister(authViewController: UIViewController) {
+    public func authViewControllerGoToRegister(_ authViewController: UIViewController) {
         let vc = factory.makeRegistrationVC(delegate: self)
         show(vc)
     }
     
-    public func authViewControllerGoToLogin(authViewController: UIViewController) {
+    public func authViewControllerGoToLogin(_ authViewController: UIViewController) {
         let vc = factory.makeLoginVC(delegate: self)
         show(vc)
     }

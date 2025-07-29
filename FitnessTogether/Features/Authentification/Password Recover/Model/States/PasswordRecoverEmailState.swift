@@ -42,7 +42,7 @@ public final class PasswordRecoverEmailState: BaseFieldsScreenState, PasswordRec
     override func nextButtonPressed(_ action: UIAction?) {
         if validateValues() {
             setNextButtonBusy(true)
-            emailConfirmer.isEmailConsist(emailTextField.text ?? "") { [weak self] result in
+            emailConfirmer.isEmailExist(emailTextField.text ?? "") { [weak self] result in
                 guard let self else { return }
                 setNextButtonBusy(false)
                 let isValid = updateFieldInConsistWithValidate(emailTextField, result: result)

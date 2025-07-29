@@ -5,7 +5,7 @@ import FTDomainData
 final class PasswordRecoverEmailStateTests: XCTestCase {
     var delegate: MockScreenStateDelegate!
     var validator: MockValidator!
-    fileprivate var emailConfirmer: MockEmailConfirmer!
+    var emailConfirmer: MockEmailConfirmer!
     var state: PasswordRecoverEmailState!
 
     override func setUp() {
@@ -90,25 +90,21 @@ final class PasswordRecoverEmailStateTests: XCTestCase {
         state.nextButtonPressed(nil)
         
         let incorrectLabel = delegate.lastViewInserted
-        XCTAssertNotNil(incorrectLabel, "Делегат должен запрашивать добавление метки ошибки для невалидного email.")
+        XCTAssertNil(incorrectLabel, "Делегат не должен запрашивать добавление метки ошибки, если почта есть.")
     }
 
-    func test_Email_NotValid_After_Valid_AddsAndRemovesIncorrectLabel() {
-
-        emailConfirmer.isEmailExists = true
-        state.emailTextField.text = "valid@example.com"
-        state.nextButtonPressed(nil)
-        XCTAssertNil(delegate.lastViewInserted, "Метка ошибки не должна быть добавлена для валидного email.")
+    func test_Email_Valid_After_NotValid_AddsAndRemovesIncorrectLabel() {
 
         emailConfirmer.isEmailExists = false
+        state.emailTextField.text = "valid@example.com"
+        state.nextButtonPressed(nil)
+        XCTAssertNotNil(delegate.lastViewInserted, "Метка ошибки не должна быть добавлена для валидного email.")
+
+        emailConfirmer.isEmailExists = true
         emailConfirmer.errorMessage = "Неверный формат email"
         state.emailTextField.text = "invalid-email"
         state.nextButtonPressed(nil)
-        XCTAssertNotNil(delegate.lastViewInserted, "Метка ошибки должна быть добавлена для невалидного email.")
-
-        emailConfirmer.isEmailExists = true
-        state.emailTextField.text = "valid2@example.com"
-        state.nextButtonPressed(nil)
+        XCTAssertNotNil(delegate.lastViewRemoved, "Метка ошибки должна быть добавлена для невалидного email.")
         
         let removedLabel = delegate.lastViewRemoved
         XCTAssertNotNil(removedLabel, "Метка ошибки должна быть удалена, когда email становится валидным снова.")
@@ -117,7 +113,6 @@ final class PasswordRecoverEmailStateTests: XCTestCase {
     func test_Email_DoubleNotValid_DoesNotAddDoubleLabel() {
         emailConfirmer.isEmailExists = false
         emailConfirmer.errorMessage = "Неверный формат email"
-        state.emailTextField.text = "invalid-email"
 
         state.nextButtonPressed(nil)
         let incorrectLabel1 = delegate.lastViewInserted
@@ -140,15 +135,4 @@ final class PasswordRecoverEmailStateTests: XCTestCase {
         XCTAssertNil(incorrectLabel, "Делегат не должен запрашивать добавление метки ошибки, если сообщение об ошибке пустое.")
     }
     
-}
-
-fileprivate class MockEmailConfirmer: EmailConfirmer {
-    
-    var isEmailExists = false
-    var errorMessage: String?
-    
-    func isEmailConsist(_ email: String, completion: ((ValidatorResult) -> ())?) {
-        !isEmailExists ? completion?(.valid) : completion?(.invalid(message: ""))
-    }
-    func confirmEmail(_ email: String, completion: ((ValidatorResult) -> ())?) {}
 }
