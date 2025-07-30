@@ -23,6 +23,15 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
             case .right: CGAffineTransform(translationX: 500, y: 0)
             }
         }
+        
+        func transform(base: CGAffineTransform) -> CGAffineTransform {
+            switch self {
+            case .up: base.translatedBy(x: 0, y: -800)
+            case .down: base.translatedBy(x: 0, y: 800)
+            case .left: base.translatedBy(x: -800, y: 0)
+            case .right: base.translatedBy(x: 800, y: 0)
+            }
+        }
     }
     
     public override var title: String? { didSet { titleLabel.text = title } }
@@ -67,14 +76,14 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
         }
     }
     
-    public func removeAllStackSubviews(duration: TimeInterval = 0.3, direction: AnimationDirection = .up,
+    public func removeAllStackSubviews(duration: TimeInterval = 0.4, direction: AnimationDirection = .up,
                                   completion: (() -> Void)? = nil) {
         UIView.animate(withDuration: duration, delay: 0, options: .curveEaseInOut, animations: { [weak self] in
             guard let self else { return }
             for subview in self.stackView.arrangedSubviews {
                 subview.alpha = 0
-                subview.isHidden = true
-                subview.transform = direction.transform
+                subview.transform = direction.transform(base: subview.transform)
+                
             }
         }, completion: { [weak self] _ in
             self?.stackView.arrangedSubviews.forEach { self?.stackView.removeArrangedSubview($0); $0.removeFromSuperview() }
@@ -82,13 +91,13 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
         })
     }
     
-    public func addStackSubviews(_ views: [UIView], duration: TimeInterval = 0.3,
+    public func addStackSubviews(_ views: [UIView], duration: TimeInterval = 0.4,
                                  direction: AnimationDirection = .up, completion: (() -> Void)? = nil) {
 
         for view in views {
             stackView.addArrangedSubview(view)
             view.alpha = 0
-            view.transform = direction.transform
+            view.transform = direction.transform(base: view.transform)
         }
         
         UIView.animate(withDuration: duration, delay: 0, options: .curveEaseInOut, animations: {

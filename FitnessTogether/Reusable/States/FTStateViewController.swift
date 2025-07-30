@@ -11,9 +11,9 @@ public class FTStateViewController: FTViewController, ScreenStateDelegate {
         }
         state.delegate = self
         
-        removeAllStackSubviews(direction: .right, completion: { [weak self] in
+        removeAllStackSubviews(direction: .left, completion: { [weak self] in
             self?.addSpacing(.fractional(0.1))
-            self?.addStackSubviews(state.viewsToPresent(), direction: .left)
+            self?.addStackSubviews(state.viewsToPresent(), direction: .right)
         })
 
     }
