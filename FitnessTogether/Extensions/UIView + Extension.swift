@@ -27,6 +27,14 @@ public extension UIView {
         }
     }
     
+    func makeCornerAndShadow(radius: CGFloat = 15, color: UIColor = .black, opacity: Float = 0.5) {
+        self.layer.cornerRadius = radius
+        self.layer.masksToBounds = false
+        self.layer.shadowColor = color.cgColor
+        self.layer.shadowOpacity = opacity
+        self.layer.shadowOffset = CGSize(width: 0, height: 2)
+    }
+    
     static func spaceView(_ height: CGFloat) -> UIView {
         let view = UIView()
         view.backgroundColor = .clear

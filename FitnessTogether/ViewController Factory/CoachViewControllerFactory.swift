@@ -41,7 +41,7 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
     }
     
     public func makeCalendarVC() -> UIViewController {
-        let vc = UIViewController()
+        let vc = CalendarViewController()
         vc.tabBarItem = UITabBarItem(title: "Календарь", image: UIImage(named: "calendar"), selectedImage: UIImage(named: "calendar.fill"))
         return vc
     }

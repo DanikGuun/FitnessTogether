@@ -6,9 +6,10 @@ public struct DC {
     
     public struct Layout {
         public static let leadingInset: CGFloat = 25
-        public static let trailingInser: CGFloat = 25
+        public static let trailingInset: CGFloat = 25
         public static let spacing: CGFloat = 12
         public static let insets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 10)
+        public static let calendarLeftInset: CGFloat = 50
     }
     
     public struct Size {

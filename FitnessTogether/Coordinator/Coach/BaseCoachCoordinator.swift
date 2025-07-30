@@ -17,6 +17,7 @@ public final class BaseCoachCoordinator: CoachCoordinator {
         self.factory = factory
         self.tabBarVC = factory.makeTabBarVC()
         self.navigationVC = UINavigationController(rootViewController: tabBarVC)
+        tabBarVC.selectedIndex = 1
     }
 
     public func show(_ viewController: UIViewController) {

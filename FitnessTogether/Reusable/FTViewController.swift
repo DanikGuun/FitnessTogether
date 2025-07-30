@@ -130,7 +130,7 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
         stackView.axis = .vertical
         stackView.distribution = .fill
         stackView.isLayoutMarginsRelativeArrangement = true
-        stackView.layoutMargins = UIEdgeInsets.init(top: 0, left: DC.Layout.leadingInset, bottom: 0, right: DC.Layout.trailingInser)
+        stackView.layoutMargins = UIEdgeInsets.init(top: 0, left: DC.Layout.leadingInset, bottom: 0, right: DC.Layout.trailingInset)
         stackView.spacing = 10
     }
     
