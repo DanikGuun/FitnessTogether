@@ -10,17 +10,28 @@ public final class CalendarViewController: FTViewController {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setupCurrentDayView()
+        setupScrollConstraint()
+        stackView.layoutMargins = .zero
+        setupScheduleView()
     }
     
     private func setupCurrentDayView() {
         view.addSubview(currentDayView)
         currentDayView.snp.makeConstraints { maker in
             maker.leading.trailing.top.equalToSuperview()
-            maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.top).offset(DC.Size.buttonHeight)
+            maker.bottom.equalTo(view.safeAreaLayoutGuide.snp.top).offset(DC.Size.buttonHeight*1.2)
         }
         
         currentDayView.items = getCurrentDayItems()
         currentDayView.selectedItemIndex = Calendar.actual.component(.weekday, from: Date()) - 2
+    }
+    
+    private func setupScrollConstraint() {
+        scrollView.snp.remakeConstraints { maker in
+            maker.top.equalTo(currentDayView.snp.bottom)
+            maker.leading.trailing.equalToSuperview()
+            maker.bottom.equalTo(view.safeAreaLayoutGuide)
+        }
     }
     
     private func getCurrentDayItems() -> [DayViewItem] {
@@ -38,6 +49,12 @@ public final class CalendarViewController: FTViewController {
         }
         
         return items
+    }
+    
+    private func setupScheduleView() {
+        let v = TimeLineView()
+        v.backgroundColor = .systemGray6
+        addStackSubview(v, height: 400)
     }
     
 }

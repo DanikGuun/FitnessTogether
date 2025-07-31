@@ -17,6 +17,7 @@ public final class BaseCoachCoordinator: CoachCoordinator {
         self.factory = factory
         self.tabBarVC = factory.makeTabBarVC()
         self.navigationVC = UINavigationController(rootViewController: tabBarVC)
+        navigationVC.navigationBar.isHidden = true
         tabBarVC.selectedIndex = 1
     }
 
