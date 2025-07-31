@@ -12,6 +12,15 @@ public extension UIView {
         return nil
     }
     
+    var scrollSuperview: UIScrollView? {
+        var responder: UIResponder = self
+        while let next = responder.next {
+            if let scroll = responder as? UIScrollView { return scroll }
+            responder = next
+        }
+        return nil
+    }
+    
     func constraintHeight(_ height: CGFloat) {
         self.translatesAutoresizingMaskIntoConstraints = false
         if let constraint = self.constraints.first(where: { $0.identifier == "heightConstraint" }) {

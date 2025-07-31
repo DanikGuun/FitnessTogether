@@ -53,8 +53,10 @@ public final class CalendarViewController: FTViewController {
     
     private func setupScheduleView() {
         let v = TimeLineView()
-        v.backgroundColor = .systemGray6
-        addStackSubview(v, height: 400)
+        v.backgroundColor = .systemBackground
+        v.tintColor = .systemGray2
+        DispatchQueue.main.async { [weak self] in v.minHeight = (self?.scrollView.bounds.height ?? 400) * 0.9}
+        addStackSubview(v, height: 2000)
     }
     
 }

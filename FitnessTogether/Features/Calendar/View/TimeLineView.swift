@@ -4,18 +4,22 @@ import UIKit
 public class TimeLineView: UIView {
     
     //Size
-    public var resizeVelocity: CGFloat = 10 { didSet { layoutIfNeeded() } }
+    public var resizeVelocity: CGFloat = 60 { didSet { layoutIfNeeded() } }
     public var minHeight: CGFloat = 400 { didSet { layoutIfNeeded() } }
     public var maxHeight: CGFloat = 4000 { didSet { layoutIfNeeded() } }
 
     //Inset
-    private var insets: UIEdgeInsets = .zero { didSet { updateContentLayoutGuide() } }
+    private var insets: UIEdgeInsets = .zero { didSet { updateScheduleLayoutGuide() } }
     private(set) public var scheduleLayoutGuide = UILayoutGuide() { didSet { layoutIfNeeded() } }
     public override var layoutMargins: UIEdgeInsets { didSet { layoutIfNeeded() } }
     
     //Font
     public var timeFont: UIFont = DC.Font.additionalInfo { didSet { layoutIfNeeded(); setNeedsDisplay() } }
     
+    //Pinch
+    private var startPinchY: CGFloat!
+    private var startOffsetY: CGFloat!
+    private var startHeight: CGFloat!
     
     //MARK: - Lifecycle
     public convenience init(){
@@ -32,9 +36,9 @@ public class TimeLineView: UIView {
     
     private func setup() {
         self.layoutMargins = UIEdgeInsets(top: 20, left: 10, bottom: 20, right: 10)
-        isUserInteractionEnabled = true
         self.addLayoutGuide(scheduleLayoutGuide)
-        updateContentLayoutGuide()
+        updateScheduleLayoutGuide()
+        isUserInteractionEnabled = true
         setupPinchGesture()
     }
     
@@ -46,13 +50,28 @@ public class TimeLineView: UIView {
     
     @objc
     private func pinchGesture(_ pinch: UIPinchGestureRecognizer) {
-        let targetHeight = bounds.height + resizeVelocity * pinch.velocity
+        
+        let resize = abs(pinch.scale - 1) * resizeVelocity * (pinch.velocity / 3) //на сколько поменять высоту
+        let targetHeight = bounds.height + resize
         let height = targetHeight.clamp(min: minHeight, max: maxHeight)
         constraintHeight(height)
         superview?.layoutIfNeeded()
+        
+        if let scroll = self.scrollSuperview {
+            
+            if pinch.state == .began {
+                startPinchY =  convert(pinch.location(in: self), to: viewController?.view).y - scroll.frame.minY
+                startOffsetY = scroll.contentOffset.y
+                startHeight = bounds.height
+            }
+            
+            let heightPercent = (bounds.height / startHeight) //процент изменения высоты от начала щипка
+            let pinchOffset = -(1 - heightPercent) * startPinchY
+            scroll.contentOffset.y = startOffsetY * heightPercent + pinchOffset
+        }
     }
     
-    private func updateContentLayoutGuide() {
+    private func updateScheduleLayoutGuide() {
         scheduleLayoutGuide.snp.remakeConstraints { maker in
             maker.top.equalTo(layoutMarginsGuide).inset(insets.top)
             maker.bottom.equalTo(layoutMarginsGuide).inset(insets.bottom)
@@ -109,7 +128,6 @@ public class TimeLineView: UIView {
         let recomendedHeightForTitle: CGFloat = 40
         let heightInterval = layoutMarginsGuide.layoutFrame.height / 24
         let count = Int(heightInterval / recomendedHeightForTitle).clamp(min: 1, max: maxIntervalCountPerHour) //на сколько фрагментов делится час
-        print("\(Int(layoutMarginsGuide.layoutFrame.height)) - \(heightInterval) - \(count)")
         let interval: TimeInterval = Double(60 * 60 / count)
         return interval
     }
