@@ -3,6 +3,11 @@ import UIKit
 
 public class TimeLineView: UIView {
     
+    //Appearance
+    public var lineWidth: CGFloat = 2 { didSet { layoutIfNeeded() } }
+    public var timeFont: UIFont = DC.Font.roboto(weight: .semibold, size: 12) { didSet { layoutIfNeeded() } }
+    public var columnCount: Int = 7 { didSet { setNeedsDisplay() } }
+    
     //Size
     public var resizeVelocity: CGFloat = 60 { didSet { layoutIfNeeded() } }
     public var minHeight: CGFloat = 400 { didSet { layoutIfNeeded() } }
@@ -12,9 +17,6 @@ public class TimeLineView: UIView {
     private var insets: UIEdgeInsets = .zero { didSet { updateScheduleLayoutGuide() } }
     private(set) public var scheduleLayoutGuide = UILayoutGuide() { didSet { layoutIfNeeded() } }
     public override var layoutMargins: UIEdgeInsets { didSet { layoutIfNeeded() } }
-    
-    //Font
-    public var timeFont: UIFont = DC.Font.additionalInfo { didSet { layoutIfNeeded(); setNeedsDisplay() } }
     
     //Pinch
     private var startPinchY: CGFloat!
@@ -42,12 +44,12 @@ public class TimeLineView: UIView {
         setupPinchGesture()
     }
     
+    
     //MARK: - Pinch
     private func setupPinchGesture() {
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(pinchGesture))
         self.addGestureRecognizer(pinch)
     }
-    
     @objc
     private func pinchGesture(_ pinch: UIPinchGestureRecognizer) {
         
@@ -65,10 +67,25 @@ public class TimeLineView: UIView {
                 startHeight = bounds.height
             }
             
-            let heightPercent = (bounds.height / startHeight) //процент изменения высоты от начала щипка
-            let pinchOffset = -(1 - heightPercent) * startPinchY
-            scroll.contentOffset.y = startOffsetY * heightPercent + pinchOffset
+            if bounds.height > scroll.bounds.height {
+                let heightPercent = (bounds.height / startHeight) //процент изменения высоты от начала щипка
+                let pinchOffset = -(1 - heightPercent) * startPinchY
+                scroll.contentOffset.y = startOffsetY * heightPercent + pinchOffset
+            }
         }
+    }
+    
+    //MARK: - Layout
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        updateInsets()
+    }
+    
+    private func updateInsets() {
+        let string = NSString(string: "00:00")
+        let width = string.size(withAttributes: [.font: timeFont]).width
+        insets.left = width + 10
     }
     
     private func updateScheduleLayoutGuide() {
@@ -79,32 +96,54 @@ public class TimeLineView: UIView {
             maker.trailing.equalTo(layoutMarginsGuide).inset(insets.right)
         }
     }
-    //
     
+    //MARK: - Drawing
     public override func draw(_ rect: CGRect) {
         super.draw(rect)
         let drawFrame = layoutMarginsGuide.layoutFrame
-        let scheduleFrame = scheduleLayoutGuide.layoutFrame
         
         tintColor.setFill()
         tintColor.setStroke()
-        drawTimeTitles(drawFrame: drawFrame)
+        drawTimeTitlesAndLines(drawFrame: drawFrame)
+        drawVerticalLines()
     }
     
-    private func drawTimeTitles(drawFrame: CGRect) {
+    private func drawTimeTitlesAndLines(drawFrame: CGRect) {
         let times = getTimesForDraw()
-        let timeHeight = drawFrame.height / CGFloat(times.count)
-        for (index, time) in times.map({ NSString(string: $0) }).enumerated() {
-            let targetY = drawFrame.minY + timeHeight * CGFloat(index)
-            let titleSize = time.size(withAttributes: [.font: timeFont])
-            let y = targetY - titleSize.height / 2
+        let timeHeight = drawFrame.height / (CGFloat(times.count) - 1)
+        for (index, time) in times.enumerated() {
+            let y = drawFrame.minY + timeHeight * CGFloat(index)
             let x = drawFrame.minX
             let point = CGPoint(x: x, y: y)
-            time.draw(at: point, withAttributes: [
-                .font: timeFont,
-                .foregroundColor: tintColor ?? .label
-            ])
+            drawTime(time, point: point)
+            drawLine(at: y)
         }
+    }
+    
+    private func drawTime(_ time: String, point: CGPoint) {
+        var point = point
+        let time = NSString(string: time)
+        let titleSize = time.size(withAttributes: [.font: timeFont])
+        point.y -= titleSize.height / 2
+        
+        time.draw(at: point, withAttributes: [
+            .font: timeFont,
+            .foregroundColor: tintColor ?? .label
+        ])
+    }
+    
+    private func drawLine(at y: CGFloat) {
+        let bounds = scheduleLayoutGuide.layoutFrame
+        let path = UIBezierPath()
+        
+        let startPoint = CGPoint(x: bounds.minX, y: y)
+        path.move(to: startPoint)
+        
+        let endPoint = CGPoint(x: bounds.maxX, y: y)
+        path.addLine(to: endPoint)
+        
+        path.lineWidth = lineWidth
+        path.stroke()
     }
     
     private func getTimesForDraw() -> [String] {
@@ -130,6 +169,30 @@ public class TimeLineView: UIView {
         let count = Int(heightInterval / recomendedHeightForTitle).clamp(min: 1, max: maxIntervalCountPerHour) //на сколько фрагментов делится час
         let interval: TimeInterval = Double(60 * 60 / count)
         return interval
+    }
+    
+    private func drawVerticalLines() {
+        let bounds = scheduleLayoutGuide.layoutFrame
+        let step = bounds.width / CGFloat(columnCount)
+        
+        for column in 0...columnCount+1 {
+            let x = bounds.minX + CGFloat(column) * step
+            drawVerticalLine(at: x)
+        }
+    }
+    
+    private func drawVerticalLine(at x: CGFloat) {
+        let bounds = scheduleLayoutGuide.layoutFrame
+        let path = UIBezierPath()
+        
+        let startPoint = CGPoint(x: x, y: bounds.minY)
+        path.move(to: startPoint)
+        
+        let endPoint = CGPoint(x: x, y: bounds.maxY)
+        path.addLine(to: endPoint)
+        
+        path.lineWidth = lineWidth
+        path.stroke()
     }
     
 }
