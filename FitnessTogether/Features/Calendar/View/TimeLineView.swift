@@ -12,6 +12,7 @@ public class TimeLineView: UIView {
     public var resizeVelocity: CGFloat = 60 { didSet { layoutIfNeeded() } }
     public var minHeight: CGFloat = 400 { didSet { layoutIfNeeded() } }
     public var maxHeight: CGFloat = 4000 { didSet { layoutIfNeeded() } }
+    public override var intrinsicContentSize: CGSize { bounds.size }
 
     //Inset
     private var insets: UIEdgeInsets = .zero { didSet { updateScheduleLayoutGuide() } }
@@ -52,7 +53,7 @@ public class TimeLineView: UIView {
     }
     @objc
     private func pinchGesture(_ pinch: UIPinchGestureRecognizer) {
-        
+
         let resize = abs(pinch.scale - 1) * resizeVelocity * (pinch.velocity / 3) //на сколько поменять высоту
         let targetHeight = bounds.height + resize
         let height = targetHeight.clamp(min: minHeight, max: maxHeight)
@@ -69,7 +70,7 @@ public class TimeLineView: UIView {
             
             if bounds.height > scroll.bounds.height {
                 let heightPercent = (bounds.height / startHeight) //процент изменения высоты от начала щипка
-                let pinchOffset = -(1 - heightPercent) * startPinchY
+                let pinchOffset = -(1 - heightPercent) * startPinchY //чтобы скролл держался на уровне вью, от которой начали зумить
                 scroll.contentOffset.y = startOffsetY * heightPercent + pinchOffset
             }
         }
@@ -116,7 +117,7 @@ public class TimeLineView: UIView {
             let x = drawFrame.minX
             let point = CGPoint(x: x, y: y)
             drawTime(time, point: point)
-            drawLine(at: y)
+            drawHorizontalLine(at: y)
         }
     }
     
@@ -132,14 +133,14 @@ public class TimeLineView: UIView {
         ])
     }
     
-    private func drawLine(at y: CGFloat) {
+    private func drawHorizontalLine(at y: CGFloat) {
         let bounds = scheduleLayoutGuide.layoutFrame
         let path = UIBezierPath()
         
-        let startPoint = CGPoint(x: bounds.minX, y: y)
+        let startPoint = CGPoint(x: bounds.minX - lineWidth/2, y: y)
         path.move(to: startPoint)
         
-        let endPoint = CGPoint(x: bounds.maxX, y: y)
+        let endPoint = CGPoint(x: bounds.maxX + lineWidth/2, y: y)
         path.addLine(to: endPoint)
         
         path.lineWidth = lineWidth
