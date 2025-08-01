@@ -24,11 +24,6 @@ public class WorkoutsTimelineView: UIView {
     private func setup() {
         isUserInteractionEnabled = true
         setupTimeLineView()
-        backgroundColor = .systemBlue
-        
-        self.items = [
-            WorkoutTimelineItem(title: "Прохор нуб", color: .systemMint, column: 2, start: 9*3600, duration: 3*3600)
-        ]
     }
     
     public override func layoutSubviews() {
@@ -42,6 +37,9 @@ public class WorkoutsTimelineView: UIView {
             maker.top.leading.trailing.equalToSuperview()
         }
         timelineView.constraintHeight(500)
+        DispatchQueue.main.async { [weak self] in
+            if let minHeight = self?.scrollSuperview?.bounds.height { self?.timelineView.minHeight = minHeight }
+        }
         
         timelineView.backgroundColor = .systemBackground
         timelineView.tintColor = .systemGray3
@@ -52,21 +50,25 @@ public class WorkoutsTimelineView: UIView {
     }
     
     private func updateItems() {
+        let perDay = (24 * 60 * 60).cgf
         for item in items {
-            let perDay = (24 * 60 * 60).cgf
             
             let itemView = WorkoutTimelineItemView()
             itemView.item = item
-            let end = item.start + item.duration
-            let endOffset = end / perDay
-            let durationOffset = item.duration / perDay
             
+            let durationMultiplier = item.duration / perDay
+            let end = item.start + item.duration
+            let endMultiplier = end / perDay
+            let column = item.column + 1
+            let columnMultiplier = column.cgf / timelineView.columnCount.cgf
+            
+            print("\(column.cgf) / \(timelineView.columnCount.cgf) = \(columnMultiplier)")
             workoutsParentView.addSubview(itemView)
             itemView.snp.makeConstraints { maker in
-                maker.leading.equalToSuperview()
+                maker.trailing.equalToSuperview().multipliedBy(columnMultiplier)
                 maker.width.equalToSuperview().dividedBy(timelineView.columnCount)
-                maker.height.equalToSuperview().multipliedBy(durationOffset)
-                maker.bottom.equalToSuperview().multipliedBy(endOffset)
+                maker.height.equalToSuperview().multipliedBy(durationMultiplier)
+                maker.bottom.equalToSuperview().multipliedBy(endMultiplier)
             }
         }
     }
@@ -114,6 +116,7 @@ fileprivate class WorkoutTimelineItemView: UIView {
             maker.bottom.equalToSuperview().priority(.medium)
         }
         label.snp.contentHuggingVerticalPriority = 1000
+        label.snp.contentCompressionResistanceVerticalPriority = 0
         
         label.textColor = .systemBackground
         label.numberOfLines = 0

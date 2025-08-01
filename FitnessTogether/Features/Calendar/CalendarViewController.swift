@@ -4,7 +4,22 @@ import SnapKit
 
 public final class CalendarViewController: FTViewController {
     
+    var model: CalendarModel!
+    
     private let currentDayView = CurrentDayView()
+    private let workoutsTimelineView = WorkoutsTimelineView()
+    
+    public convenience init(model: CalendarModel) {
+        self.init(nibName: nil, bundle: nil)
+        self.model = model
+    }
+    public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
+        super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
+    }
+    
+    required init?(coder: NSCoder) {
+        super.init(coder: coder)
+    }
     
     public override func viewDidLoad() {
         super.viewDidLoad()
@@ -12,7 +27,8 @@ public final class CalendarViewController: FTViewController {
         setupCurrentDayView()
         setupScrollConstraint()
         stackView.layoutMargins = .zero
-        setupScheduleView()
+        setupWorkoutsTimelineView()
+        updateItems()
     }
     
     private func setupCurrentDayView() {
@@ -51,9 +67,14 @@ public final class CalendarViewController: FTViewController {
         return items
     }
     
-    private func setupScheduleView() {
-        let v = WorkoutsTimelineView()
-        addStackSubview(v, height: 500)
+    private func setupWorkoutsTimelineView() {
+        addStackSubview(workoutsTimelineView)
+    }
+    
+    private func updateItems() {
+        model.getItems(completion: { [weak self] items in
+            self?.workoutsTimelineView.items = items
+        })
     }
     
 }

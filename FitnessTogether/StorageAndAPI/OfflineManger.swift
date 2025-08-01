@@ -37,7 +37,9 @@ public class OfflineManger: FTManager {
             //его тренировки
             for _ in 0...15 {
                 let date = refDate//Calendar.current.date(byAdding: .day, value: Int.random(in: 0..<7), to: refDate)
-                var workout = FTWorkout(id: UUID().uuidString, startDate: date)
+                let random = getRandomCurrentWeekDate(refDate)
+                let type = FTWorkoutKind.allCases.randomElement()!
+                var workout = FTWorkout(id: UUID().uuidString, startDate: random, endDate: random.addingTimeInterval(CGFloat.random(in: 0..<3*3600)), workoutKind: type)
                 let client = clients.randomElement()!
                 let part1 = FTWorkoutParticipant(workoutId: workout.id, userId: client.id, role: .client)
                 let part2 = FTWorkoutParticipant(workoutId: workout.id, userId: coach.id, role: .coach)
@@ -50,6 +52,14 @@ public class OfflineManger: FTManager {
         _user.user = coaches.first!
     }
     
+    private func getRandomCurrentWeekDate(_ refDate: Date) -> Date {
+        let daysToAdd = Int.random(in: 0..<7).cgf
+        let startWeek = Calendar.current.dateInterval(of: .weekOfYear, for: refDate)!.start
+        var day = startWeek.addingTimeInterval(daysToAdd * 24.cgf * 3600.cgf)
+        var startTime = CGFloat.random(in: 0..<21*3600)
+        day = day.addingTimeInterval(startTime)
+        return day
+    }
     
 }
 

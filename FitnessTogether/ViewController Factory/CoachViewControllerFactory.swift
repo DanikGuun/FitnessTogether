@@ -41,7 +41,8 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
     }
     
     public func makeCalendarVC() -> UIViewController {
-        let vc = CalendarViewController()
+        let model = CoachCalendarModel(ftManager: ftManager)
+        let vc = CalendarViewController(model: model)
         vc.tabBarItem = UITabBarItem(title: "Календарь", image: UIImage(named: "calendar"), selectedImage: UIImage(named: "calendar.fill"))
         return vc
     }

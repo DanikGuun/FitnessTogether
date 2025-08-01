@@ -9,9 +9,9 @@ public class TimeLineView: UIView {
     public var columnCount: Int = 7 { didSet { setNeedsDisplay() } }
     
     //Size
-    public var resizeVelocity: CGFloat = 60 { didSet { layoutIfNeeded() } }
-    public var minHeight: CGFloat = 400 { didSet { layoutIfNeeded() } }
-    public var maxHeight: CGFloat = 4000 { didSet { layoutIfNeeded() } }
+    public var resizeVelocity: CGFloat = 60 { didSet { setNeedsLayout()  } }
+    public var minHeight: CGFloat = 400 { didSet { setNeedsLayout() } }
+    public var maxHeight: CGFloat = 4000 { didSet { setNeedsLayout()  } }
     public override var intrinsicContentSize: CGSize { bounds.size }
 
     //Inset
@@ -54,7 +54,7 @@ public class TimeLineView: UIView {
     @objc
     private func pinchGesture(_ pinch: UIPinchGestureRecognizer) {
 
-        let resize = abs(pinch.scale - 1) * resizeVelocity * (pinch.velocity / 3) //на сколько поменять высоту
+        let resize = abs(pinch.scale - 2) * resizeVelocity * (pinch.velocity / 3) //на сколько поменять высоту
         let targetHeight = bounds.height + resize
         let height = targetHeight.clamp(min: minHeight, max: maxHeight)
         constraintHeight(height)
@@ -81,6 +81,8 @@ public class TimeLineView: UIView {
     public override func layoutSubviews() {
         super.layoutSubviews()
         updateInsets()
+        let height = bounds.height.clamp(min: minHeight, max: maxHeight)
+        if height != bounds.height { constraintHeight(height) }
     }
     
     private func updateInsets() {
