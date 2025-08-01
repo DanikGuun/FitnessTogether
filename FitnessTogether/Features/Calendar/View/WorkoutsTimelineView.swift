@@ -15,6 +15,7 @@ public class WorkoutsTimelineView: UIView {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
+        constraintHeight(24)
     }
     
     required init?(coder: NSCoder) {
@@ -62,7 +63,6 @@ public class WorkoutsTimelineView: UIView {
             let column = item.column + 1
             let columnMultiplier = column.cgf / timelineView.columnCount.cgf
             
-            print("\(column.cgf) / \(timelineView.columnCount.cgf) = \(columnMultiplier)")
             workoutsParentView.addSubview(itemView)
             itemView.snp.makeConstraints { maker in
                 maker.trailing.equalToSuperview().multipliedBy(columnMultiplier)

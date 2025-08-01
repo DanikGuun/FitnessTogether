@@ -14,6 +14,7 @@ public struct DC {
     
     public struct Size {
         public static let buttonHeight: CGFloat = 54
+        public static let smallButtonHeight: CGFloat = 34
         public static let buttonCornerRadius: CGFloat = 20
     }
     

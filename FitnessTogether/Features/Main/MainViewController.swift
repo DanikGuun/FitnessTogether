@@ -6,10 +6,9 @@ public final class MainWorkoutsViewController: FTViewController {
     var model: MainModel!
     
     private var trainsCollection: MainWorkoutView = MainWorkoutCollectionView()
-    private var disclosureButton = UIButton(configuration: .plain())
-    private var disclosureImageView: UIImageView = UIImageView()
+    private var disclosureButton = DisclosureButton()
     
-    private let trainCollectionMaxHeight: CGFloat = 270
+    private let trainCollectionMaxHeight: CGFloat = 290
     
     //MARK: - Lifecycle
     public convenience init(model: MainModel) {
@@ -70,31 +69,10 @@ public final class MainWorkoutsViewController: FTViewController {
     }
     
     private func setupDisclosureButton() {
-        addStackSubview(disclosureButton)
-        disclosureButton.changesSelectionAsPrimaryAction = true
+        addStackSubview(disclosureButton, height: DC.Size.smallButtonHeight)
+        disclosureButton.backgroundColor = .systemBackground
         disclosureButton.addAction(UIAction(handler: disclosureButtonPressed), for: .touchUpInside)
-        disclosureButton.configurationUpdateHandler = disclosureButtonConfigurationHandler
-        
-        let imageConf = UIImage.SymbolConfiguration(weight: .medium)
-        let image = UIImage(systemName: "chevron.down")?.withConfiguration(imageConf)
-        disclosureImageView.image = image
-        disclosureImageView.contentMode = .scaleAspectFit
-        disclosureImageView.tintColor = .ftOrange
-        disclosureButton.addSubview(disclosureImageView)
-        disclosureImageView.snp.makeConstraints { [weak self] maker in
-            guard let self else { return }
-            maker.top.bottom.trailing.equalToSuperview().inset(8)
-            maker.width.equalTo(disclosureImageView.snp.height)
-        }
     }
-    
-    private func disclosureButtonConfigurationHandler(_ button: UIButton) {
-        button.configuration?.baseBackgroundColor = .clear
-        UIView.animate(withDuration: 0.3, animations: {
-            self.disclosureImageView.transform = button.isSelected ? CGAffineTransform(rotationAngle: -.pi) : CGAffineTransform(rotationAngle: 0.0001)
-        })
-    }
-    
     private func disclosureButtonPressed(_ action: UIAction) {
         let selected = disclosureButton.isSelected
         setTrainCollectionDisclosed(selected)
@@ -103,7 +81,8 @@ public final class MainWorkoutsViewController: FTViewController {
     private func setDisclosureButtonHidden(_ hidden: Bool) {
         if hidden { disclosureButton.isSelected = false }
         UIView.animate(withDuration: 0.3, animations: { [weak self] in
-            self?.disclosureButton.constraintHeight(hidden ? 0 : 44)
+            self?.disclosureButton.constraintHeight(hidden ? 0 : DC.Size.smallButtonHeight)
+            self?.disclosureButton.alpha = hidden ? 0 : 1
             self?.view.layoutIfNeeded()
         })
     }
