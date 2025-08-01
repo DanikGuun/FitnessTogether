@@ -2,11 +2,12 @@
 import UIKit
 
 public protocol CoachViewControllerFactory {
-    func makeTabBarVC() -> UITabBarController
+    func makeTabBarVC(calendarDelegate: CalendarViewControllerDelegate?) -> UITabBarController
     func makeMainVC() -> UIViewController
-    func makeCalendarVC() -> UIViewController
-    func makerWorkoutsVC() -> UIViewController
+    func makeCalendarVC(delegate: CalendarViewControllerDelegate?) -> UIViewController
+    func makeWorkoutsVC() -> UIViewController
     func makeProfileVC() -> UIViewController
+    func makeAddWorkoutVC(startInterval: DateInterval?) -> UIViewController
 }
 
 public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
@@ -17,7 +18,7 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         self.ftManager = ftManager
     }
     
-    public func makeTabBarVC() -> UITabBarController {
+    public func makeTabBarVC(calendarDelegate: CalendarViewControllerDelegate?) -> UITabBarController {
         let tabBarController = UITabBarController()
         
         let tabBar = FTTabBar()
@@ -25,8 +26,8 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         
         tabBarController.viewControllers = [
             makeMainVC(),
-            makeCalendarVC(),
-            makerWorkoutsVC(),
+            makeCalendarVC(delegate: calendarDelegate),
+            makeWorkoutsVC(),
             makeProfileVC()
         ]
         
@@ -40,14 +41,15 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         return vc
     }
     
-    public func makeCalendarVC() -> UIViewController {
+    public func makeCalendarVC(delegate: CalendarViewControllerDelegate?) -> UIViewController {
         let model = CoachCalendarModel(ftManager: ftManager)
         let vc = CalendarViewController(model: model)
+        vc.delegate = delegate
         vc.tabBarItem = UITabBarItem(title: "Календарь", image: UIImage(named: "calendar"), selectedImage: UIImage(named: "calendar.fill"))
         return vc
     }
     
-    public func makerWorkoutsVC() -> UIViewController {
+    public func makeWorkoutsVC() -> UIViewController {
         let vc = UIViewController()
         vc.tabBarItem = UITabBarItem(title: "Тренировки", image: UIImage(named: "barbell"), selectedImage: UIImage(named: "barbell.fill"))
         return vc
@@ -56,6 +58,12 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
     public func makeProfileVC() -> UIViewController {
         let vc = UIViewController()
         vc.tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(named: "figure"), selectedImage: UIImage(named: "figure.fill"))
+        return vc
+    }
+    
+    public func makeAddWorkoutVC(startInterval: DateInterval?) -> UIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .systemBackground
         return vc
     }
     
