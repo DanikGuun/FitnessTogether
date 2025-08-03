@@ -7,6 +7,8 @@ public class TimeLineView: UIView {
     public var lineWidth: CGFloat = 2 { didSet { layoutIfNeeded() } }
     public var timeFont: UIFont = DC.Font.roboto(weight: .semibold, size: 12) { didSet { layoutIfNeeded() } }
     public var columnCount: Int = 7 { didSet { setNeedsDisplay() } }
+    public var rowCount: Int { drawedTimes.count }
+    public var drawedTimes: [String] { getTimesForDraw() }
     
     //Size
     public var resizeVelocity: CGFloat = 60 { didSet { setNeedsLayout()  } }

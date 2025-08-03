@@ -4,6 +4,7 @@ import UIKit
 public class WorkoutsTimelineView: UIView {
     
     var items: [WorkoutTimelineItem] = [] { didSet { updateItems() } }
+    var delegate: (any WorkoutTimeLineDelegate)?
     
     private let timelineView = TimeLineView()
     private let workoutsParentView = UIView()
@@ -25,6 +26,23 @@ public class WorkoutsTimelineView: UIView {
     private func setup() {
         isUserInteractionEnabled = true
         setupTimeLineView()
+        let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
+        self.addGestureRecognizer(tap)
+    }
+    
+    @objc
+    private func handleTap(_ tap: UITapGestureRecognizer) {
+        let tapCoodrds = tap.location(in: self)
+        guard timelineView.scheduleLayoutGuide.layoutFrame.contains(tapCoodrds) else { return }
+        let tapPoint = workoutsParentView.convert(tapCoodrds, from: self)
+        let scheduleFrame = timelineView.scheduleLayoutGuide.layoutFrame
+        let oneColumnWidth = scheduleFrame.width / timelineView.columnCount.cgf
+        let oneRowHeight = scheduleFrame.height / timelineView.rowCount.cgf
+        let column = Int(tapPoint.x / oneColumnWidth)
+        let row = Int(tapPoint.y / oneRowHeight)
+        
+        let time = timelineView.drawedTimes[row]
+        print(column, time)
     }
     
     public override func layoutSubviews() {
@@ -81,6 +99,14 @@ public struct WorkoutTimelineItem {
     public var column: Int
     public var start: TimeInterval
     public var duration: TimeInterval
+}
+
+public protocol WorkoutTimeLineDelegate {
+    func workoutTimeline(_ timeline: WorkoutTimelineItem, didSelectDate date: Date, column: Int)
+}
+
+public extension WorkoutTimeLineDelegate {
+    func workoutTimeline(_ timeline: WorkoutTimelineItem, didSelectDate date: Date, column: Int) {}
 }
 
 fileprivate class WorkoutTimelineItemView: UIView {
