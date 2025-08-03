@@ -23,6 +23,7 @@ final class CoachCalendarModelTests: XCTestCase {
     
     
     let refDate = Date()
+    let interval = Calendar.current.dateInterval(of: .weekOfYear, for: Date())!
     
     func test_GetWorkouts_WorkoutOutOfDate_NextWeek() {
         let client = FTUser(firstName: "Client", role: .client, id: "ClientId")
@@ -42,7 +43,7 @@ final class CoachCalendarModelTests: XCTestCase {
         ftManager._workout.workouts = [workout]
         
         var item: WorkoutTimelineItem?
-        model.getItems(completion: { items in
+        model.getItems(for: interval, completion: { items in
             item = items.first
         })
         XCTAssertNil(item)
@@ -66,7 +67,7 @@ final class CoachCalendarModelTests: XCTestCase {
         ftManager._workout.workouts = [workout]
         
         var item: WorkoutTimelineItem?
-        model.getItems(completion: { items in
+        model.getItems(for: interval, completion: { items in
             item = items.first
         })
         XCTAssertNil(item)
@@ -90,7 +91,7 @@ final class CoachCalendarModelTests: XCTestCase {
         ftManager._workout.workouts = [workout]
         
         var item: WorkoutTimelineItem?
-        model.getItems(completion: { items in
+        model.getItems(for: interval, completion: { items in
             item = items.first
         })
         
@@ -115,7 +116,7 @@ final class CoachCalendarModelTests: XCTestCase {
         ftManager._workout.workouts = [workout]
         
         var item: WorkoutTimelineItem?
-        model.getItems(completion: { items in
+        model.getItems(for: interval, completion: { items in
             item = items.first
         })
         
@@ -140,14 +141,14 @@ final class CoachCalendarModelTests: XCTestCase {
         ftManager._workout.workouts = [workout]
         
         var item: WorkoutTimelineItem?
-        model.getItems(completion: { items in
+        model.getItems(for: interval, completion: { items in
             item = items.first
         })
         
         let startDay = Calendar.current.startOfDay(for: refDate)
         let expectedTitle = "\(client.lastName) \(client.firstName)"
         let expectedColor = workout.workoutKind.color
-        let expectedColumn = Calendar.current.component(.weekday, from: workout.startDate!) - 2
+        let expectedColumn = (Calendar.actual.component(.weekday, from: refDate) - 2 + 7) % 7
         let expectedStart = workout.startDate!.timeIntervalSince(startDay)
         let expectedDuration = workout.endDate!.timeIntervalSince(workout.startDate!)
         

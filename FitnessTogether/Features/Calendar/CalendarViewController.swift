@@ -2,13 +2,13 @@
 import UIKit
 import SnapKit
 
-public final class CalendarViewController: FTViewController {
+public final class CalendarViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
     
     public var model: CalendarModel!
     public var delegate: CalendarViewControllerDelegate?
     
     private let currentDayView = CurrentDayView()
-    private let workoutsTimelineView = WorkoutsTimelineView()
+    private let collection = UICollectionView(frame: .zero, collectionViewLayout: CalendarViewController.makeLayout())
     private let addButton = UIButton(configuration: .filled())
     
     public convenience init(model: CalendarModel) {
@@ -31,11 +31,8 @@ public final class CalendarViewController: FTViewController {
     
     private func setup() {
         setupCurrentDayView()
-        setupScrollConstraint()
-        stackView.layoutMargins = .zero
-        setupWorkoutsTimelineView()
+        setupWorkoutsTimelineCollection()
         setupAddButton()
-        updateItems()
     }
     
     //MARK: - CurrentDayView
@@ -47,17 +44,8 @@ public final class CalendarViewController: FTViewController {
         }
         
         currentDayView.items = getCurrentDayItems()
-        currentDayView.selectedItemIndex = Calendar.actual.component(.weekday, from: Date()) - 2
+        currentDayView.selectedItemIndex = (Calendar.actual.component(.weekday, from: Date()) - 2 + 7) % 7
     }
-    
-    private func setupScrollConstraint() {
-        scrollView.snp.remakeConstraints { maker in
-            maker.top.equalTo(currentDayView.snp.bottom)
-            maker.leading.trailing.equalToSuperview()
-            maker.bottom.equalTo(view.safeAreaLayoutGuide)
-        }
-    }
-    
     private func getCurrentDayItems() -> [DayViewItem] {
         var items: [DayViewItem] = []
         let calendar = Calendar.actual
@@ -76,14 +64,37 @@ public final class CalendarViewController: FTViewController {
     }
     
     //MARK: - TimeLine
-    private func setupWorkoutsTimelineView() {
-        addStackSubview(workoutsTimelineView)
+    private func setupWorkoutsTimelineCollection() {
+        view.addSubview(collection)
+        collection.snp.makeConstraints { maker in
+            maker.top.equalTo(currentDayView.snp.bottom)
+            maker.leading.trailing.bottom.equalToSuperview()
+        }
+        collection.canCancelContentTouches = false
+        collection.showsHorizontalScrollIndicator = false
+        collection.isPagingEnabled = true
+        collection.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        collection.delegate = self
+        collection.dataSource = self
     }
     
-    private func updateItems() {
-        model.getItems(completion: { [weak self] items in
-            self?.workoutsTimelineView.items = items
-        })
+    public func numberOfSections(in collectionView: UICollectionView) -> Int {
+        return 1
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
+        return 5
+    }
+    
+    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+        print("end")
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
+        cell.contentConfiguration = TimelineCellContentConfiguration()
+
+        return cell
     }
     
     //MARK: - AddButton
@@ -106,6 +117,24 @@ public final class CalendarViewController: FTViewController {
     
     private func addButtonPressed(_ action: UIAction?) {
         delegate?.calendarViewControllerGoToAddWorkout(self, interval: nil)
+    }
+    
+    private static func makeLayout() -> UICollectionViewCompositionalLayout {
+        let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+        let item = NSCollectionLayoutItem(layoutSize: itemSize)
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .fractionalHeight(1))
+        let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
+        let section = NSCollectionLayoutSection(group: group)
+        
+        var conf = UICollectionViewCompositionalLayoutConfiguration()
+        conf.scrollDirection = .horizontal
+    
+        let layout = UICollectionViewCompositionalLayout(section: section, configuration: conf)
+        return layout
+//        let layout = UICollectionViewFlowLayout()
+//        layout.itemSize = CGSize(width: 600, height: 800)
+//        layout.scrollDirection = .horizontal
+//        return layout
     }
     
 }

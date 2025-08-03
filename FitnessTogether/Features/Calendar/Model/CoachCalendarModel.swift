@@ -10,13 +10,13 @@ public final class CoachCalendarModel: CalendarModel {
         self.ftManager = ftManager
     }
     
-    public func getItems(completion: @escaping ([WorkoutTimelineItem]) -> Void) {
+    public func getItems(for interval: DateInterval, completion: @escaping ([WorkoutTimelineItem]) -> Void) {
         ftManager.user.current(completion: { [weak self] result in
             guard let self else { return }
             switch result {
                 
             case .success(let user):
-                getWorkouts(user: user, completion: { workouts in
+                getWorkouts(user: user, for: interval, completion: { workouts in
                     self.workoutsToItems(workouts, completion: { items in
                         completion(items)
                     })
@@ -29,13 +29,13 @@ public final class CoachCalendarModel: CalendarModel {
         })
     }
     
-    private func getWorkouts(user: FTUser, completion: @escaping ([FTWorkout]) -> Void) {
+    private func getWorkouts(user: FTUser, for interval: DateInterval, completion: @escaping ([FTWorkout]) -> Void) {
         ftManager.workout.getAll(completion: { [weak self] result in
             guard let self else { return }
             switch result {
                 
             case .success(let workouts):
-                let filtered = filterWorkouts(workouts, user: user)
+                let filtered = filterWorkouts(workouts, user: user, for: interval)
                 completion(filtered)
                 
             case .failure(let error):
@@ -45,7 +45,7 @@ public final class CoachCalendarModel: CalendarModel {
         })
     }
     
-    private func filterWorkouts(_ workouts: [FTWorkout], user: FTUser) -> [FTWorkout] {
+    private func filterWorkouts(_ workouts: [FTWorkout], user: FTUser, for interval: DateInterval) -> [FTWorkout] {
         
         let weekInterval = Calendar.actual.dateInterval(of: .weekOfYear, for: Date())!
         

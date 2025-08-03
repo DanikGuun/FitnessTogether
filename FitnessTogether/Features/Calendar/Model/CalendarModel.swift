@@ -1,5 +1,6 @@
+import Foundation
 
 public protocol CalendarModel {
-    func getItems(completion: @escaping ([WorkoutTimelineItem]) -> Void)
+    func getItems(for interval: DateInterval, completion: @escaping ([WorkoutTimelineItem]) -> Void)
 }
 

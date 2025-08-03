@@ -5,6 +5,14 @@ public class WorkoutsTimelineView: UIView {
     
     var items: [WorkoutTimelineItem] = [] { didSet { updateItems() } }
     var delegate: (any WorkoutTimeLineDelegate)?
+    var minHeight: CGFloat {
+        get { timelineView.minHeight }
+        set { timelineView.minHeight = newValue }
+    }
+    var maxHeight: CGFloat {
+        get { timelineView.maxHeight }
+        set { timelineView.maxHeight = newValue }
+    }
     
     private let timelineView = TimeLineView()
     private let workoutsParentView = UIView()
@@ -16,7 +24,6 @@ public class WorkoutsTimelineView: UIView {
     public override init(frame: CGRect) {
         super.init(frame: frame)
         setup()
-        constraintHeight(24)
     }
     
     required init?(coder: NSCoder) {
@@ -56,9 +63,6 @@ public class WorkoutsTimelineView: UIView {
             maker.top.leading.trailing.equalToSuperview()
         }
         timelineView.constraintHeight(500)
-        DispatchQueue.main.async { [weak self] in
-            if let minHeight = self?.scrollSuperview?.bounds.height { self?.timelineView.minHeight = minHeight }
-        }
         
         timelineView.backgroundColor = .systemBackground
         timelineView.tintColor = .systemGray3
