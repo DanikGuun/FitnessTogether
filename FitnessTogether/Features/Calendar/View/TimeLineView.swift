@@ -64,12 +64,15 @@ public class TimeLineView: UIView {
         
         if let scroll = self.scrollSuperview {
             
+            
             if pinch.state == .began {
                 startPinchY =  convert(pinch.location(in: self), to: viewController?.view).y - scroll.frame.minY
                 startOffsetY = scroll.contentOffset.y
                 startHeight = bounds.height
             }
             
+            //чтобы при сжатии скрол не влезал не середину
+            guard scroll.contentOffset.y > 0 || pinch.velocity > 0 else { return }
             if bounds.height > scroll.bounds.height {
                 let heightPercent = (bounds.height / startHeight) //процент изменения высоты от начала щипка
                 let pinchOffset = -(1 - heightPercent) * startPinchY //чтобы скролл держался на уровне вью, от которой начали зумить
