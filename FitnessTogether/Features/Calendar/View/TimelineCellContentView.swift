@@ -29,10 +29,14 @@ public class TimelineCellContentView: UIView, UIContentView {
     private func updateConfiguration() {
         let conf = getConfiguration()
         timelineView.items = conf.items
+        lab.text = conf.count
     }
     
+    let lab = UILabel()
     private func setup() {
         setupTimeLine()
+        addSubview(lab)
+        lab.snp.makeConstraints { $0.leading.trailing.equalToSuperview() }
     }
     
     private func setupTimeLine() {

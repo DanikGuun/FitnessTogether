@@ -10,6 +10,7 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
     private let currentDayView = CurrentDayView()
     private let collection = UICollectionView(frame: .zero, collectionViewLayout: CalendarViewController.makeLayout())
     private let addButton = UIButton(configuration: .filled())
+    private var dates: [Date] = [Date().addingTimeInterval(-86400*2), Date().addingTimeInterval(-86400), Date(), Date().addingTimeInterval(86400), Date().addingTimeInterval(86400*2)]
     
     public convenience init(model: CalendarModel) {
         self.init(nibName: nil, bundle: nil)
@@ -76,6 +77,9 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
         collection.register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         collection.delegate = self
         collection.dataSource = self
+        DispatchQueue.main.async {
+            self.collection.scrollToItem(at: IndexPath(item: 2, section: 0), at: .centeredHorizontally, animated: false)
+        }
     }
     
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -83,18 +87,43 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
     }
     
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return 5
+        return dates.count
     }
     
-    public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-        print("end")
-    }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        cell.contentConfiguration = TimelineCellContentConfiguration()
+        let day = dates[indexPath.item]
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd.MM.yyyy"
+        cell.contentConfiguration = TimelineCellContentConfiguration(count: formatter.string(from: day))
 
         return cell
+    }
+    
+    public func scrollViewDidScroll(_ scrollView: UIScrollView) {
+        let collectionView = collection
+        collectionView.performBatchUpdates({
+            
+            if shouldAddToEnd {
+                dates.append(dates.last!.addingTimeInterval(86400))
+                collectionView.insertItems(at: [IndexPath(item: dates.count-1, section: 0)])
+            }
+            
+            else if shouldAddToStart {
+                dates.insert(dates.first!.addingTimeInterval(-86400), at: 0)
+                collectionView.insertItems(at: [IndexPath(item: 0, section: 0)])
+            }
+            
+        })
+    }
+    
+    private var shouldAddToEnd: Bool {
+        collection.contentOffset.x > collection.contentSize.width - collection.bounds.width*2
+    }
+    
+    private var shouldAddToStart: Bool {
+        collection.contentOffset.x <= collection.bounds.width*2
     }
     
     //MARK: - AddButton
@@ -126,15 +155,11 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item])
         let section = NSCollectionLayoutSection(group: group)
         
-        var conf = UICollectionViewCompositionalLayoutConfiguration()
+        let conf = UICollectionViewCompositionalLayoutConfiguration()
         conf.scrollDirection = .horizontal
     
         let layout = UICollectionViewCompositionalLayout(section: section, configuration: conf)
         return layout
-//        let layout = UICollectionViewFlowLayout()
-//        layout.itemSize = CGSize(width: 600, height: 800)
-//        layout.scrollDirection = .horizontal
-//        return layout
     }
     
 }

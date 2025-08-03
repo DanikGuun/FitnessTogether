@@ -4,6 +4,7 @@ import UIKit
 public struct TimelineCellContentConfiguration: UIContentConfiguration {
     
     var items: [WorkoutTimelineItem] = []
+    var count = ""
     
     public func makeContentView() -> any UIView & UIContentView {
         return TimelineCellContentView(configuration: self)
