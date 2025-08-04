@@ -123,6 +123,34 @@ final class CoachCalendarModelTests: XCTestCase {
         XCTAssertNotNil(item)
     }
     
+    func test_GetItems_Correct_NextWeek() {
+        let refDate = refDate.addingTimeInterval(9 * 24 * 60 * 60)
+        let interval = Calendar.current.dateInterval(of: .weekOfYear, for: refDate)!
+        
+        let client = FTUser(firstName: "Client", role: .client, id: "ClientId")
+        var coach = FTUser(firstName: "Coach", role: .coach, id: "CoachId")
+        
+        let pair = FTClientCoachPair(clientId: client.id, client: client, coachId: coach.id, coach: coach)
+        coach.clients = [pair]
+        
+        var workout = FTWorkout(id: "workoutId", startDate: refDate)
+        
+        let workoutPaticipant1 = FTWorkoutParticipant(workoutId: workout.id, userId: client.id, role: .client)
+        let workoutPaticipant2 = FTWorkoutParticipant(workoutId: workout.id, userId: coach.id, role: .coach)
+        
+        workout.participants = [workoutPaticipant1, workoutPaticipant2]
+        
+        ftManager._user.user = coach
+        ftManager._workout.workouts = [workout]
+        
+        var item: WorkoutTimelineItem?
+        model.getItems(for: interval, completion: { items in
+            item = items.first
+        })
+        
+        XCTAssertNotNil(item)
+    }
+    
     func test_GetItems_Convert_ToItem() {
         let client = FTUser(firstName: "Client", lastName: "Zhop", role: .client, id: "ClientId")
         var coach = FTUser(firstName: "Coach", role: .coach, id: "CoachId")

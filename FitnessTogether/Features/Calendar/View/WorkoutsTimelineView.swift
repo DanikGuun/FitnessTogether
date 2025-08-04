@@ -26,6 +26,12 @@ public class WorkoutsTimelineView: TimeLineView {
         isUserInteractionEnabled = true
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         self.addGestureRecognizer(tap)
+        setupWorkoutParentView()
+    }
+    
+    private func setupWorkoutParentView() {
+        addSubview(workoutsParentView)
+        workoutsParentView.snp.makeConstraints { $0.edges.equalTo(scheduleLayoutGuide) }
     }
     
     @objc

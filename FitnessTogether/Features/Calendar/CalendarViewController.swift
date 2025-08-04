@@ -57,7 +57,9 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
         }
         
         currentDayView.items = getCurrentDayItems(interval: interval)
-        currentDayView.selectedItemIndex = (Calendar.actual.component(.weekday, from: Date()) - 2 + 7) % 7
+        if interval.contains(Date()) { //выделяем, только если инетрвал содержит сегодня, то есть текущая неделя
+            currentDayView.selectedItemIndex = (Calendar.actual.component(.weekday, from: Date()) - 2 + 7) % 7
+        }
     }
     
     private func getCurrentCellIndex() -> Int? {
@@ -120,6 +122,17 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
         conf.timelineDelegate = self
         conf.shouldSyncHeights = true
         cell.contentConfiguration = conf
+        
+        let interval = dateIntervals[indexPath.item]
+        print(interval)
+        model.getItems(for: interval, completion: { items in
+            //print(interval)
+            var conf = cell.contentConfiguration as? TimelineCellContentConfiguration ?? TimelineCellContentConfiguration()
+            conf.items = items
+            cell.contentConfiguration = conf
+        })
+        
+        
         return cell
     }
     

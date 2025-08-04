@@ -53,7 +53,7 @@ public class OfflineManger: FTManager {
     }
     
     private func getRandomCurrentWeekDate(_ refDate: Date) -> Date {
-        let daysToAdd = Int.random(in: 0..<7).cgf
+        let daysToAdd = Int.random(in: 0..<14).cgf
         let startWeek = Calendar.current.dateInterval(of: .weekOfYear, for: refDate)!.start
         var day = startWeek.addingTimeInterval(daysToAdd * 24.cgf * 3600.cgf)
         var startTime = CGFloat.random(in: 0..<21*3600)
