@@ -53,8 +53,8 @@ public class TimelineCellContentView: UIView, UIContentView {
     private func synchronizeHeightIfNeeded() {
         let conf = getConfiguration()
         guard conf.shouldSyncHeights else { return }
-        timelineView.timelineView.constraintHeight(TimelineCellContentConfiguration.timelineHeight)
-        timelineView.timelineView.scrollSuperview?.contentOffset = TimelineCellContentConfiguration.timelineContentOffset
+        timelineView.constraintHeight(TimelineCellContentConfiguration.timelineHeight)
+        timelineView.scrollSuperview?.contentOffset = TimelineCellContentConfiguration.timelineContentOffset
     }
     
     private func getConfiguration() -> TimelineCellContentConfiguration {

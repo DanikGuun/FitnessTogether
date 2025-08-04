@@ -57,8 +57,6 @@ public class TimeLineView: UIView, UIGestureRecognizerDelegate {
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(pinchGesture))
         self.addGestureRecognizer(pinch)
     }
-
-
     
     @objc
     private func pinchGesture(_ pinch: UIPinchGestureRecognizer) {

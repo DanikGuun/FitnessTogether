@@ -1,23 +1,10 @@
 
 import UIKit
 
-public class WorkoutsTimelineView: UIView {
+public class WorkoutsTimelineView: TimeLineView {
     
     var items: [WorkoutTimelineItem] = [] { didSet { updateItems() } }
-    var delegate: (any TimelineDelegate)? {
-        get { timelineView.delegate }
-        set { timelineView.delegate = newValue }
-    }
-    var minHeight: CGFloat {
-        get { timelineView.minHeight }
-        set { timelineView.minHeight = newValue }
-    }
-    var maxHeight: CGFloat {
-        get { timelineView.maxHeight }
-        set { timelineView.maxHeight = newValue }
-    }
     
-    let timelineView = TimeLineView()
     private let workoutsParentView = UIView()
     
     //MARK: - Lifecycle
@@ -34,8 +21,9 @@ public class WorkoutsTimelineView: UIView {
     }
     
     private func setup() {
+        backgroundColor = .systemBackground
+        tintColor = .systemGray2
         isUserInteractionEnabled = true
-        setupTimeLineView()
         let tap = UITapGestureRecognizer(target: self, action: #selector(handleTap))
         self.addGestureRecognizer(tap)
     }
@@ -43,36 +31,21 @@ public class WorkoutsTimelineView: UIView {
     @objc
     private func handleTap(_ tap: UITapGestureRecognizer) {
         let tapCoodrds = tap.location(in: self)
-        guard timelineView.scheduleLayoutGuide.layoutFrame.contains(tapCoodrds) else { return }
+        guard scheduleLayoutGuide.layoutFrame.contains(tapCoodrds) else { return }
         let tapPoint = workoutsParentView.convert(tapCoodrds, from: self)
-        let scheduleFrame = timelineView.scheduleLayoutGuide.layoutFrame
-        let oneColumnWidth = scheduleFrame.width / timelineView.columnCount.cgf
-        let oneRowHeight = scheduleFrame.height / timelineView.rowCount.cgf
+        let scheduleFrame = scheduleLayoutGuide.layoutFrame
+        let oneColumnWidth = scheduleFrame.width / columnCount.cgf
+        let oneRowHeight = scheduleFrame.height / rowCount.cgf
         let column = Int(tapPoint.x / oneColumnWidth)
         let row = Int(tapPoint.y / oneRowHeight)
         
-        let time = timelineView.drawedTimes[row]
+        let time = drawedTimes[row]
         print(column, time)
     }
     
     public override func layoutSubviews() {
         super.layoutSubviews()
-        constraintHeight(timelineView.intrinsicContentSize.height)
-    }
-
-    private func setupTimeLineView() {
-        self.addSubview(timelineView)
-        timelineView.snp.makeConstraints { maker in
-            maker.top.leading.trailing.equalToSuperview()
-        }
-        timelineView.constraintHeight(500)
-        
-        timelineView.backgroundColor = .systemBackground
-        timelineView.tintColor = .systemGray3
-        
-        addSubview(workoutsParentView)
-        workoutsParentView.isUserInteractionEnabled = false
-        workoutsParentView.snp.makeConstraints { $0.edges.equalTo(timelineView.scheduleLayoutGuide) }
+        constraintHeight(intrinsicContentSize.height)
     }
     
     private func updateItems() {
@@ -86,12 +59,12 @@ public class WorkoutsTimelineView: UIView {
             let end = item.start + item.duration
             let endMultiplier = end / perDay
             let column = item.column + 1
-            let columnMultiplier = column.cgf / timelineView.columnCount.cgf
+            let columnMultiplier = column.cgf / columnCount.cgf
             
             workoutsParentView.addSubview(itemView)
             itemView.snp.makeConstraints { maker in
                 maker.trailing.equalToSuperview().multipliedBy(columnMultiplier)
-                maker.width.equalToSuperview().dividedBy(timelineView.columnCount)
+                maker.width.equalToSuperview().dividedBy(columnCount)
                 maker.height.equalToSuperview().multipliedBy(durationMultiplier)
                 maker.bottom.equalToSuperview().multipliedBy(endMultiplier)
             }
