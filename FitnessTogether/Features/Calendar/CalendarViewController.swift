@@ -186,6 +186,11 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
         TimelineCellContentConfiguration.timelineContentOffset = contentOffset
     }
     
+    public func timeline(_ timeline: TimeLineView, didSelectTime components: DateComponents, at column: Int) {
+        print(column)
+        print("hour:\(components.hour) minute:\(components.minute)")
+    }
+    
     //MARK: - AddButton
     private func setupAddButton() {
         view.addSubview(addButton)

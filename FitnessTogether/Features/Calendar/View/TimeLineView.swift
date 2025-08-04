@@ -4,6 +4,7 @@ import UIKit
 public class TimeLineView: UIView, UIGestureRecognizerDelegate {
     
     public var delegate: (any TimelineDelegate)?
+    let dateFormatter = DateFormatter()
     
     //Appearance
     public var lineWidth: CGFloat = 2 { didSet { layoutIfNeeded() } }
@@ -47,6 +48,7 @@ public class TimeLineView: UIView, UIGestureRecognizerDelegate {
         self.addLayoutGuide(scheduleLayoutGuide)
         updateScheduleLayoutGuide()
         isUserInteractionEnabled = true
+        dateFormatter.dateFormat = "HH:mm"
         setupPinchGesture()
         setupScrollGesture()
     }
@@ -180,8 +182,6 @@ public class TimeLineView: UIView, UIGestureRecognizerDelegate {
     
     private func getTimesForDraw() -> [String] {
         var titles: [String] = []
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "HH:mm"
         
         var currentDate = Calendar.current.startOfDay(for: Date())
         let todayInterval = Calendar.current.dateInterval(of: .day, for: Date())!
@@ -232,11 +232,11 @@ public class TimeLineView: UIView, UIGestureRecognizerDelegate {
 public protocol TimelineDelegate {
     func timeline(_ timeline: TimeLineView, heightChanged height: CGFloat)
     func timeline(_ timeline: TimeLineView, contentOffsetChanged contentOffset: CGPoint)
-    func timeline(_ timeline: TimeLineView, didSelectTime: DateComponents, at column: Int)
+    func timeline(_ timeline: TimeLineView, didSelectTime components: DateComponents, at column: Int)
 }
 
 public extension TimelineDelegate {
     func timeline(_ timeline: TimeLineView, heightChanged height: CGFloat) {}
     func timeline(_ timeline: TimeLineView, contentOffsetChanged contentOffset: CGPoint) {}
-    func timeline(_ timeline: TimeLineView, didSelectTime: DateComponents, at column: Int) {}
+    func timeline(_ timeline: TimeLineView, didSelectTime components: DateComponents, at column: Int) {}
 }

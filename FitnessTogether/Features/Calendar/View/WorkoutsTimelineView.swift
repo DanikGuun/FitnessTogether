@@ -39,14 +39,21 @@ public class WorkoutsTimelineView: TimeLineView {
         let tapCoodrds = tap.location(in: self)
         guard scheduleLayoutGuide.layoutFrame.contains(tapCoodrds) else { return }
         let tapPoint = workoutsParentView.convert(tapCoodrds, from: self)
+        processTapToIndexPath(for: tapPoint)
+    }
+    
+    private func processTapToIndexPath(for point: CGPoint)  {
         let scheduleFrame = scheduleLayoutGuide.layoutFrame
         let oneColumnWidth = scheduleFrame.width / columnCount.cgf
         let oneRowHeight = scheduleFrame.height / rowCount.cgf
-        let column = Int(tapPoint.x / oneColumnWidth)
-        let row = Int(tapPoint.y / oneRowHeight)
+        let column = Int(point.x / oneColumnWidth)
+        let row = Int(point.y / oneRowHeight)
         
         let time = drawedTimes[row]
-        print(column, time)
+        let date = dateFormatter.date(from: time) ?? Date()
+        let components = Calendar.actual.dateComponents([.hour, .minute], from: date)
+        
+        delegate?.timeline(self, didSelectTime: components, at: column)
     }
     
     public override func layoutSubviews() {
