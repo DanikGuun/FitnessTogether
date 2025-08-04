@@ -4,7 +4,10 @@ import UIKit
 public class WorkoutsTimelineView: UIView {
     
     var items: [WorkoutTimelineItem] = [] { didSet { updateItems() } }
-    var delegate: (any WorkoutTimeLineDelegate)?
+    var delegate: (any TimelineDelegate)? {
+        get { timelineView.delegate }
+        set { timelineView.delegate = newValue }
+    }
     var minHeight: CGFloat {
         get { timelineView.minHeight }
         set { timelineView.minHeight = newValue }
@@ -14,7 +17,7 @@ public class WorkoutsTimelineView: UIView {
         set { timelineView.maxHeight = newValue }
     }
     
-    private let timelineView = TimeLineView()
+    let timelineView = TimeLineView()
     private let workoutsParentView = UIView()
     
     //MARK: - Lifecycle
@@ -103,14 +106,6 @@ public struct WorkoutTimelineItem {
     public var column: Int
     public var start: TimeInterval
     public var duration: TimeInterval
-}
-
-public protocol WorkoutTimeLineDelegate {
-    func workoutTimeline(_ timeline: WorkoutTimelineItem, didSelectDate date: Date, column: Int)
-}
-
-public extension WorkoutTimeLineDelegate {
-    func workoutTimeline(_ timeline: WorkoutTimelineItem, didSelectDate date: Date, column: Int) {}
 }
 
 fileprivate class WorkoutTimelineItemView: UIView {

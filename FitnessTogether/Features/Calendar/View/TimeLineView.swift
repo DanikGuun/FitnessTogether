@@ -1,7 +1,9 @@
 
 import UIKit
 
-public class TimeLineView: UIView {
+public class TimeLineView: UIView, UIGestureRecognizerDelegate {
+    
+    public var delegate: (any TimelineDelegate)?
     
     //Appearance
     public var lineWidth: CGFloat = 2 { didSet { layoutIfNeeded() } }
@@ -25,6 +27,7 @@ public class TimeLineView: UIView {
     private var startPinchY: CGFloat!
     private var startOffsetY: CGFloat!
     private var startHeight: CGFloat!
+    private var previousOffsetY: CGFloat?
     
     //MARK: - Lifecycle
     public convenience init(){
@@ -45,6 +48,7 @@ public class TimeLineView: UIView {
         updateScheduleLayoutGuide()
         isUserInteractionEnabled = true
         setupPinchGesture()
+        setupScrollGesture()
     }
     
     
@@ -53,6 +57,9 @@ public class TimeLineView: UIView {
         let pinch = UIPinchGestureRecognizer(target: self, action: #selector(pinchGesture))
         self.addGestureRecognizer(pinch)
     }
+
+
+    
     @objc
     private func pinchGesture(_ pinch: UIPinchGestureRecognizer) {
 
@@ -60,10 +67,10 @@ public class TimeLineView: UIView {
         let targetHeight = bounds.height + resize
         let height = targetHeight.clamp(min: minHeight, max: maxHeight)
         constraintHeight(height)
+        delegate?.timeline(self, heightChanged: height)
         superview?.layoutIfNeeded()
         
         if let scroll = self.scrollSuperview {
-            
             
             if pinch.state == .began {
                 startPinchY =  convert(pinch.location(in: self), to: viewController?.view).y - scroll.frame.minY
@@ -78,6 +85,25 @@ public class TimeLineView: UIView {
                 let pinchOffset = -(1 - heightPercent) * startPinchY //чтобы скролл держался на уровне вью, от которой начали зумить
                 scroll.contentOffset.y = startOffsetY * heightPercent + pinchOffset
             }
+        }
+    }
+    
+    //MARK: - Scroll
+    private func setupScrollGesture() {
+        let scroll = UIPanGestureRecognizer(target: self, action: #selector(scrollGesture))
+        scroll.cancelsTouchesInView = false
+        scroll.delegate = self
+        self.addGestureRecognizer(scroll)
+    }
+    
+    public func gestureRecognizer(_ gestureRecognizer: UIGestureRecognizer, shouldRecognizeSimultaneouslyWith otherGestureRecognizer: UIGestureRecognizer) -> Bool {
+        return true
+    }
+    
+    @objc private func scrollGesture() {
+        if previousOffsetY != scrollSuperview?.contentOffset.y {
+            previousOffsetY = scrollSuperview?.contentOffset.y
+            delegate?.timeline(self, contentOffsetChanged: scrollSuperview?.contentOffset ?? .zero)
         }
     }
     
@@ -203,4 +229,16 @@ public class TimeLineView: UIView {
         path.stroke()
     }
     
+}
+
+public protocol TimelineDelegate {
+    func timeline(_ timeline: TimeLineView, heightChanged height: CGFloat)
+    func timeline(_ timeline: TimeLineView, contentOffsetChanged contentOffset: CGPoint)
+    func timeline(_ timeline: TimeLineView, didSelectTime: DateComponents, at column: Int)
+}
+
+public extension TimelineDelegate {
+    func timeline(_ timeline: TimeLineView, heightChanged height: CGFloat) {}
+    func timeline(_ timeline: TimeLineView, contentOffsetChanged contentOffset: CGPoint) {}
+    func timeline(_ timeline: TimeLineView, didSelectTime: DateComponents, at column: Int) {}
 }

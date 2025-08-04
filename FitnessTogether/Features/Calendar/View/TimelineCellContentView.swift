@@ -24,14 +24,15 @@ public class TimelineCellContentView: UIView, UIContentView {
     public override func layoutSubviews() {
         super.layoutSubviews()
         timelineView.minHeight = bounds.height
+        synchronizeHeightIfNeeded()
     }
     
     private func updateConfiguration() {
         let conf = getConfiguration()
         timelineView.items = conf.items
+        timelineView.delegate = conf.timelineDelegate
     }
     
-    let lab = UILabel()
     private func setup() {
         setupTimeLine()
     }
@@ -47,6 +48,13 @@ public class TimelineCellContentView: UIView, UIContentView {
             maker.edges.equalToSuperview()
             maker.width.equalToSuperview()
         }
+    }
+    
+    private func synchronizeHeightIfNeeded() {
+        let conf = getConfiguration()
+        guard conf.shouldSyncHeights else { return }
+        timelineView.timelineView.constraintHeight(TimelineCellContentConfiguration.timelineHeight)
+        timelineView.timelineView.scrollSuperview?.contentOffset = TimelineCellContentConfiguration.timelineContentOffset
     }
     
     private func getConfiguration() -> TimelineCellContentConfiguration {

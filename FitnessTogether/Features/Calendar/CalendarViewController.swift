@@ -2,7 +2,7 @@
 import UIKit
 import SnapKit
 
-public final class CalendarViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource {
+public final class CalendarViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, TimelineDelegate {
     
     public var model: CalendarModel!
     public var delegate: CalendarViewControllerDelegate?
@@ -109,9 +109,17 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
         return dateIntervals.count
     }
     
+    public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
+        cell.contentView.setNeedsLayout()
+        cell.contentView.layoutIfNeeded()
+    }
+    
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        cell.contentConfiguration = TimelineCellContentConfiguration()
+        var conf = cell.contentConfiguration as? TimelineCellContentConfiguration ?? TimelineCellContentConfiguration()
+        conf.timelineDelegate = self
+        conf.shouldSyncHeights = true
+        cell.contentConfiguration = conf
         return cell
     }
     
@@ -154,6 +162,15 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
     
     public func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
         updateCurrentDayItems()
+    }
+    
+    //MARK: - TimelineDelegate
+    public func timeline(_ timeline: TimeLineView, heightChanged height: CGFloat) {
+        TimelineCellContentConfiguration.timelineHeight = height
+    }
+    
+    public func timeline(_ timeline: TimeLineView, contentOffsetChanged contentOffset: CGPoint) {
+        TimelineCellContentConfiguration.timelineContentOffset = contentOffset
     }
     
     //MARK: - AddButton
