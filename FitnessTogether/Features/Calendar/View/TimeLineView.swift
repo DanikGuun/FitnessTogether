@@ -10,7 +10,7 @@ public class TimeLineView: UIView, UIGestureRecognizerDelegate {
     public var lineWidth: CGFloat = 2 { didSet { layoutIfNeeded() } }
     public var timeFont: UIFont = DC.Font.roboto(weight: .semibold, size: 12) { didSet { layoutIfNeeded() } }
     public var columnCount: Int = 7 { didSet { setNeedsDisplay() } }
-    public var rowCount: Int { drawedTimes.count }
+    public var rowCount: Int { drawedTimes.count - 1 }
     public var drawedTimes: [String] { getTimesForDraw() }
     
     //Size

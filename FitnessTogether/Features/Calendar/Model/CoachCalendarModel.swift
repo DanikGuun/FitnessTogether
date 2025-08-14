@@ -10,6 +10,11 @@ public final class CoachCalendarModel: CalendarModel {
         self.ftManager = ftManager
     }
     
+    public func getTrainInterval(startDate: Date) -> DateInterval? {
+        let endDate = startDate.addingTimeInterval(60*60)
+        return DateInterval(start: startDate, end: endDate)
+    }
+    
     public func getItems(for interval: DateInterval, completion: @escaping ([WorkoutTimelineItem]) -> Void) {
         ftManager.user.current(completion: { [weak self] result in
             guard let self else { return }

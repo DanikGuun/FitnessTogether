@@ -21,6 +21,15 @@ final class CoachCalendarModelTests: XCTestCase {
         super.tearDown()
     }
     
+    func test_GetInterval() {
+        let startDate = Date()
+        let endDate = Date().addingTimeInterval(60*60)
+        let expectedInterval = DateInterval(start: startDate, end: endDate)
+        
+        let interval = model.getTrainInterval(startDate: startDate)
+        
+        XCTAssertEqual(interval, expectedInterval)
+    }
     
     let refDate = Date()
     let interval = Calendar.current.dateInterval(of: .weekOfYear, for: Date())!

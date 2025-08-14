@@ -7,4 +7,9 @@ public extension Calendar {
         calendar.locale = Locale.actual
         return calendar
     }
+    
+    func allComponents(from date: Date) -> DateComponents {
+        let components = self.dateComponents([.calendar, .year, .month, .day, .hour, .minute, .second], from: date)
+        return components
+    }
 }

@@ -10,7 +10,8 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
     private let currentDayView = CurrentDayView()
     private let collection = UICollectionView(frame: .zero, collectionViewLayout: CalendarViewController.makeLayout())
     private let addButton = UIButton(configuration: .filled())
-    private var dateIntervals: [DateInterval] = CalendarViewController.getStartIntervals()
+    private var weekDateIntervals: [DateInterval] = CalendarViewController.getStartIntervals()
+    private var weekDayDates: [Date] = []
     
     public convenience init(model: CalendarModel) {
         self.init(nibName: nil, bundle: nil)
@@ -50,15 +51,26 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
     private func updateCurrentDayItems() {
         var interval: DateInterval
         if let index = getCurrentCellIndex() {
-            interval = dateIntervals[index]
+            interval = weekDateIntervals[index]
         }
         else {
             interval = Calendar.current.dateInterval(of: .weekOfYear, for: Date())!
         }
         
+        setWeekDaysDates(week: interval)
         currentDayView.items = getCurrentDayItems(interval: interval)
         if interval.contains(Date()) { //выделяем, только если инетрвал содержит сегодня, то есть текущая неделя
             currentDayView.selectedItemIndex = (Calendar.actual.component(.weekday, from: Date()) - 2 + 7) % 7
+        }
+    }
+    
+    private func setWeekDaysDates(week: DateInterval) {
+        weekDayDates.removeAll()
+        var date = week.start
+        
+        while date < week.end {
+            weekDayDates.append(date)
+            date = date.addingTimeInterval(86400)
         }
     }
     
@@ -108,7 +120,7 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
     }
     
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return dateIntervals.count
+        return weekDateIntervals.count
     }
     
     public func collectionView(_ collectionView: UICollectionView, willDisplay cell: UICollectionViewCell, forItemAt indexPath: IndexPath) {
@@ -123,10 +135,9 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
         conf.shouldSyncHeights = true
         cell.contentConfiguration = conf
         
-        let interval = dateIntervals[indexPath.item]
-        print(interval)
+        let interval = weekDateIntervals[indexPath.item]
+        
         model.getItems(for: interval, completion: { items in
-            //print(interval)
             var conf = cell.contentConfiguration as? TimelineCellContentConfiguration ?? TimelineCellContentConfiguration()
             conf.items = items
             cell.contentConfiguration = conf
@@ -142,7 +153,7 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
             updateDateIntervals()
             
             if shouldAddToEnd {
-                collectionView.insertItems(at: [IndexPath(item: dateIntervals.count-1, section: 0)])
+                collectionView.insertItems(at: [IndexPath(item: weekDateIntervals.count-1, section: 0)])
             }
             
             else if shouldAddToStart {
@@ -154,14 +165,14 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
     
     private func updateDateIntervals() {
         if shouldAddToEnd {
-            let date = dateIntervals.last!.end.addingTimeInterval(86400*1)
+            let date = weekDateIntervals.last!.end.addingTimeInterval(86400*1)
             let interval = Calendar.current.dateInterval(of: .weekOfYear, for: date)!
-            dateIntervals.append(interval)
+            weekDateIntervals.append(interval)
         }
         else if shouldAddToStart {
-            let date = dateIntervals.first!.start.addingTimeInterval(86400*(-1))
+            let date = weekDateIntervals.first!.start.addingTimeInterval(86400*(-1))
             let interval = Calendar.current.dateInterval(of: .weekOfYear, for: date)!
-            dateIntervals.insert(interval, at: 0)
+            weekDateIntervals.insert(interval, at: 0)
         }
     }
     
@@ -187,8 +198,18 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
     }
     
     public func timeline(_ timeline: TimeLineView, didSelectTime components: DateComponents, at column: Int) {
-        print(column)
-        print("hour:\(components.hour) minute:\(components.minute)")
+        let startDate = getStartDate(components: components, column: column)
+        let interval = model.getTrainInterval(startDate: startDate)
+        delegate?.calendarViewControllerGoToAddWorkout(self, interval: interval)
+    }
+    
+    private func getStartDate(components selectedComponents: DateComponents, column: Int) -> Date {
+        let selectedDay = weekDayDates[column]
+        var components = Calendar.current.allComponents(from: selectedDay)
+        components.hour = selectedComponents.hour ?? 0
+        components.minute = selectedComponents.minute ?? 0
+        let date = Calendar.current.date(from: components)
+        return date ?? Date()
     }
     
     //MARK: - AddButton
