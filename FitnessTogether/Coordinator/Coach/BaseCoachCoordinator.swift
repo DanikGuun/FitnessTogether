@@ -18,7 +18,6 @@ public final class BaseCoachCoordinator: NSObject, CoachCoordinator {
         super.init()
         self.tabBarVC = factory.makeTabBarVC(calendarDelegate: self)
         self.navigationVC = UINavigationController(rootViewController: tabBarVC)
-        navigationVC.navigationBar.isHidden = true
         tabBarVC.selectedIndex = 1
         
         //TODO: - Remove

@@ -19,7 +19,7 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
     }
     
     public func makeTabBarVC(calendarDelegate: CalendarViewControllerDelegate?) -> UITabBarController {
-        let tabBarController = UITabBarController()
+        let tabBarController = FTTabBarController()
         
         let tabBar = FTTabBar()
         tabBarController.setValue(tabBar, forKey: "tabBar")
