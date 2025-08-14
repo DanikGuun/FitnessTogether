@@ -62,8 +62,8 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
     }
     
     public func makeAddWorkoutVC(startInterval: DateInterval?) -> UIViewController {
-        let vc = UIViewController()
-        vc.view.backgroundColor = .systemBackground
+        let model = BaseWorkoutBuilderModel()
+        let vc = WorkoutBuilderViewController(model: model)
         return vc
     }
     

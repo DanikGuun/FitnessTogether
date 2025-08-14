@@ -3,6 +3,8 @@ import UIKit
 
 public class FTStateViewController: FTViewController, ScreenStateDelegate {
     
+    var firstSpacingHeight: SpaceKind = .fractional(0.1)
+    
     //MARK: - Pattern method
     public func goToNextState() {
         guard let state = getNextState() else {
@@ -12,8 +14,9 @@ public class FTStateViewController: FTViewController, ScreenStateDelegate {
         state.delegate = self
         
         removeAllStackSubviews(direction: .left, completion: { [weak self] in
-            self?.addSpacing(.fractional(0.1))
-            self?.addStackSubviews(state.viewsToPresent(), direction: .right)
+            guard let self else { return }
+            addSpacing(firstSpacingHeight)
+            addStackSubviews(state.viewsToPresent(), direction: .right)
         })
 
     }

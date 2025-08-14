@@ -20,6 +20,9 @@ public final class BaseCoachCoordinator: NSObject, CoachCoordinator {
         self.navigationVC = UINavigationController(rootViewController: tabBarVC)
         navigationVC.navigationBar.isHidden = true
         tabBarVC.selectedIndex = 1
+        
+        //TODO: - Remove
+        calendarViewControllerGoToAddWorkout(UIViewController(), interval: nil)
     }
 
     public func show(_ viewController: UIViewController) {
