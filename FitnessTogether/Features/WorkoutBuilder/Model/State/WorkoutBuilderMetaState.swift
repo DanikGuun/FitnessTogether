@@ -16,7 +16,8 @@ public final class WorkoutBuilderMetaState: ScreenState {
     private var dateTimeView = DateTimeView()
     
     private var selectClientLabel = UILabel()
-    private var clientSelecter = UIView()
+    private var clientSelecter = ClientListCollectionView()
+    private var clientDisclosureButton: DisclosureButton!
     
     private var nextButton = UIButton()
     
@@ -29,7 +30,7 @@ public final class WorkoutBuilderMetaState: ScreenState {
                 workoutKindLabel, workoutKindSelecter, UIView.spaceView(DC.Layout.spacing),
                 descriptionLabel, descriptionTextView, UIView.underlineView(), UIView.spaceView(DC.Layout.spacing),
                 dateTimeView, UIView.spaceView(DC.Layout.spacing),
-                selectClientLabel, clientSelecter, UIView.spaceView(DC.Layout.spacing),
+                selectClientLabel, clientSelecter, clientDisclosureButton, UIView.spaceView(DC.Layout.spacing),
                 nextButton]
     }
     
@@ -40,8 +41,7 @@ public final class WorkoutBuilderMetaState: ScreenState {
         workoutKindSelecter.constraintHeight(28)
         setupTitle(descriptionLabel, text: "Описание ренировки")
         setupDescriptionTextView()
-
-        
+        setupClientDisclosureButton()
         setupTitle(selectClientLabel, text: "Выберите ученика")
     }
     
@@ -63,6 +63,21 @@ public final class WorkoutBuilderMetaState: ScreenState {
         descriptionTextView.isEditable = true
         descriptionTextView.textContainerInset = .zero
         descriptionTextView.contentInset = .zero
+    }
+    
+    private func setupClientDisclosureButton() {
+        clientDisclosureButton = DisclosureButton(viewToDisclosure: clientSelecter)
+        clientDisclosureButton.backgroundColor = .systemBackground
+        setClientItems()
+    }
+    
+    private func setClientItems() {
+        var items: [ClientListItem] = []
+        for i in 0...50 {
+            items.append(ClientListItem(title: "title \(i)"))
+        }
+        clientSelecter.items = items
+        clientDisclosureButton.updateViewHeight()
     }
     
 }

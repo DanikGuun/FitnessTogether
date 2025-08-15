@@ -10,7 +10,8 @@ public protocol DisclosableView: UIView {
 public class DisclosureButton: UIControl {
     
     public var viewToDisclosure: (any DisclosableView)?
-    public override var isSelected: Bool { didSet { discloseView() } }
+    public override var isSelected: Bool { didSet { updateViewHeight() } }
+    public override var isHidden: Bool { didSet { setHidden(isHidden) } }
     
     private let label = UILabel()
     private let imageView = UIImageView()
@@ -67,7 +68,7 @@ public class DisclosureButton: UIControl {
     }
     
     //MARK: - Actions
-    public func discloseView() {
+    public func updateViewHeight() {
         guard let viewToDisclosure = viewToDisclosure else { return }
         let isDisclosed = self.isSelected
         viewToDisclosure.isDisclosed = isDisclosed
@@ -87,6 +88,16 @@ public class DisclosureButton: UIControl {
         })
     }
     
+    private func setHidden(_ hidden: Bool) {
+        if hidden { isSelected = false }
+        UIView.animate(withDuration: 0.3, animations: { [weak self] in
+            self?.constraintHeight(hidden ? 0 : DC.Size.smallButtonHeight)
+            self?.alpha = hidden ? 0 : 1
+            self?.layoutIfNeeded()
+            self?.scrollSuperview?.layoutIfNeeded()
+        })
+    }
+    
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         if bounds.contains(touch.location(in: self)){
@@ -98,7 +109,7 @@ public class DisclosureButton: UIControl {
     private func touchUpInside() {
         isSelected.toggle()
         animateImage()
-        discloseView()
+        updateViewHeight()
     }
     
     //MARK: - Other

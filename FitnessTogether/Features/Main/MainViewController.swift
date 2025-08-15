@@ -57,14 +57,7 @@ public final class MainWorkoutsViewController: FTViewController {
         disclosureButton.backgroundColor = .systemBackground
     }
     
-    private func setDisclosureButtonHidden(_ hidden: Bool) {
-        if hidden { disclosureButton.isSelected = false }
-        UIView.animate(withDuration: 0.3, animations: { [weak self] in
-            self?.disclosureButton.constraintHeight(hidden ? 0 : DC.Size.smallButtonHeight)
-            self?.disclosureButton.alpha = hidden ? 0 : 1
-            self?.view.layoutIfNeeded()
-        })
-    }
+
     
     //MARK: - Data
     private func updateItems() {
@@ -72,10 +65,10 @@ public final class MainWorkoutsViewController: FTViewController {
             guard let self else { return }
             
             trainsCollection.items = items
-            disclosureButton.discloseView()
+            disclosureButton.updateViewHeight()
             
             let disclosureButtonHidden = items.count <= 4
-            setDisclosureButtonHidden(disclosureButtonHidden)
+            disclosureButton.isHidden = disclosureButtonHidden
         }
     }
 
