@@ -62,6 +62,10 @@ public class MainWorkoutCollectionView: UIView, MainWorkoutView, DisclosableView
         return cell
     }
     
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        collectionView.deselectItem(at: indexPath, animated: true)
+    }
+    
     private func getCellConfiguration(for indexPath: IndexPath) -> FTUserCellConfiguration {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale.actual
