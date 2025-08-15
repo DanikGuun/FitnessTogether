@@ -1,7 +1,7 @@
 
 import UIKit
 
-public class MainWorkoutCollectionCellContentView: UIView, UIContentView {
+public class FTUserCollectionContentView: UIView, UIContentView {
     public var configuration: any UIContentConfiguration { didSet { updateConfiguration() } }
     
     private let titleLabel = UILabel()
@@ -16,13 +16,13 @@ public class MainWorkoutCollectionCellContentView: UIView, UIContentView {
         self.configuration = configuration
     }
     public override init(frame: CGRect) {
-        configuration = MainWorkoutCellConfiguration()
+        configuration = FTUserCellConfiguration()
         super.init(frame: frame)
         setupViews()
     }
     
     required init?(coder: NSCoder) {
-        configuration = MainWorkoutCellConfiguration()
+        configuration = FTUserCellConfiguration()
         super.init(coder: coder)
     }
     
@@ -74,11 +74,11 @@ public class MainWorkoutCollectionCellContentView: UIView, UIContentView {
         subtitleLabel.text = conf.subtitle
     }
     
-    private func getConfiguration() -> MainWorkoutCellConfiguration {
-        if let conf = configuration as? MainWorkoutCellConfiguration {
+    private func getConfiguration() -> FTUserCellConfiguration {
+        if let conf = configuration as? FTUserCellConfiguration {
             return conf
         }
-        return MainWorkoutCellConfiguration()
+        return FTUserCellConfiguration()
     }
     
     public override func draw(_ rect: CGRect) {

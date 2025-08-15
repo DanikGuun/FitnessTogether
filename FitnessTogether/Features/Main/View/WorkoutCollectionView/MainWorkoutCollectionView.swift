@@ -60,13 +60,13 @@ public class MainWorkoutCollectionView: UIView, MainWorkoutView, DisclosableView
         return cell
     }
     
-    private func getCellConfiguration(for indexPath: IndexPath) -> MainWorkoutCellConfiguration {
+    private func getCellConfiguration(for indexPath: IndexPath) -> FTUserCellConfiguration {
         let dateFormatter = DateFormatter()
         dateFormatter.locale = Locale.actual
         dateFormatter.dateFormat = "cccc, HH:mm"
         
         let item = items[indexPath.item]
-        var conf = MainWorkoutCellConfiguration()
+        var conf = FTUserCellConfiguration()
         conf.image = item.image
         conf.title = item.title
         conf.subtitle = dateFormatter.string(from: item.date).capitalized(with: .actual)
