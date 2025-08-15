@@ -45,6 +45,7 @@ public class FTUserCollectionContentView: UIView, UIContentView {
         }
         
         imageView.contentMode = .scaleToFill
+        imageView.backgroundColor = .systemBackground
         imageView.layer.mask = imageMaskLayer
     }
     
@@ -74,10 +75,17 @@ public class FTUserCollectionContentView: UIView, UIContentView {
     private func updateConfiguration() {
         let conf = getConfiguration()
         imageView.image = conf.image
+        
         titleLabel.text = conf.title
+        titleLabel.textColor = conf.isSelected ? .systemBackground : .label
+        
         subtitleLabel.text = conf.subtitle
+        subtitleLabel.textColor = conf.isSelected ? .systemBackground : .label
+        
         if let title = conf.attributedTitle { titleLabel.attributedText = title }
         if let subtitle = conf.attributedSubtitle { titleLabel.attributedText = subtitle }
+        
+        setNeedsDisplay()
     }
     
     //MARK: - Other
@@ -130,7 +138,15 @@ public class FTUserCollectionContentView: UIView, UIContentView {
         path.addArc(withCenter: leftMiddlePoint, radius: halfH, startAngle: .pi/2, endAngle: .pi*3/2, clockwise: true)
         
         path.lineWidth = lineWidth
+        path.close()
         path.stroke()
+        
+        //если выделено - закрасить
+        let conf = getConfiguration()
+        if conf.isSelected {
+            UIColor.ftOrange.setFill()
+            path.fill()
+        }
         
         //обновление маски для картинки
         let diff = lineFrame.minY - lineWidth/2 //разница между началом границ и отрисовкой

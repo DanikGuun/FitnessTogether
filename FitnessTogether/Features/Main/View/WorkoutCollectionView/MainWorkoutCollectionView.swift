@@ -3,9 +3,11 @@ import UIKit
 
 public class MainWorkoutCollectionView: UIView, MainWorkoutView, DisclosableView, UICollectionViewDelegate, UICollectionViewDataSource {
     
+    
     //Disclosing
     public var fullHeight: CGFloat { contentSize.height }
     public var maximumCollapsedHeight: CGFloat = 290
+    public weak var disclosureButton: DisclosureButton?
     public var isDisclosed = false
     
     public var items: [WorkoutItem] = [] { didSet { itemsHasUpdated() } }

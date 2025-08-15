@@ -4,6 +4,7 @@ import UIKit
 public protocol DisclosableView: UIView {
     var fullHeight: CGFloat { get }
     var maximumCollapsedHeight: CGFloat { get }
+    var disclosureButton: DisclosureButton? { get set }
     var isDisclosed: Bool { get set }
 }
 
@@ -20,6 +21,7 @@ public class DisclosureButton: UIControl {
     public convenience init(viewToDisclosure: (any DisclosableView)?){
         self.init(frame: .zero)
         self.viewToDisclosure = viewToDisclosure
+        viewToDisclosure?.disclosureButton = self
     }
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,6 +31,11 @@ public class DisclosureButton: UIControl {
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+    }
+    
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        updateViewHeight()
     }
     
     private func setup() {
@@ -73,6 +80,7 @@ public class DisclosureButton: UIControl {
         let isDisclosed = self.isSelected
         viewToDisclosure.isDisclosed = isDisclosed
         superview?.layoutIfNeeded()
+        scrollSuperview?.layoutIfNeeded()
         
         var height: CGFloat = 0
         if isDisclosed {

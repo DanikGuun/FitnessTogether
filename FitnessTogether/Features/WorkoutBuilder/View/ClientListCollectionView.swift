@@ -3,12 +3,14 @@ import UIKit
 
 public class ClientListCollectionView: UICollectionView, DisclosableView, UICollectionViewDelegate, UICollectionViewDataSource  {
     //Disclosing
-    public var fullHeight: CGFloat { contentSize.height }
-    public var maximumCollapsedHeight: CGFloat = 80
+    public var fullHeight: CGFloat { max(contentSize.height, noClientsLabel.intrinsicContentSize.height) }
+    public var maximumCollapsedHeight: CGFloat = 100
+    public weak var disclosureButton: DisclosureButton?
     public var isDisclosed = false
     
+    private var noClientsLabel = UILabel()
     
-    public var items: [ClientListItem] = []
+    public var items: [ClientListItem] = [] { didSet { itemsHasUpdated() } }
     
     //MARK: - Lifecycle
     public convenience init(){
@@ -28,6 +30,19 @@ public class ClientListCollectionView: UICollectionView, DisclosableView, UIColl
         self.dataSource = self
         self.delegate = self
         register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
+        isScrollEnabled = false
+        setupNoClientsLabel()
+    }
+    
+    private func setupNoClientsLabel() {
+        addSubview(noClientsLabel)
+        noClientsLabel.snp.makeConstraints { maker in
+            maker.top.centerX.equalToSuperview()
+        }
+        
+        noClientsLabel.font = DC.Font.additionalInfo
+        noClientsLabel.textColor = .systemGray3
+        noClientsLabel.text = "У вас нет учеников"
     }
     
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -36,6 +51,10 @@ public class ClientListCollectionView: UICollectionView, DisclosableView, UIColl
     
     public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         return items.count
+    }
+    
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+        print(1)
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -55,6 +74,14 @@ public class ClientListCollectionView: UICollectionView, DisclosableView, UIColl
             .font: DC.Font.roboto(weight: .regular, size: 16)
         ])
         return string
+    }
+    
+    private func itemsHasUpdated() {
+        reloadData()
+        disclosureButton?.updateViewHeight()
+        let shouldHideDisclosureButton = items.count < 4
+        disclosureButton?.isHidden = shouldHideDisclosureButton
+        noClientsLabel.isHidden = !items.isEmpty
     }
 
     private static func makeLayout() -> UICollectionViewCompositionalLayout {

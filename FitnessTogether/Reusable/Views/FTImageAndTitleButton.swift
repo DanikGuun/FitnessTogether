@@ -36,7 +36,7 @@ public class FTImageAndTitleButton: UIControl {
             maker.top.bottom.equalToSuperview()
         }
         
-        titleLabel.font = DC.Font.roboto(weight: .semibold, size: 16)
+        titleLabel.font = DC.Font.roboto(weight: .medium, size: 16)
     }
     
     private func setupImageView() {

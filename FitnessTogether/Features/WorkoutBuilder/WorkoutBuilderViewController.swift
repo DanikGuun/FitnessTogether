@@ -22,6 +22,7 @@ public final class WorkoutBuilderViewController: FTStateViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        scrollView.keyboardDismissMode = .onDrag
         goToNextState()
     }
     

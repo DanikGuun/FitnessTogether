@@ -6,6 +6,7 @@ public struct FTUserCellConfiguration: UIContentConfiguration {
     var image: UIImage? = nil
     var title: String? = nil
     var subtitle: String? = nil
+    var isSelected = false
     
     var attributedTitle: NSAttributedString? = nil
     var attributedSubtitle: NSAttributedString? = nil
@@ -15,6 +16,12 @@ public struct FTUserCellConfiguration: UIContentConfiguration {
     }
     
     public func updated(for state: any UIConfigurationState) -> FTUserCellConfiguration {
+        if let state = state as? UICellConfigurationState {
+            let isSelected = state.isSelected || state.isHighlighted
+            return FTUserCellConfiguration(image: image, title: title, subtitle: subtitle,
+                                           isSelected: isSelected,
+                                           attributedTitle: attributedTitle, attributedSubtitle: attributedSubtitle)
+        }
         return self
     }
     

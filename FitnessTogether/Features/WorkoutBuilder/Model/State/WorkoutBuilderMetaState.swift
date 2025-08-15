@@ -19,7 +19,7 @@ public final class WorkoutBuilderMetaState: ScreenState {
     private var clientSelecter = ClientListCollectionView()
     private var clientDisclosureButton: DisclosureButton!
     
-    private var nextButton = UIButton()
+    private var nextButton = UIButton.ftFilled(title: "Далее")
     
     init() {
         setup()
@@ -43,6 +43,7 @@ public final class WorkoutBuilderMetaState: ScreenState {
         setupDescriptionTextView()
         setupClientDisclosureButton()
         setupTitle(selectClientLabel, text: "Выберите ученика")
+        nextButton.isEnabled = false
     }
     
     private func setupTitle(_ label: UILabel, text: String = "") {
@@ -73,7 +74,7 @@ public final class WorkoutBuilderMetaState: ScreenState {
     
     private func setClientItems() {
         var items: [ClientListItem] = []
-        for i in 0...50 {
+        for i in 0...10 {
             items.append(ClientListItem(title: "title \(i)"))
         }
         clientSelecter.items = items
