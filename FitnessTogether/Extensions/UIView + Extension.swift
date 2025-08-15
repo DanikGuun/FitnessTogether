@@ -36,11 +36,12 @@ public extension UIView {
         }
     }
     
-    func makeCornerAndShadow(radius: CGFloat = 15, color: UIColor = .black, opacity: Float = 0.5) {
+    func makeCornerAndShadow(radius: CGFloat = 15, shadowRadius: CGFloat = 3, color: UIColor = .black, opacity: Float = 0.5) {
         self.layer.cornerRadius = radius
         self.layer.masksToBounds = false
         self.layer.shadowColor = color.cgColor
         self.layer.shadowOpacity = opacity
+        self.layer.shadowRadius = shadowRadius
         self.layer.shadowOffset = CGSize(width: 0, height: 2)
     }
     
@@ -48,6 +49,13 @@ public extension UIView {
         let view = UIView()
         view.backgroundColor = .clear
         view.constraintHeight(height)
+        return view
+    }
+    
+    static func underlineView(_ color: UIColor = .systemGray2) -> UIView {
+        let view = UIView()
+        view.backgroundColor = color
+        view.constraintHeight(1)
         return view
     }
 }
