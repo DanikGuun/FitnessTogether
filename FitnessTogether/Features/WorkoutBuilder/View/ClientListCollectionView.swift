@@ -40,20 +40,33 @@ public class ClientListCollectionView: UICollectionView, DisclosableView, UIColl
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "cell", for: indexPath)
-        cell.backgroundColor = .systemBlue
+        
+        var conf = cell.contentConfiguration as? FTUserCellConfiguration ?? FTUserCellConfiguration()
+        conf.image = UIImage(systemName: "person.circle")
+        conf.attributedTitle = getAttributedTitle(for: indexPath.item)
+        cell.contentConfiguration = conf
+        
         return cell
+    }
+    
+    private func getAttributedTitle(for index: Int) -> NSAttributedString {
+        let text = items[index].title ?? ""
+        let string = NSAttributedString(string: text, attributes: [
+            .font: DC.Font.roboto(weight: .regular, size: 16)
+        ])
+        return string
     }
 
     private static func makeLayout() -> UICollectionViewCompositionalLayout {
         let itemSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(0.5), heightDimension: .fractionalHeight(1))
         let item = NSCollectionLayoutItem(layoutSize: itemSize)
         
-        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(DC.Size.smallButtonHeight))
+        let groupSize = NSCollectionLayoutSize(widthDimension: .fractionalWidth(1), heightDimension: .absolute(48))
         let group = NSCollectionLayoutGroup.horizontal(layoutSize: groupSize, subitems: [item, item])
-        group.interItemSpacing = .fixed(DC.Layout.spacing)
+        group.interItemSpacing = .fixed(DC.Layout.spacing/2)
         
         let section = NSCollectionLayoutSection(group: group)
-        section.interGroupSpacing = DC.Layout.spacing
+        section.interGroupSpacing = DC.Layout.spacing/2
         
         let layout = UICollectionViewCompositionalLayout(section: section)
         return layout

@@ -7,8 +7,9 @@ public class FTUserCollectionContentView: UIView, UIContentView {
     private let titleLabel = UILabel()
     private let subtitleLabel = UILabel()
     private let imageView = UIImageView()
+    private let imageMaskLayer = CAShapeLayer()
     
-    private let lineWidth: CGFloat = 2
+    private let lineWidth: CGFloat = 1
     
     //MARK: - Lifecycle
     public convenience init(configuration: any UIContentConfiguration){
@@ -26,6 +27,7 @@ public class FTUserCollectionContentView: UIView, UIContentView {
         super.init(coder: coder)
     }
     
+    //MARK: - Layout
     private func setupViews() {
         setupImageView()
         setupSubtitleLabel()
@@ -38,10 +40,12 @@ public class FTUserCollectionContentView: UIView, UIContentView {
         imageView.snp.makeConstraints { [weak self] maker in
             guard let self = self else { return }
             maker.leading.equalToSuperview()
-            maker.top.bottom.equalToSuperview().inset(4)
+            maker.top.bottom.equalToSuperview().inset(lineWidth)
             maker.width.equalTo(imageView.snp.height)
         }
         
+        imageView.contentMode = .scaleToFill
+        imageView.layer.mask = imageMaskLayer
     }
     
     private func setupTitleLabel() {
@@ -72,8 +76,11 @@ public class FTUserCollectionContentView: UIView, UIContentView {
         imageView.image = conf.image
         titleLabel.text = conf.title
         subtitleLabel.text = conf.subtitle
+        if let title = conf.attributedTitle { titleLabel.attributedText = title }
+        if let subtitle = conf.attributedSubtitle { titleLabel.attributedText = subtitle }
     }
     
+    //MARK: - Other
     private func getConfiguration() -> FTUserCellConfiguration {
         if let conf = configuration as? FTUserCellConfiguration {
             return conf
@@ -86,7 +93,7 @@ public class FTUserCollectionContentView: UIView, UIContentView {
         
         let inset: CGFloat = 3
         let lineFrame = CGRect(
-            x: bounds.minX + inset,
+            x: bounds.minX + inset + lineWidth,
             y: bounds.minY + lineWidth*2 + inset,
             width: bounds.width - lineWidth*4 - inset*2,
             height: bounds.height - lineWidth*4 - inset*2
@@ -125,5 +132,12 @@ public class FTUserCollectionContentView: UIView, UIContentView {
         path.lineWidth = lineWidth
         path.stroke()
         
+        //обновление маски для картинки
+        let diff = lineFrame.minY - lineWidth/2 //разница между началом границ и отрисовкой
+        let imageRadius = imageView.bounds.width/2 - diff
+        let imageCenter = CGPoint(x: imageView.bounds.width/2, y: imageView.bounds.height/2)
+        let maskPath = UIBezierPath(arcCenter: imageCenter, radius: imageRadius, startAngle: 0, endAngle: .pi*2, clockwise: true)
+
+        imageMaskLayer.path = maskPath.cgPath
     }
 }
