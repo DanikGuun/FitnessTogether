@@ -1,7 +1,7 @@
-//
-//  WorkoutBuilderState.swift
-//  FitnessTogether
-//
-//  Created by Данила Бондарь on 15.08.2025.
-//
+
+import FTDomainData
+
+public protocol WorkoutBuilderState: ScreenState {
+    func apply(to workout: inout FTWorkout)
+}
 

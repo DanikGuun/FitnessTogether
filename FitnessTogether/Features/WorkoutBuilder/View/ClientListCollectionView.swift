@@ -11,6 +11,8 @@ public class ClientListCollectionView: UICollectionView, DisclosableView, UIColl
     private var noClientsLabel = UILabel()
     
     public var items: [ClientListItem] = [] { didSet { itemsHasUpdated() } }
+    public var selectedItem: ClientListItem?
+    public var clientDidSelected: ((ClientListItem) -> Void)?
     
     //MARK: - Lifecycle
     public convenience init(){
@@ -54,7 +56,9 @@ public class ClientListCollectionView: UICollectionView, DisclosableView, UIColl
     }
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        print(1)
+        let item = items[indexPath.item]
+        selectedItem = item
+        clientDidSelected?(item)
     }
     
     public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {

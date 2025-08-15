@@ -8,9 +8,11 @@ public class DateTimeView: UIStackView {
         set {
             _date = getRoundedDate(newValue)
             updateButtonTitles()
+            dateHasChanged?(_date)
         }
     }
     private var _date: Date?
+    public var dateHasChanged: ((Date?) -> Void)?
     
     private var dateLabel = UILabel()
     private var dateButton = FTImageAndTitleButton()

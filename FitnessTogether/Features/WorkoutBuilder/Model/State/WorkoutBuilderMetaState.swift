@@ -1,5 +1,6 @@
 
 import UIKit
+import FTDomainData
 
 public final class WorkoutBuilderMetaState: ScreenState {
     public var delegate: (any ScreenStateDelegate)?
@@ -38,9 +39,10 @@ public final class WorkoutBuilderMetaState: ScreenState {
         setupTitle(titleLabel, text: "Конструктор тренировок")
         setupSubtitle()
         setupTitle(workoutKindLabel, text: "Тип тренировки")
-        workoutKindSelecter.constraintHeight(28)
+        setupWorkoutKindSelecter()
         setupTitle(descriptionLabel, text: "Описание ренировки")
         setupDescriptionTextView()
+        setupDateTimeView()
         setupClientDisclosureButton()
         setupTitle(selectClientLabel, text: "Выберите ученика")
         nextButton.isEnabled = false
@@ -59,6 +61,11 @@ public final class WorkoutBuilderMetaState: ScreenState {
         subtitleLabel.text = "Соберите тренировку"
     }
     
+    private func setupWorkoutKindSelecter() {
+        workoutKindSelecter.constraintHeight(28)
+        workoutKindSelecter.selectedWorkoutKind = FTWorkoutKind.allCases.first ?? .none
+    }
+    
     private func setupDescriptionTextView() {
         descriptionTextView.font = DC.Font.roboto(weight: .regular, size: 14)
         descriptionTextView.isEditable = true
@@ -66,9 +73,14 @@ public final class WorkoutBuilderMetaState: ScreenState {
         descriptionTextView.contentInset = .zero
     }
     
+    private func setupDateTimeView() {
+        dateTimeView.dateHasChanged = { [weak self] _ in self?.checkNextButtonAvailable() }
+    }
+    
     private func setupClientDisclosureButton() {
         clientDisclosureButton = DisclosureButton(viewToDisclosure: clientSelecter)
         clientDisclosureButton.backgroundColor = .systemBackground
+        clientSelecter.clientDidSelected = { [weak self] _ in self?.checkNextButtonAvailable() }
         setClientItems()
     }
     
@@ -79,6 +91,12 @@ public final class WorkoutBuilderMetaState: ScreenState {
         }
         clientSelecter.items = items
         clientDisclosureButton.updateViewHeight()
+    }
+    
+    //MARK: - Validation
+    private func checkNextButtonAvailable() {
+        let available = dateTimeView.date != nil && clientSelecter.selectedItem != nil
+        nextButton.isEnabled = available
     }
     
 }

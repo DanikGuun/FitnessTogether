@@ -27,12 +27,18 @@ public class FTUserCollectionContentView: UIView, UIContentView {
         super.init(coder: coder)
     }
     
+    public override func tintColorDidChange() {
+        tintColor = (viewController?.isOverlapsed ?? false) ? .systemGray4 : .ftOrange
+        setNeedsDisplay()
+    }
+    
     //MARK: - Layout
     private func setupViews() {
         setupImageView()
         setupSubtitleLabel()
         setupTitleLabel()
         DispatchQueue.main.async { [weak self] in self?.backgroundColor = .clear }
+        tintColor = .ftOrange
     }
     
     private func setupImageView() {
@@ -47,6 +53,7 @@ public class FTUserCollectionContentView: UIView, UIContentView {
         imageView.contentMode = .scaleToFill
         imageView.backgroundColor = .systemBackground
         imageView.layer.mask = imageMaskLayer
+        imageView.tintColor = .systemBlue
     }
     
     private func setupTitleLabel() {
@@ -111,7 +118,7 @@ public class FTUserCollectionContentView: UIView, UIContentView {
         let cornerRadius: CGFloat = 15
         
         let path = UIBezierPath()
-        UIColor.ftOrange.setStroke()
+        tintColor.setStroke()
         
         let start = CGPoint(x: lineFrame.minX + halfH, y: lineFrame.minY)
         path.move(to: start)
@@ -144,7 +151,7 @@ public class FTUserCollectionContentView: UIView, UIContentView {
         //если выделено - закрасить
         let conf = getConfiguration()
         if conf.isSelected {
-            UIColor.ftOrange.setFill()
+            tintColor.setFill()
             path.fill()
         }
         
