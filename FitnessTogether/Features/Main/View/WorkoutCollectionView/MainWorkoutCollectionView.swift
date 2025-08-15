@@ -1,7 +1,13 @@
  
 import UIKit
 
-public class MainWorkoutCollectionView: UIView, MainWorkoutView, UICollectionViewDelegate, UICollectionViewDataSource {
+public class MainWorkoutCollectionView: UIView, MainWorkoutView, DisclosableView, UICollectionViewDelegate, UICollectionViewDataSource {
+    
+    //Disclosing
+    public var fullHeight: CGFloat { contentSize.height }
+    public var maximumCollapsedHeight: CGFloat = 290
+    public var isDisclosed = false
+    
     public var items: [WorkoutItem] = [] { didSet { itemsHasUpdated() } }
     public var needShowTitleIfEmpty: Bool = true
     public var contentSize: CGSize { getContentSize() }

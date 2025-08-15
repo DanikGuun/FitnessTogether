@@ -1,14 +1,24 @@
 
 import UIKit
 
+public protocol DisclosableView: UIView {
+    var fullHeight: CGFloat { get }
+    var maximumCollapsedHeight: CGFloat { get }
+    var isDisclosed: Bool { get set }
+}
+
 public class DisclosureButton: UIControl {
+    
+    public var viewToDisclosure: (any DisclosableView)?
+    public override var isSelected: Bool { didSet { discloseView() } }
     
     private let label = UILabel()
     private let imageView = UIImageView()
     
     //MARK: - Lifecycle
-    public convenience init(){
+    public convenience init(viewToDisclosure: (any DisclosableView)?){
         self.init(frame: .zero)
+        self.viewToDisclosure = viewToDisclosure
     }
     public override init(frame: CGRect) {
         super.init(frame: frame)
@@ -56,6 +66,27 @@ public class DisclosureButton: UIControl {
         }
     }
     
+    //MARK: - Actions
+    public func discloseView() {
+        guard let viewToDisclosure = viewToDisclosure else { return }
+        let isDisclosed = self.isSelected
+        viewToDisclosure.isDisclosed = isDisclosed
+        superview?.layoutIfNeeded()
+        
+        var height: CGFloat = 0
+        if isDisclosed {
+            height = viewToDisclosure.fullHeight
+        }
+        else {
+            height = min(viewToDisclosure.maximumCollapsedHeight, viewToDisclosure.fullHeight)
+        }
+        UIView.animate(withDuration: 0.3, animations: { [weak self] in
+            viewToDisclosure.constraintHeight(max(height, 1))
+            self?.superview?.layoutIfNeeded()
+            self?.scrollSuperview?.layoutIfNeeded()
+        })
+    }
+    
     public override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
         guard let touch = touches.first else { return }
         if bounds.contains(touch.location(in: self)){
@@ -67,8 +98,10 @@ public class DisclosureButton: UIControl {
     private func touchUpInside() {
         isSelected.toggle()
         animateImage()
+        discloseView()
     }
     
+    //MARK: - Other
     private func animateImage() {
         let angle = self.isSelected ? CGFloat.pi/2 : 0
         UIView.animate(withDuration: 0.2, animations: { [weak self] in
@@ -89,4 +122,3 @@ public class DisclosureButton: UIControl {
     }
     
 }
-

@@ -6,9 +6,7 @@ public final class MainWorkoutsViewController: FTViewController {
     var model: MainModel!
     
     private var trainsCollection: MainWorkoutView = MainWorkoutCollectionView()
-    private var disclosureButton = DisclosureButton()
-    
-    private let trainCollectionMaxHeight: CGFloat = 290
+    private var disclosureButton: DisclosureButton!
     
     //MARK: - Lifecycle
     public convenience init(model: MainModel) {
@@ -40,22 +38,6 @@ public final class MainWorkoutsViewController: FTViewController {
     
     private func setupTrainsCollectionView() {
         addStackSubview(trainsCollection, height: 1)
-        setTrainCollectionDisclosed(false)
-    }
-    
-    private func setTrainCollectionDisclosed(_ isDisclosed: Bool) {
-        view.layoutIfNeeded()
-        var height: CGFloat = 0
-        if isDisclosed {
-            height = trainsCollection.contentSize.height
-        }
-        else {
-            height = min(trainCollectionMaxHeight, trainsCollection.contentSize.height)
-        }
-        UIView.animate(withDuration: 0.3, animations: { [weak self] in
-            self?.trainsCollection.constraintHeight(max(height, 1))
-            self?.view.layoutIfNeeded()
-        })
     }
     
     private func setupAddWorkoutButton() {
@@ -69,13 +51,10 @@ public final class MainWorkoutsViewController: FTViewController {
     }
     
     private func setupDisclosureButton() {
+        guard let collection = trainsCollection as? DisclosableView else { return }
+        disclosureButton = DisclosureButton(viewToDisclosure: collection)
         addStackSubview(disclosureButton, height: DC.Size.smallButtonHeight)
         disclosureButton.backgroundColor = .systemBackground
-        disclosureButton.addAction(UIAction(handler: disclosureButtonPressed), for: .touchUpInside)
-    }
-    private func disclosureButtonPressed(_ action: UIAction) {
-        let selected = disclosureButton.isSelected
-        setTrainCollectionDisclosed(selected)
     }
     
     private func setDisclosureButtonHidden(_ hidden: Bool) {
@@ -93,7 +72,7 @@ public final class MainWorkoutsViewController: FTViewController {
             guard let self else { return }
             
             trainsCollection.items = items
-            setTrainCollectionDisclosed(disclosureButton.isSelected)
+            disclosureButton.discloseView()
             
             let disclosureButtonHidden = items.count <= 4
             setDisclosureButtonHidden(disclosureButtonHidden)
