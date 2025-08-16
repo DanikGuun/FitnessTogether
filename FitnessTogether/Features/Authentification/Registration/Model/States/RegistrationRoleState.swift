@@ -10,6 +10,10 @@ public final class RegistrationRoleState: BaseRegistrationState {
     
     private var buttons: [UIButton] { return [coachButton, clientButton] }
     
+    override init() {
+        
+    }
+    
     public override func viewsToPresent() -> [UIView] {
         return [titleLabel, subtitleLabel, UIView.spaceView(20), coachButton, clientButton, nextButton]
     }

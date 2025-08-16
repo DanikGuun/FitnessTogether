@@ -55,17 +55,25 @@ public final class RegistrationViewController: FTStateViewController {
         })
     }
     
+    public override func goToNextState() {
+        super.goToNextState()
+        
+        currentStep += 1
+        updateStepLabel()
+    }
+    
     public override func getNextState() -> (any ScreenState)? {
         let state = model.goNext()
         isRegistrationCompleted = state == nil
         return state
     }
     
-    public override func goToNextState() {
-        super.goToNextState()
-        
-        currentStep += 1
-        updateStepLabel()
+    public override func getPreviousState() -> (any ScreenState)? {
+        return model.getPreviousState()
+    }
+    
+    public override func isFirstState() -> Bool {
+        return model.currentState <= 0
     }
     
 }

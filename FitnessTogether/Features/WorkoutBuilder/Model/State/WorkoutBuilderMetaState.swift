@@ -2,28 +2,38 @@
 import UIKit
 import FTDomainData
 
-public final class WorkoutBuilderMetaState: ScreenState {
+public final class WorkoutBuilderMetaState: WorkoutBuilderState {
     public var delegate: (any ScreenStateDelegate)?
     
-    private var titleLabel = UILabel()
-    private var subtitleLabel = UILabel()
+    var titleLabel = UILabel()
+    var subtitleLabel = UILabel()
     
-    private var workoutKindLabel = UILabel()
-    private var workoutKindSelecter = WorkoutKindSelector()
+    var workoutKindLabel = UILabel()
+    var workoutKindSelecter = WorkoutKindSelector()
     
-    private var descriptionLabel = UILabel()
-    private var descriptionTextView = AutoSizeTextView()
+    var descriptionLabel = UILabel()
+    var descriptionTextView = AutoSizeTextView()
     
-    private var dateTimeView = DateTimeView()
+    var dateTimeView = DateTimeView()
     
-    private var selectClientLabel = UILabel()
-    private var clientSelecter = ClientListCollectionView()
-    private var clientDisclosureButton: DisclosureButton!
+    var selectClientLabel = UILabel()
+    var clientSelecter = ClientListCollectionView()
+    var clientDisclosureButton: DisclosureButton!
     
-    private var nextButton = UIButton.ftFilled(title: "Далее")
+    var nextButton = UIButton.ftFilled(title: "Далее")
+    
+    public func apply(to workout: inout FTWorkout) {
+        workout.workoutKind = workoutKindSelecter.selectedWorkoutKind
+        workout.description = descriptionTextView.text ?? ""
+        workout.startDate = dateTimeView.date
+        workout.participants.append(FTWorkoutParticipant(workoutId: workout.id, userId: clientSelecter.selectedItem?.id ?? "", role: .client))
+    }
     
     init() {
         setup()
+        //TODO: - Убрать
+        dateTimeView.date = Date()
+        clientSelecter.selectClient(id: clientSelecter.items.first!.id)
     }
     
     public func viewsToPresent() -> [UIView] {
@@ -38,14 +48,14 @@ public final class WorkoutBuilderMetaState: ScreenState {
     private func setup() {
         setupTitle(titleLabel, text: "Конструктор тренировок")
         setupSubtitle()
-        setupTitle(workoutKindLabel, text: "Тип тренировки")
+        setupTitle(workoutKindLabel, text: "Тип")
         setupWorkoutKindSelecter()
-        setupTitle(descriptionLabel, text: "Описание ренировки")
+        setupTitle(descriptionLabel, text: "Описание")
         setupDescriptionTextView()
         setupDateTimeView()
         setupClientDisclosureButton()
         setupTitle(selectClientLabel, text: "Выберите ученика")
-        nextButton.isEnabled = false
+        setupNextButton()
     }
     
     private func setupTitle(_ label: UILabel, text: String = "") {
@@ -82,6 +92,14 @@ public final class WorkoutBuilderMetaState: ScreenState {
         clientDisclosureButton.backgroundColor = .systemBackground
         clientSelecter.clientDidSelected = { [weak self] _ in self?.checkNextButtonAvailable() }
         setClientItems()
+    }
+    
+    private func setupNextButton() {
+        nextButton.isEnabled = false
+        nextButton.addAction(UIAction(handler: { [weak self] _ in
+            guard let self else { return }
+            delegate?.screenStateGoNext(self)
+        }), for: .touchUpInside)
     }
     
     private func setClientItems() {

@@ -4,17 +4,19 @@ import FTDomainData
 public protocol RegistrationModel {
     var userRegister: FTUserRegister { get set }
     var stepCount: Int { get }
+    var currentState: Int { get }
     func goNext() -> (any RegistrationState)?
+    func getPreviousState() -> (any RegistrationState)?
     func register(user: FTUserRegister, completion: @escaping (Result<Void, Error>) -> ())
 }
 
 public final class BaseRegistrationModel: RegistrationModel {
     
     public var userRegister = FTUserRegister()
+    public var currentState = -1
     let userInterface: any FTUserInterface
     
     private var states: [any RegistrationState]
-    private var currentState = -1
     public let stepCount = 3
     
     public init(userInterface: any FTUserInterface, validator: any Validator, emailConfirmer: any EmailConfirmer) {
@@ -28,19 +30,17 @@ public final class BaseRegistrationModel: RegistrationModel {
     }
     
     public func goNext() -> (any RegistrationState)? {
-        applyStateData()
+        states[safe: currentState]?.apply(userRegister: &userRegister)
         let state = getCorrectNextState()
         return state
     }
     
-    private func applyStateData() {
-        guard currentState >= 0, currentState <= states.count else { return }
-        let state = states[currentState]
-        state.apply(userRegister: &userRegister)
+    public func getPreviousState() -> (any RegistrationState)? {
+        currentState -= 1
+        return states[safe: currentState]
     }
     
     private func getCorrectNextState() -> (any RegistrationState)? {
-        guard currentState < states.count else { return nil }
         if currentState == 2 { //после регистрации переходить к доп инфе коуча или нет
             switch userRegister.role {
             case .client, .admin: return nil
@@ -48,11 +48,11 @@ public final class BaseRegistrationModel: RegistrationModel {
             }
         }
         currentState += 1
-        return states[currentState]
+        return states[safe: currentState]
     }
     
     public func register(user: FTUserRegister, completion: @escaping (Result<Void, Error>) -> Void) {
-        let state = getCurrentState()
+        let state = states[safe: currentState]
         state?.setNextButtonBusy(true)
         userInterface.register(data: user, completion: { [weak self] result in
             switch result {
@@ -75,13 +75,6 @@ public final class BaseRegistrationModel: RegistrationModel {
                 completion(.failure(error))
             }
         })
-    }
-    
-    private func getCurrentState() -> (any RegistrationState)? {
-        if currentState >= 0 && currentState < states.count {
-            return states[currentState]
-        }
-        return nil
     }
     
 }

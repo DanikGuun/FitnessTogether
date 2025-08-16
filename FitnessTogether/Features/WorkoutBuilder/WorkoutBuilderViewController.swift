@@ -30,4 +30,12 @@ public final class WorkoutBuilderViewController: FTStateViewController {
     public override func getNextState() -> (any ScreenState)? {
         return model.getNextState()
     }
+    
+    public override func getPreviousState() -> (any ScreenState)? {
+        return model.getPreviousState()
+    }
+    
+    public override func isFirstState() -> Bool {
+        return model.currentState <= 0
+    }
 }

@@ -24,8 +24,6 @@ open class BaseRegistrationState: BaseFieldsScreenState, RegistrationState {
     //Override
     internal override func setupViews() {
         super.setupViews()
-        setupTitleLabel()
-        setupNextButton()
         setupInfoLabel()
     }
     

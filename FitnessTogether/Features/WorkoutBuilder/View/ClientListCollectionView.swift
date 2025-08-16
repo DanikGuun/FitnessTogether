@@ -11,8 +11,20 @@ public class ClientListCollectionView: UICollectionView, DisclosableView, UIColl
     private var noClientsLabel = UILabel()
     
     public var items: [ClientListItem] = [] { didSet { itemsHasUpdated() } }
-    public var selectedItem: ClientListItem?
-    public var clientDidSelected: ((ClientListItem) -> Void)?
+    public var selectedItem: ClientListItem? {
+        get {
+            guard let item = indexPathsForSelectedItems?.first?.item else { return  nil }
+            return items[item]
+        }
+        set {
+            guard let id = newValue?.id else { return }
+            let index = items.firstIndex(where: { $0.id == id }) ?? 0
+            let path = IndexPath(item: index, section: 0)
+            selectItem(at: path, animated: true, scrollPosition: .centeredVertically)
+            clientDidSelected?(newValue)
+        }
+    }
+    public var clientDidSelected: ((ClientListItem?) -> Void)?
     
     //MARK: - Lifecycle
     public convenience init(){
@@ -26,6 +38,13 @@ public class ClientListCollectionView: UICollectionView, DisclosableView, UIColl
     
     required init?(coder: NSCoder) {
         super.init(coder: coder)
+    }
+    
+    public func selectClient(id: String?) {
+        guard let item = items.firstIndex(where: { $0.id == id } ) else { return }
+        let path = IndexPath(item: item, section: 0)
+        selectItem(at: path, animated: true, scrollPosition: .centeredVertically)
+        clientDidSelected?(items[item])
     }
     
     private func setup() {
@@ -57,7 +76,6 @@ public class ClientListCollectionView: UICollectionView, DisclosableView, UIColl
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         let item = items[indexPath.item]
-        selectedItem = item
         clientDidSelected?(item)
     }
     

@@ -1,4 +1,6 @@
 
 public protocol WorkoutBuilderModel {
-    func getNextState() -> ScreenState
+    var currentState: Int { get }
+    func getNextState() -> (any ScreenState)?
+    func getPreviousState() -> (any ScreenState)?
 }
