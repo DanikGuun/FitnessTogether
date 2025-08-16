@@ -7,7 +7,8 @@ public protocol CoachViewControllerFactory {
     func makeCalendarVC(delegate: CalendarViewControllerDelegate?) -> UIViewController
     func makeWorkoutsVC() -> UIViewController
     func makeProfileVC() -> UIViewController
-    func makeAddWorkoutVC(startInterval: DateInterval?) -> UIViewController
+    func makeAddWorkoutVC(startInterval: DateInterval?, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController
+    func makeCreateExerciseVC() -> UIViewController
 }
 
 public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
@@ -61,9 +62,16 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         return vc
     }
     
-    public func makeAddWorkoutVC(startInterval: DateInterval?) -> UIViewController {
-        let model = BaseWorkoutBuilderModel()
+    public func makeAddWorkoutVC(startInterval: DateInterval?, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController {
+        let model = BaseWorkoutBuilderModel(ftManager: ftManager)
         let vc = WorkoutBuilderViewController(model: model)
+        vc.delegate = delegate
+        return vc
+    }
+    
+    public func makeCreateExerciseVC() -> UIViewController {
+        let vc = UIViewController()
+        vc.view.backgroundColor = .systemGreen
         return vc
     }
     

@@ -30,6 +30,7 @@ final class BaseCoachCoordinatorTests: XCTestCase {
 
 fileprivate class MockCoachVCFactory: CoachViewControllerFactory {
     
+    
     func makeTabBarVC(calendarDelegate: (any FitnessTogether.CalendarViewControllerDelegate)?) -> UITabBarController {
         return UITabBarController()
     }
@@ -50,8 +51,12 @@ fileprivate class MockCoachVCFactory: CoachViewControllerFactory {
         return vc("Profile")
     }
     
-    func makeAddWorkoutVC(startInterval: DateInterval?) -> UIViewController {
+    func makeAddWorkoutVC(startInterval: DateInterval?, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController {
         return vc("AddWorkout")
+    }
+    
+    func makeCreateExerciseVC() -> UIViewController {
+        return vc("CreateExercise")
     }
     
     private func vc(_ title: String) -> UIViewController {

@@ -3,12 +3,13 @@ import UIKit
 
 public final class ExerciseCollectionView: UICollectionView, DisclosableView, UICollectionViewDataSource, UICollectionViewDelegate {
     //Disclosing
-    public var fullHeight: CGFloat { contentSize.height }
+    public var fullHeight: CGFloat { max(contentSize.height, emptyItemsLabel.bounds.height) }
     public var maximumCollapsedHeight: CGFloat = 440
     public var disclosureButton: DisclosureButton?
     public var isDisclosed: Bool = false
 
     var items: [ExerciseCollectionItem] = [] { didSet { itemsHasUpdated() } }
+    var emptyItemsLabel = UILabel()
     
     //MARK: - Lifecycle
     public convenience init(){
@@ -33,6 +34,7 @@ public final class ExerciseCollectionView: UICollectionView, DisclosableView, UI
         dataSource = self
         register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         isScrollEnabled = false
+        setupEmptyLabel()
     }
     
     public func numberOfSections(in collectionView: UICollectionView) -> Int {
@@ -58,9 +60,19 @@ public final class ExerciseCollectionView: UICollectionView, DisclosableView, UI
         collectionView.deselectItem(at: indexPath, animated: true)
     }
     
+    private func setupEmptyLabel() {
+        addSubview(emptyItemsLabel)
+        emptyItemsLabel.snp.makeConstraints { $0.top.centerX.equalToSuperview() }
+        
+        emptyItemsLabel.font = DC.Font.additionalInfo
+        emptyItemsLabel.textColor = .systemGray3
+        emptyItemsLabel.text = "Список урпажнений пуст"
+    }
+    
     private func itemsHasUpdated() {
         reloadData()
         disclosureButton?.isHidden = items.count <= 6
+        emptyItemsLabel.isHidden = !items.isEmpty
     }
     
     private static func makeLayout() -> UICollectionViewCompositionalLayout {
