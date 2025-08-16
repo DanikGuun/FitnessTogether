@@ -1,9 +1,9 @@
 
 import UIKit
 
-public final class WorkoutBuilderViewController: FTStateViewController {
-    
+public final class WorkoutBuilderViewController: FTStateViewController, WorkoutBuilderStateDelegate {
     var model: WorkoutBuilderModel!
+    var delegate: (any WorkoutBuilderViewControllerDelegate)?
     
     //MARK: - Lifecycle
     public convenience init(model: WorkoutBuilderModel) {
@@ -26,6 +26,24 @@ public final class WorkoutBuilderViewController: FTStateViewController {
         goToNextState()
     }
     
+    public func workoutBuilderStateRequestToAddExercise(_ state: (any WorkoutBuilderState)) {
+        delegate?.workoutBuilderVCRequestToOpenAddExerciseScreen(self)
+    }
+    
+    public override func viewStatesDidEnd() {
+        model.addWorkoutAndExercises(completion: { result in
+            switch result {
+                
+            case .success:
+                self.delegate?.workoutBuilderVCDidFinish(self)
+                
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+            
+        })
+    }
+    
     //MARK: - StateManagment
     public override func getNextState() -> (any ScreenState)? {
         return model.getNextState()
@@ -38,4 +56,14 @@ public final class WorkoutBuilderViewController: FTStateViewController {
     public override func isFirstState() -> Bool {
         return model.currentState <= 0
     }
+}
+
+public protocol WorkoutBuilderViewControllerDelegate {
+    func workoutBuilderVCRequestToOpenAddExerciseScreen(_ vc: UIViewController)
+    func workoutBuilderVCDidFinish(_ vc: UIViewController)
+}
+
+public extension WorkoutBuilderViewControllerDelegate {
+    func workoutBuilderVCRequestToOpenAddExerciseScreen(_ vc: UIViewController) {}
+    func workoutBuilderVCDidFinish(_ vc: UIViewController) {}
 }

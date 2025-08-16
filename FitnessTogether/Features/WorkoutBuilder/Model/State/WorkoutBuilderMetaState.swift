@@ -22,18 +22,14 @@ public final class WorkoutBuilderMetaState: WorkoutBuilderState {
     
     var nextButton = UIButton.ftFilled(title: "Далее")
     
-    public func apply(to workout: inout FTWorkout) {
+    public func apply(workoutCreate workout: inout FTWorkoutCreate, exercises: inout [FTExerciseCreate]) {
         workout.workoutKind = workoutKindSelecter.selectedWorkoutKind
         workout.description = descriptionTextView.text ?? ""
-        workout.startDate = dateTimeView.date
-        workout.participants.append(FTWorkoutParticipant(workoutId: workout.id, userId: clientSelecter.selectedItem?.id ?? "", role: .client))
+        workout.startDate = dateTimeView.date?.ISO8601Format() ?? ""
     }
     
     init() {
         setup()
-        //TODO: - Убрать
-        dateTimeView.date = Date()
-        clientSelecter.selectClient(id: clientSelecter.items.first!.id)
     }
     
     public func viewsToPresent() -> [UIView] {

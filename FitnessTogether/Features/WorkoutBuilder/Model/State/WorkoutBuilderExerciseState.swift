@@ -8,22 +8,25 @@ public final class WorkoutBuilderExerciseState: WorkoutBuilderState {
     
     var titleLabel = UILabel()
     var subtitleLabel = UILabel()
+    var selectExercisesLabel = UILabel.headline("Добавьте упражнения")
     var exerciseCollectionView = ExerciseCollectionView()
     var disclosureButton: DisclosureButton!
     
-    var addExerciseButton = UIButton.ftPlain(title: "Добавить упражнение")
-    var addWorkoutButton = UIButton.ftFilled(title: "Добавить тренировку")
+    lazy var addExerciseButton = UIButton.ftPlain(title: "Добавить упражнение", handler: addExerciseButtonPressed)
+    lazy var addWorkoutButton = UIButton.ftFilled(title: "Добавить тренировку", handler: addWorkoutButtonPressed)
+    
+    var exercises: [FTExerciseCreate] = []
     
     init() {
         setup()
     }
     
-    public func apply(to workout: inout FTWorkout) {
-        
+    public func apply(workoutCreate workout: inout FTWorkoutCreate, exercises: inout [FTExerciseCreate]) {
+        exercises = self.exercises
     }
     
     public func viewsToPresent() -> [UIView] {
-        return [titleLabel, subtitleLabel, exerciseCollectionView, disclosureButton, addExerciseButton, addWorkoutButton]
+        return [titleLabel, subtitleLabel, selectExercisesLabel, exerciseCollectionView, disclosureButton, addExerciseButton, addWorkoutButton]
     }
     
     private func setup() {
@@ -32,7 +35,7 @@ public final class WorkoutBuilderExerciseState: WorkoutBuilderState {
         setupDisclosureButton()
         
         var items: [ExerciseCollectionItem] = []
-        for title in 0..<3 {
+        for title in 0..<20 {
             let item = ExerciseCollectionItem(title: "title \(title)", image: UIImage(systemName: "trash"))
             items.append(item)
         }
@@ -55,6 +58,14 @@ public final class WorkoutBuilderExerciseState: WorkoutBuilderState {
     private func setupDisclosureButton() {
         disclosureButton = DisclosureButton(viewToDisclosure: exerciseCollectionView)
         disclosureButton.backgroundColor = .systemBackground
+    }
+    
+    private func addExerciseButtonPressed(_ action: UIAction) {
+        (delegate as? WorkoutBuilderStateDelegate)?.workoutBuilderStateRequestToAddExercise(self)
+    }
+    
+    private func addWorkoutButtonPressed(_ action: UIAction) {
+        delegate?.screenStateGoNext(self)
     }
     
 }

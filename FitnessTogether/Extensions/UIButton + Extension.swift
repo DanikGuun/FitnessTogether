@@ -3,12 +3,15 @@ import UIKit
 
 public extension UIButton {
     
-    static func ftFilled(title: String = "") -> UIButton {
+    static func ftFilled(title: String = "", handler: ((UIAction) -> Void)? = nil) -> UIButton {
         let button = UIButton(configuration: .filled())
         button.constraintHeight(DC.Size.buttonHeight)
         let attributes = AttributeContainer([
             .font: DC.Font.roboto(weight: .semibold, size: 16)
         ])
+        if let handler = handler {
+            button.addAction(UIAction(handler: handler), for: .touchUpInside)
+        }
         
         var conf = button.configuration
         conf?.baseBackgroundColor = .ftOrange
@@ -19,12 +22,15 @@ public extension UIButton {
         return button
     }
     
-    static func ftPlain(title: String = "") -> UIButton {
+    static func ftPlain(title: String = "", handler: ((UIAction) -> Void)? = nil) -> UIButton {
         let button = UIButton(configuration: .plain())
         button.constraintHeight(DC.Size.buttonHeight)
         let attributes = AttributeContainer([
             .font: DC.Font.roboto(weight: .semibold, size: 16)
         ])
+        if let handler = handler {
+            button.addAction(UIAction(handler: handler), for: .touchUpInside)
+        }
         
         var conf = button.configuration
         conf?.background.cornerRadius = DC.Size.buttonCornerRadius
