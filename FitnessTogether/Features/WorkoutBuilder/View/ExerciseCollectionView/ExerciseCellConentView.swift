@@ -28,7 +28,7 @@ public final class ExerciseCellConentView: UIView, UIContentView {
         let conf = getConfiguration()
         titleLabel.text = conf.title
         subtitleLabel.text = conf.subtitle
-        imageView.image = conf.image
+        imageView.image = conf.image ?? UIImage(systemName: "trophy.circle")
         backgroundColor = conf.isHighlited ? .ftOrange : .systemBackground
     }
     

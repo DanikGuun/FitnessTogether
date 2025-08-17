@@ -35,6 +35,7 @@ public final class ExerciseCollectionView: UICollectionView, DisclosableView, UI
         register(UICollectionViewCell.self, forCellWithReuseIdentifier: "cell")
         isScrollEnabled = false
         setupEmptyLabel()
+        itemsHasUpdated()
     }
     
     public func numberOfSections(in collectionView: UICollectionView) -> Int {

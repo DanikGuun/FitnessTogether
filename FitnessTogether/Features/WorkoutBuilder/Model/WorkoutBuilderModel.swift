@@ -10,7 +10,7 @@ public protocol WorkoutBuilderModel {
 
 public class BaseWorkoutBuilderModel: WorkoutBuilderModel {
     public private(set) var currentState = -1
-    let states: [any WorkoutBuilderState]
+    var states: [any WorkoutBuilderState]
     
     var ftmanager: FTManager
     var workout = FTWorkoutCreate()

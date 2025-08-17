@@ -44,7 +44,10 @@ public class OfflineManger: FTManager {
                 let part1 = FTWorkoutParticipant(workoutId: workout.id, userId: client.id, role: .client)
                 let part2 = FTWorkoutParticipant(workoutId: workout.id, userId: coach.id, role: .coach)
                 workout.participants = [part1, part2]
+                let exersies = getRandomExercises(for: workout)
+                workout.exercises = exersies
                 workouts.append(workout)
+                _exercise.exercises += exersies
             }
         }
         
@@ -56,9 +59,18 @@ public class OfflineManger: FTManager {
         let daysToAdd = Int.random(in: 0..<14).cgf
         let startWeek = Calendar.current.dateInterval(of: .weekOfYear, for: refDate)!.start
         var day = startWeek.addingTimeInterval(daysToAdd * 24.cgf * 3600.cgf)
-        var startTime = CGFloat.random(in: 0..<21*3600)
+        let startTime = CGFloat.random(in: 0..<21*3600)
         day = day.addingTimeInterval(startTime)
         return day
+    }
+    
+    private func getRandomExercises(for workout: FTWorkout) -> [FTExercise] {
+        var exercieses: [FTExercise] = []
+        for _ in 0..<10 {
+            let ex = FTExercise(id: UUID().uuidString, name: "WorkoutName", description: "Some description", muscleKinds: [.abs, .biceps], сomplexity: .hard, statistics: [], workoutId: workout.id, workout: workout)
+            exercieses.append(ex)
+        }
+        return exercieses
     }
     
 }
@@ -109,7 +121,11 @@ public class OfflineWorkoutInterface: FTWorkoutInterface {
     
     public func create(data: FTWorkoutCreate, completion: FTCompletion<FTWorkout>) { print("Cresate") }
     
-    public func get(workoutId: String, completion: FTCompletion<FTWorkout>) { }
+    public func get(workoutId: String, completion: FTCompletion<FTWorkout>) {
+        if let workout = workouts.first(where: { $0.id == workoutId }) {
+            completion?(.success(workout))
+        }
+    }
     
     public func getAll(completion: FTCompletion<[FTWorkout]>) {
         completion?(.success(workouts))
@@ -124,6 +140,8 @@ public class OfflineWorkoutInterface: FTWorkoutInterface {
 
 public class OfflineExerciseInterface: FTExerciseInterface {
     
+    var exercises: [FTExercise] = []
+    
     init() {
         
     }
@@ -132,7 +150,10 @@ public class OfflineExerciseInterface: FTExerciseInterface {
     
     public func get(exerciseId: String, completion: FTCompletion<FTExercise>) { }
     
-    public func get(workoutId: String, completion: FTCompletion<[FTExercise]>) { }
+    public func get(workoutId: String, completion: FTCompletion<[FTExercise]>) {
+        let exercises = exercises.filter { $0.workoutId == workoutId }
+        completion?(.success(exercises))
+    }
     
     public func update(exerciseId: String, data: FTExerciseCreate, completion: FTCompletion<FTExercise>) { }
     

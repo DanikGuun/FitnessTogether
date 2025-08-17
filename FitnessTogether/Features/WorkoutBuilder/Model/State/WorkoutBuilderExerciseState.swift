@@ -15,7 +15,7 @@ public final class WorkoutBuilderExerciseState: WorkoutBuilderState, ExerciseCre
     lazy var addExerciseButton = UIButton.ftPlain(title: "Добавить упражнение", handler: addExerciseButtonPressed)
     lazy var addWorkoutButton = UIButton.ftFilled(title: "Добавить тренировку", handler: addWorkoutButtonPressed)
     
-    var exercises: [FTExerciseCreate] = []
+    var exercises: [FTExerciseCreate] = [] { didSet { itemHasUpdated()} }
     
     init() {
         setup()
@@ -34,13 +34,6 @@ public final class WorkoutBuilderExerciseState: WorkoutBuilderState, ExerciseCre
         setupTitle(titleLabel, text: "Конструктор тренировок")
         setupSubtitle()
         setupDisclosureButton()
-        
-        var items: [ExerciseCollectionItem] = []
-        for title in 0..<20 {
-            let item = ExerciseCollectionItem(title: "title \(title)", image: UIImage(systemName: "trash"))
-            items.append(item)
-        }
-        exerciseCollectionView.items = items
     }
     
     private func setupTitle(_ label: UILabel, text: String = "") {
@@ -59,6 +52,7 @@ public final class WorkoutBuilderExerciseState: WorkoutBuilderState, ExerciseCre
     private func setupDisclosureButton() {
         disclosureButton = DisclosureButton(viewToDisclosure: exerciseCollectionView)
         disclosureButton.backgroundColor = .systemBackground
+        disclosureButton.isHidden = exerciseCollectionView.items.count <= 6
     }
     
     private func addExerciseButtonPressed(_ action: UIAction) {
@@ -67,6 +61,12 @@ public final class WorkoutBuilderExerciseState: WorkoutBuilderState, ExerciseCre
     
     private func addWorkoutButtonPressed(_ action: UIAction) {
         delegate?.screenStateGoNext(self)
+    }
+    
+    //MARK: - Exercises
+    private func itemHasUpdated() {
+        var items = exercises.map { ExerciseCollectionItem(title: $0.name, subtitle: $0.description, image: nil) }
+        exerciseCollectionView.items = items
     }
     
     //MARK: - Exercises Delegate

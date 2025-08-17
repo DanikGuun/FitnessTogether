@@ -73,7 +73,8 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
     }
     
     public func makeEditWorkoutVC(workoutId: String, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController {
-        let vc = WorkoutBuilderViewController()
+        let model = EditWorkoutBuilderModel(workoutId: workoutId, ftManager: ftManager)
+        let vc = WorkoutBuilderViewController(model: model)
         vc.delegate = delegate
         return vc
     }
