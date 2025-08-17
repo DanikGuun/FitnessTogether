@@ -12,8 +12,9 @@ public final class CreateWorkoutBuilderModel: WorkoutBuilderModel {
     
     init(ftManager: FTManager) {
         self.ftmanager = ftManager
+        let clientProvider = FTUserAdapterClientProvider(ftUser: ftManager.user)
         states = [
-            WorkoutBuilderMetaState(),
+            WorkoutBuilderMetaState(clientsProvider: clientProvider),
             WorkoutBuilderExerciseState()
         ]
     }

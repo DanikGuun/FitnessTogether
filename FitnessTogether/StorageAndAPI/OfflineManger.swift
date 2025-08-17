@@ -107,7 +107,7 @@ public class OfflineWorkoutInterface: FTWorkoutInterface {
         
     }
     
-    public func create(data: FTWorkoutCreate, completion: FTCompletion<FTWorkout>) { }
+    public func create(data: FTWorkoutCreate, completion: FTCompletion<FTWorkout>) { print("Cresate") }
     
     public func get(workoutId: String, completion: FTCompletion<FTWorkout>) { }
     

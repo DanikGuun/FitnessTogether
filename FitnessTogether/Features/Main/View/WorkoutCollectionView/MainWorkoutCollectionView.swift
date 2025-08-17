@@ -11,6 +11,7 @@ public class MainWorkoutCollectionView: UIView, MainWorkoutView, DisclosableView
     public var isDisclosed = false
     
     public var items: [WorkoutItem] = [] { didSet { itemsHasUpdated() } }
+    public var itemDidPressed: ((WorkoutItem) -> Void)?
     public var needShowTitleIfEmpty: Bool = true
     public var contentSize: CGSize { getContentSize() }
     
@@ -64,6 +65,8 @@ public class MainWorkoutCollectionView: UIView, MainWorkoutView, DisclosableView
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
+        guard let item = items[safe: indexPath.item] else { return }
+        itemDidPressed?(item)
     }
     
     private func getCellConfiguration(for indexPath: IndexPath) -> FTUserCellConfiguration {

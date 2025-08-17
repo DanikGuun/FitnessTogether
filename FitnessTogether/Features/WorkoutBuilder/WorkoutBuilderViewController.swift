@@ -1,5 +1,6 @@
 
 import UIKit
+import FTDomainData
 
 public final class WorkoutBuilderViewController: FTStateViewController, WorkoutBuilderStateDelegate {
     var model: WorkoutBuilderModel!
@@ -26,10 +27,6 @@ public final class WorkoutBuilderViewController: FTStateViewController, WorkoutB
         goToNextState()
     }
     
-    public func workoutBuilderStateRequestToAddExercise(_ state: (any WorkoutBuilderState)) {
-        delegate?.workoutBuilderVCRequestToOpenAddExerciseScreen(self)
-    }
-    
     public override func viewStatesDidEnd() {
         model.addWorkoutAndExercises(completion: { result in
             switch result {
@@ -45,6 +42,11 @@ public final class WorkoutBuilderViewController: FTStateViewController, WorkoutB
     }
     
     //MARK: - StateManagment
+    public func workoutBuilderStateRequestToAddExercise(_ state: (any WorkoutBuilderState)) {
+        let createDelegate = state as? ExerciseCreateViewControllerDelegate
+        delegate?.workoutBuilderVCRequestToOpenAddExerciseScreen(self, delegate: createDelegate)
+    }
+    
     public override func getNextState() -> (any ScreenState)? {
         return model.getNextState()
     }
@@ -59,11 +61,11 @@ public final class WorkoutBuilderViewController: FTStateViewController, WorkoutB
 }
 
 public protocol WorkoutBuilderViewControllerDelegate {
-    func workoutBuilderVCRequestToOpenAddExerciseScreen(_ vc: UIViewController)
+    func workoutBuilderVCRequestToOpenAddExerciseScreen(_ vc: UIViewController, delegate: (any ExerciseCreateViewControllerDelegate)?)
     func workoutBuilderVCDidFinish(_ vc: UIViewController)
 }
 
 public extension WorkoutBuilderViewControllerDelegate {
-    func workoutBuilderVCRequestToOpenAddExerciseScreen(_ vc: UIViewController) {}
+    func workoutBuilderVCRequestToOpenAddExerciseScreen(_ vc: UIViewController, delegate: (any ExerciseCreateViewControllerDelegate)?) {}
     func workoutBuilderVCDidFinish(_ vc: UIViewController) {}
 }

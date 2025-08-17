@@ -3,6 +3,7 @@ import UIKit
 import FTDomainData
 
 public final class WorkoutBuilderMetaState: WorkoutBuilderState {
+    public var clientsProvider: any ClientProvider
     public var delegate: (any ScreenStateDelegate)?
     
     var titleLabel = UILabel()
@@ -22,15 +23,17 @@ public final class WorkoutBuilderMetaState: WorkoutBuilderState {
     
     var nextButton = UIButton.ftFilled(title: "Далее")
     
+    init(clientsProvider: any ClientProvider) {
+        self.clientsProvider = clientsProvider
+        setup()
+    }
+    
     public func apply(workoutCreate workout: inout FTWorkoutCreate, exercises: inout [FTExerciseCreate]) {
         workout.workoutKind = workoutKindSelecter.selectedWorkoutKind
         workout.description = descriptionTextView.text ?? ""
         workout.startDate = dateTimeView.date?.ISO8601Format() ?? ""
     }
     
-    init() {
-        setup()
-    }
     
     public func viewsToPresent() -> [UIView] {
         return [titleLabel, subtitleLabel, UIView.spaceView(20),
@@ -40,6 +43,8 @@ public final class WorkoutBuilderMetaState: WorkoutBuilderState {
                 selectClientLabel, clientSelecter, clientDisclosureButton, UIView.spaceView(DC.Layout.spacing),
                 nextButton]
     }
+    
+    //MARK: - UI
     
     private func setup() {
         setupTitle(titleLabel, text: "Конструктор тренировок")
@@ -99,12 +104,20 @@ public final class WorkoutBuilderMetaState: WorkoutBuilderState {
     }
     
     private func setClientItems() {
-        var items: [ClientListItem] = []
-        for i in 0...10 {
-            items.append(ClientListItem(title: "title \(i)"))
-        }
-        clientSelecter.items = items
-        clientDisclosureButton.updateViewHeight()
+        clientsProvider.getClients(completion: { [weak self] clients in
+            guard let self else { return }
+            
+            let items = clients.map { ClientListItem(id: $0.id, title: self.getUserTitle($0), image: UIImage(systemName: "person.circle")) }
+            clientSelecter.items = items
+            clientDisclosureButton.updateViewHeight()
+        })
+        
+    }
+    
+    private func getUserTitle(_ user: FTUser) -> String {
+        let name = user.firstName
+        let lastName = user.lastName.last ?? Character(" ")
+        return "\(name) \(lastName)"
     }
     
     //MARK: - Validation

@@ -1,14 +1,16 @@
 
 import UIKit
+import FTDomainData
 
 public protocol CoachViewControllerFactory {
-    func makeTabBarVC(calendarDelegate: CalendarViewControllerDelegate?) -> UITabBarController
-    func makeMainVC() -> UIViewController
+    func makeTabBarVC(mainDeleage: (any MainViewControllerDelegate)?, calendarDelegate: CalendarViewControllerDelegate?) -> UITabBarController
+    func makeMainVC(delegate: (any MainViewControllerDelegate)?) -> UIViewController
     func makeCalendarVC(delegate: CalendarViewControllerDelegate?) -> UIViewController
     func makeWorkoutsVC() -> UIViewController
     func makeProfileVC() -> UIViewController
     func makeAddWorkoutVC(startInterval: DateInterval?, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController
-    func makeCreateExerciseVC() -> UIViewController
+    func makeEditWorkoutVC(workoutId: String, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController
+    func makeCreateExerciseVC(delegate: (any ExerciseCreateViewControllerDelegate)?) -> UIViewController
 }
 
 public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
@@ -19,14 +21,14 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         self.ftManager = ftManager
     }
     
-    public func makeTabBarVC(calendarDelegate: CalendarViewControllerDelegate?) -> UITabBarController {
+    public func makeTabBarVC(mainDeleage: (any MainViewControllerDelegate)?, calendarDelegate: CalendarViewControllerDelegate?) -> UITabBarController {
         let tabBarController = FTTabBarController()
         
         let tabBar = FTTabBar()
         tabBarController.setValue(tabBar, forKey: "tabBar")
         
         tabBarController.viewControllers = [
-            makeMainVC(),
+            makeMainVC(delegate: mainDeleage),
             makeCalendarVC(delegate: calendarDelegate),
             makeWorkoutsVC(),
             makeProfileVC()
@@ -35,9 +37,10 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         return tabBarController
     }
     
-    public func makeMainVC() -> UIViewController {
+    public func makeMainVC(delegate: (any MainViewControllerDelegate)?) -> UIViewController {
         let model = CoachMainModel(ftManager: ftManager)
         let vc = MainWorkoutsViewController(model: model)
+        vc.delegate = delegate
         vc.tabBarItem = UITabBarItem(title: "Главная", image: UIImage(named: "house"), selectedImage: UIImage(named: "house.fill"))
         return vc
     }
@@ -69,9 +72,15 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         return vc
     }
     
-    public func makeCreateExerciseVC() -> UIViewController {
-        let vc = UIViewController()
-        vc.view.backgroundColor = .systemGreen
+    public func makeEditWorkoutVC(workoutId: String, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController {
+        let vc = WorkoutBuilderViewController()
+        vc.delegate = delegate
+        return vc
+    }
+    
+    public func makeCreateExerciseVC(delegate: (any ExerciseCreateViewControllerDelegate)?) -> UIViewController {
+        let vc = ExerciseCreateViewController()
+        vc.delegate = delegate
         return vc
     }
     

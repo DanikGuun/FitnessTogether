@@ -2,7 +2,7 @@
 import UIKit
 import FTDomainData
 
-public final class WorkoutBuilderExerciseState: WorkoutBuilderState {
+public final class WorkoutBuilderExerciseState: WorkoutBuilderState, ExerciseCreateViewControllerDelegate {
     
     public var delegate: (any ScreenStateDelegate)?
     
@@ -29,6 +29,7 @@ public final class WorkoutBuilderExerciseState: WorkoutBuilderState {
         return [titleLabel, subtitleLabel, selectExercisesLabel, exerciseCollectionView, disclosureButton, addExerciseButton, addWorkoutButton]
     }
     
+    //MARK: - UI
     private func setup() {
         setupTitle(titleLabel, text: "Конструктор тренировок")
         setupSubtitle()
@@ -66,6 +67,12 @@ public final class WorkoutBuilderExerciseState: WorkoutBuilderState {
     
     private func addWorkoutButtonPressed(_ action: UIAction) {
         delegate?.screenStateGoNext(self)
+    }
+    
+    //MARK: - Exercises Delegate
+    public func exerciseVC(_ vc: ExerciseCreateViewController, requestToCreate exercise: FTExerciseCreate) {
+        exercises.append(exercise)
+        exerciseCollectionView.items = exercises.map { ExerciseCollectionItem(title: $0.name, subtitle: $0.description, image: UIImage(systemName: "trophy.circle")) }
     }
     
 }

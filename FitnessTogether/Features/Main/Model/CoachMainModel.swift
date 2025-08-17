@@ -14,10 +14,11 @@ public final class CoachMainModel: BaseMainModel {
             case .success(let clients):
                 let items: [WorkoutItem] = workouts.compactMap { [weak self] workout in
                     guard let self else { return nil }
+                    let id = workout.id
                     let image = UIImage(systemName: "person.crop.circle")
                     let name = getClientName(workout: workout, clients: clients)
                     let date = workout.startDate ?? Date()
-                    let item = WorkoutItem(image: image, name: name, date: date)
+                    let item = WorkoutItem(id: id, image: image, name: name, date: date)
                     return item
                 }
                 completion(items)

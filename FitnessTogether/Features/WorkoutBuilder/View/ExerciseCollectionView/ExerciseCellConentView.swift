@@ -59,6 +59,7 @@ public final class ExerciseCellConentView: UIView, UIContentView {
         subtitleLabel.snp.contentHuggingVerticalPriority = 1000
         
         subtitleLabel.font = DC.Font.additionalInfo
+        subtitleLabel.numberOfLines = 1
         subtitleLabel.textColor = .systemGray4
     }
     
@@ -71,6 +72,7 @@ public final class ExerciseCellConentView: UIView, UIContentView {
         }
         
         titleLabel.font = DC.Font.roboto(weight: .medium, size: 16)
+        titleLabel.numberOfLines = 1
     }
     
     private func setupAppearance() {

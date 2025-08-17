@@ -1,11 +1,16 @@
 
 import UIKit
 
+public protocol MainViewControllerDelegate {
+    func mainVC(_ vc: MainWorkoutsViewController, requestToOpen workoutId: String)
+}
+
 public final class MainWorkoutsViewController: FTViewController {
     
     var model: MainModel!
+    var delegate: (any MainViewControllerDelegate)?
     
-    private var trainsCollection: MainWorkoutView = MainWorkoutCollectionView()
+    private var workoutCollection: MainWorkoutView = MainWorkoutCollectionView()
     private var disclosureButton: DisclosureButton!
     
     //MARK: - Lifecycle
@@ -37,7 +42,14 @@ public final class MainWorkoutsViewController: FTViewController {
     }
     
     private func setupTrainsCollectionView() {
-        addStackSubview(trainsCollection, height: 1)
+        addStackSubview(workoutCollection, height: 1)
+        workoutCollection.itemDidPressed = itemDidPressed
+    }
+    
+    private func itemDidPressed(_ item: WorkoutItem) {
+        guard let id = item.id else { return }
+        print(id)
+        delegate?.mainVC(self, requestToOpen: id)
     }
     
     private func setupAddWorkoutButton() {
@@ -51,20 +63,18 @@ public final class MainWorkoutsViewController: FTViewController {
     }
     
     private func setupDisclosureButton() {
-        guard let collection = trainsCollection as? DisclosableView else { return }
+        guard let collection = workoutCollection as? DisclosableView else { return }
         disclosureButton = DisclosureButton(viewToDisclosure: collection)
         addStackSubview(disclosureButton, height: DC.Size.smallButtonHeight)
         disclosureButton.backgroundColor = .systemBackground
     }
-    
-
     
     //MARK: - Data
     private func updateItems() {
         model.getItems { [weak self] items in
             guard let self else { return }
             
-            trainsCollection.items = items
+            workoutCollection.items = items
             disclosureButton.updateViewHeight()
             
             let disclosureButtonHidden = items.count <= 4
@@ -72,4 +82,8 @@ public final class MainWorkoutsViewController: FTViewController {
         }
     }
 
+}
+
+public extension MainViewControllerDelegate {
+    func mainVC(_ vc: MainWorkoutsViewController, requestToOpen workoutId: String) {}
 }

@@ -1,5 +1,6 @@
 
 import UIKit
+import FTDomainData
 
 public final class BaseCoachCoordinator: NSObject, CoachCoordinator {
     
@@ -16,7 +17,7 @@ public final class BaseCoachCoordinator: NSObject, CoachCoordinator {
     init(factory: CoachViewControllerFactory) {
         self.factory = factory
         super.init()
-        self.tabBarVC = factory.makeTabBarVC(calendarDelegate: self)
+        self.tabBarVC = factory.makeTabBarVC(mainDeleage: self, calendarDelegate: self)
         self.navigationVC = UINavigationController(rootViewController: tabBarVC)
         tabBarVC.selectedIndex = 0
 
@@ -24,6 +25,15 @@ public final class BaseCoachCoordinator: NSObject, CoachCoordinator {
 
     public func show(_ viewController: UIViewController) {
         navigationVC.pushViewController(viewController, animated: needAnimate)
+    }
+    
+}
+
+extension BaseCoachCoordinator: MainViewControllerDelegate {
+    
+    public func mainVC(_ vc: MainWorkoutsViewController, requestToOpen workoutId: String) {
+        let vc = factory.makeEditWorkoutVC(workoutId: workoutId, delegate: self)
+        show(vc)
     }
     
 }
@@ -39,10 +49,9 @@ extension BaseCoachCoordinator: CalendarViewControllerDelegate {
 
 extension BaseCoachCoordinator: WorkoutBuilderViewControllerDelegate {
     
-    public func workoutBuilderVCRequestToOpenAddExerciseScreen(_ vc: UIViewController) {
-        let vc = factory.makeCreateExerciseVC()
+    public func workoutBuilderVCRequestToOpenAddExerciseScreen(_ vc: UIViewController, delegate: (any ExerciseCreateViewControllerDelegate)?) {
+        let vc = factory.makeCreateExerciseVC(delegate: delegate)
         currentVC?.present(vc, animated: needAnimate)
-        print(currentVC)
     }
     
     public func workoutBuilderVCDidFinish(_ vc: UIViewController) {
