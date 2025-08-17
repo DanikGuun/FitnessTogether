@@ -19,7 +19,7 @@ public final class BaseLoginModel: LoginModel {
         self.userInterface = userInterface
     }
     
-    public func login(userLogin: FTDomainData.FTUserLogin, completion: FTDomainData.FTCompletion<Data>) {
+    public func login(userLogin: FTUserLogin, completion: FTCompletion<Data>) {
         userInterface.login(data: userLogin, completion: completion)
     }
         

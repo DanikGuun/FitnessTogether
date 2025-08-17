@@ -265,8 +265,10 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
 public protocol CalendarViewControllerDelegate {
     //интервал, если тыкаем с календаря и надо задать дату.
     func calendarViewControllerGoToAddWorkout(_ viewController: UIViewController, interval: DateInterval?)
+    func calendarViewControllerGoToEditWorkout(_ viewController: UIViewController, workoutId: String)
 }
 
 public extension CalendarViewControllerDelegate {
     func calendarViewControllerGoToAddWorkout(_ viewController: UIViewController, interval: DateInterval?) {}
+    func calendarViewControllerGoToEditWorkout(_ viewController: UIViewController, workoutId: String) {}
 }

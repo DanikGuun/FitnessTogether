@@ -23,32 +23,32 @@ class MockUserInterface: FTUserInterface {
     var token: String? = nil
     var hasPreviousLogin: Bool = false
     
-    var lastRegisterData: FTDomainData.FTUserRegister?
-    var lastLoginData: FTDomainData.FTUserLogin?
+    var lastRegisterData: FTUserRegister?
+    var lastLoginData: FTUserLogin?
     var user: FTUser? = FTUser()
     
-    func register(data: FTDomainData.FTUserRegister, completion: FTDomainData.FTCompletion<Data>) {
+    func register(data: FTUserRegister, completion: FTCompletion<Data>) {
         lastRegisterData = data
         completion?(.success(Data()))
     }
     
-    func login(data: FTDomainData.FTUserLogin, completion: FTDomainData.FTCompletion<Data>) {
+    func login(data: FTUserLogin, completion: FTCompletion<Data>) {
         lastLoginData = data
         completion?(.success(Data()))
     }
     
-    func loginWithPreviousCredentials(completion: FTDomainData.FTCompletion<Data>) {}
+    func loginWithPreviousCredentials(completion: FTCompletion<Data>) {}
     
-    func logout(completion: FTDomainData.FTCompletion<Void>) {}
+    func logout(completion: FTCompletion<Void>) {}
     
-    func current(completion: FTDomainData.FTCompletion<FTDomainData.FTUser>) {
+    func current(completion: FTCompletion<FTUser>) {
         guard let user else { completion?(.failure(.unknown)); return }
         completion?(.success(user))
     }
     
-    func addClientToCoach(clientId: String, completion: FTDomainData.FTCompletion<Void>) {}
+    func addClientToCoach(clientId: String, completion: FTCompletion<Void>) {}
     
-    func getClients(completion: FTDomainData.FTCompletion<[FTDomainData.FTUser]>) {
+    func getClients(completion: FTCompletion<[FTUser]>) {
         let clients = user?.clients.map { $0.client } ?? []
         completion?(.success(clients))
     }
@@ -58,45 +58,58 @@ class MockUserInterface: FTUserInterface {
 class MockWorkoutInterface: FTWorkoutInterface {
     var workouts: [FTWorkout] = []
     
-    func create(data: FTDomainData.FTWorkoutCreate, completion: FTDomainData.FTCompletion<FTDomainData.FTWorkout>) {}
+    func create(data: FTWorkoutCreate, completion: FTCompletion<FTWorkout>) {
+        let id = UUID().uuidString
+        let formatter = ISO8601DateFormatter()
+        let part = FTWorkoutParticipant(workoutId: id, userId: data.userId, role: .coach)
+        let workout = FTWorkout(id: id, startDate: formatter.date(from: data.startDate), participants: [part])
+        workouts.append(workout)
+        completion?(.success(workout))
+    }
     
-    func get(workoutId: String, completion: FTDomainData.FTCompletion<FTDomainData.FTWorkout>) {}
+    func get(workoutId: String, completion: FTCompletion<FTWorkout>) {}
     
-    func getAll(completion: FTDomainData.FTCompletion<[FTDomainData.FTWorkout]>) {
+    func getAll(completion: FTCompletion<[FTWorkout]>) {
         completion?(.success(workouts))
     }
     
-    func edit(workoutId: String, newData data: FTDomainData.FTWorkoutCreate, completion: FTDomainData.FTCompletion<FTDomainData.FTWorkout>) {}
+    func edit(workoutId: String, newData data: FTWorkoutCreate, completion: FTCompletion<FTWorkout>) {}
     
-    func delete(workoutId: String, completion: FTDomainData.FTCompletion<Void>) {}
+    func delete(workoutId: String, completion: FTCompletion<Void>) {}
     
     
 }
 
 class MockExerciseInterface: FTExerciseInterface {
-    func create(data: FTDomainData.FTExerciseCreate, completion: FTDomainData.FTCompletion<FTDomainData.FTExercise>) {}
+    var exercises: [FTExercise] = []
     
-    func get(exerciseId: String, completion: FTDomainData.FTCompletion<FTDomainData.FTExercise>) {}
+    func create(data: FTExerciseCreate, completion: FTCompletion<FTExercise>) {
+        let exercise = FTExercise(id: UUID().uuidString, name: data.name, description: data.description, muscleKinds: data.muscleKinds, сomplexity: data.complexity, workoutId: data.workoutId)
+        exercises.append(exercise)
+        completion?(.success(exercise))
+    }
     
-    func get(workoutId: String, completion: FTDomainData.FTCompletion<[FTDomainData.FTExercise]>) {}
+    func get(exerciseId: String, completion: FTCompletion<FTExercise>) {}
     
-    func update(exerciseId: String, data: FTDomainData.FTExerciseCreate, completion: FTDomainData.FTCompletion<FTDomainData.FTExercise>) {}
+    func get(workoutId: String, completion: FTCompletion<[FTExercise]>) {}
     
-    func delete(exerciseId: String, completion: FTDomainData.FTCompletion<Void>) {}
+    func update(exerciseId: String, data: FTExerciseCreate, completion: FTCompletion<FTExercise>) {}
+    
+    func delete(exerciseId: String, completion: FTCompletion<Void>) {}
     
     
 }
 
 class MockSetInterface: FTSetInterface {
-    func create(data: FTDomainData.FTSetCreate, completion: FTDomainData.FTCompletion<FTDomainData.FTSet>) {}
+    func create(data: FTSetCreate, completion: FTCompletion<FTSet>) {}
     
-    func get(setId: String, completion: FTDomainData.FTCompletion<FTDomainData.FTSet>) {}
+    func get(setId: String, completion: FTCompletion<FTSet>) {}
     
-    func get(exerciseId: String, completion: FTDomainData.FTCompletion<[FTDomainData.FTSet]>) {}
+    func get(exerciseId: String, completion: FTCompletion<[FTSet]>) {}
     
-    func edit(setId: String, newData data: FTDomainData.FTSetCreate, completion: FTDomainData.FTCompletion<FTDomainData.FTSet>) {}
+    func edit(setId: String, newData data: FTSetCreate, completion: FTCompletion<FTSet>) {}
     
-    func delete(setId: String, completion: FTDomainData.FTCompletion<Void>) {}
+    func delete(setId: String, completion: FTCompletion<Void>) {}
     
     
 }

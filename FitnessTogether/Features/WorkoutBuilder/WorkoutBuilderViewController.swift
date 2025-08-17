@@ -28,7 +28,7 @@ public final class WorkoutBuilderViewController: FTStateViewController, WorkoutB
     }
     
     public override func viewStatesDidEnd() {
-        model.addWorkoutAndExercises(completion: { result in
+        model.saveWorkoutAndExercises(completion: { result in
             switch result {
                 
             case .success:

@@ -4,14 +4,14 @@ import XCTest
 import FTDomainData
 @testable import FitnessTogether
 
-final class CreateWorkoutBuilderModelTests: XCTestCase {
+final class BaseWorkoutBuilderModelTests: XCTestCase {
     
     var ftManager: MockFTManager!
-    var model: CreateWorkoutBuilderModel!
+    var model: BaseWorkoutBuilderModel!
     
     override func setUp() {
         ftManager = MockFTManager()
-        model = CreateWorkoutBuilderModel(ftManager: ftManager)
+        model = BaseWorkoutBuilderModel(ftManager: ftManager)
         super.setUp()
     }
     
@@ -53,17 +53,5 @@ final class CreateWorkoutBuilderModelTests: XCTestCase {
         XCTAssertEqual(model.currentState, 0)
     }
     
-    func test_ApplyingState() {
-        let _ = model.getNextState()
-        let state = model.getNextState() as? WorkoutBuilderExerciseState
-        XCTAssertNotNil(state)
-        let exercise = FTExerciseCreate(name: "title1")
-        state?.exercises = [exercise]
-        
-        model.applyDataIfNeeded()
-        let modelExercise = model.exercises.first
-        
-        XCTAssertEqual(modelExercise, exercise)
-    }
-    
 }
+

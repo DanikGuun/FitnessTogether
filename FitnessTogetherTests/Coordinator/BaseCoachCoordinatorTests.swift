@@ -26,16 +26,26 @@ final class BaseCoachCoordinatorTests: XCTestCase {
         XCTAssertEqual(coordinator.currentVC?.title, "AddWorkout")
     }
     
+    func test_GoToEditWorkout_FromMain() {
+        coordinator.mainVC(UIViewController(), requestToOpenWorkoutWithId: "id")
+        XCTAssertEqual(coordinator.currentVC?.title, "EditWorkout")
+    }
+    
+    func test_GoToEditWorkout_FromCalendar() {
+        coordinator.calendarViewControllerGoToEditWorkout(UIViewController(), workoutId: "")
+        XCTAssertEqual(coordinator.currentVC?.title, "EditWorkout")
+    }
+    
 }
 
 fileprivate class MockCoachVCFactory: CoachViewControllerFactory {
     
     
-    func makeTabBarVC(calendarDelegate: (any FitnessTogether.CalendarViewControllerDelegate)?) -> UITabBarController {
+    func makeTabBarVC(mainDeleage: (any MainViewControllerDelegate)?, calendarDelegate: (any FitnessTogether.CalendarViewControllerDelegate)?) -> UITabBarController {
         return UITabBarController()
     }
     
-    func makeMainVC() -> UIViewController {
+    func makeMainVC(delegate: (any MainViewControllerDelegate)?) -> UIViewController {
         return vc("Main")
     }
     
@@ -55,7 +65,11 @@ fileprivate class MockCoachVCFactory: CoachViewControllerFactory {
         return vc("AddWorkout")
     }
     
-    func makeCreateExerciseVC() -> UIViewController {
+    func makeEditWorkoutVC(workoutId: String, delegate: (any FitnessTogether.WorkoutBuilderViewControllerDelegate)?) -> UIViewController {
+        return vc("EditWorkout")
+    }
+    
+    func makeCreateExerciseVC(delegate: (any ExerciseCreateViewControllerDelegate)?) -> UIViewController {
         return vc("CreateExercise")
     }
     

@@ -2,7 +2,7 @@
 import UIKit
 
 public protocol MainViewControllerDelegate {
-    func mainVC(_ vc: MainWorkoutsViewController, requestToOpen workoutId: String)
+    func mainVC(_ vc: UIViewController, requestToOpenWorkoutWithId workoutId: String)
 }
 
 public final class MainWorkoutsViewController: FTViewController {
@@ -49,7 +49,7 @@ public final class MainWorkoutsViewController: FTViewController {
     private func itemDidPressed(_ item: WorkoutItem) {
         guard let id = item.id else { return }
         print(id)
-        delegate?.mainVC(self, requestToOpen: id)
+        delegate?.mainVC(self, requestToOpenWorkoutWithId: id)
     }
     
     private func setupAddWorkoutButton() {

@@ -9,7 +9,7 @@ final class WorkoutBuilderMetaStateTests: XCTestCase {
     var state: WorkoutBuilderMetaState!
     
     override func setUp() {
-        state = WorkoutBuilderMetaState()
+        state = WorkoutBuilderMetaState(clientsProvider: EmptyClientProvider())
         super.setUp()
     }
     
@@ -49,4 +49,10 @@ final class WorkoutBuilderMetaStateTests: XCTestCase {
         XCTAssertTrue(state.nextButton.isEnabled)
     }
     
+}
+
+fileprivate class EmptyClientProvider: ClientProvider {
+    func getClients(completion: @escaping (([FTUser]) -> Void)) {
+        
+    }
 }
