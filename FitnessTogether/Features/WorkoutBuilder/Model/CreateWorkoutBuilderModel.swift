@@ -1,7 +1,7 @@
 
 import FTDomainData
 
-public final class BaseWorkoutBuilderModel: WorkoutBuilderModel {
+public final class CreateWorkoutBuilderModel: WorkoutBuilderModel {
     
     public private(set) var currentState = -1
     let states: [any WorkoutBuilderState]
@@ -20,11 +20,18 @@ public final class BaseWorkoutBuilderModel: WorkoutBuilderModel {
     
     public func getNextState() -> (any ScreenState)? {
         applyDataIfNeeded()
+        guard currentState < states.count - 1 else { return nil }
         currentState += 1
         return states[safe: currentState]
     }
     
-    private func applyDataIfNeeded() {
+    public func getPreviousState() -> (any ScreenState)? {
+        guard currentState > 0 else { return nil }
+        currentState -= 1
+        return states[safe: currentState]
+    }
+    
+    internal func applyDataIfNeeded() {
         guard let state = states[safe: currentState] else { return }
         state.apply(workoutCreate: &workout, exercises: &exercises)
     }
@@ -96,8 +103,4 @@ public final class BaseWorkoutBuilderModel: WorkoutBuilderModel {
         }
     }
     
-    public func getPreviousState() -> (any ScreenState)? {
-        currentState -= 1
-        return states[safe: currentState]
-    }
 }

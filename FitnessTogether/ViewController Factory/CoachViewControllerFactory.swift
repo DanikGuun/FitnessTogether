@@ -63,7 +63,7 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
     }
     
     public func makeAddWorkoutVC(startInterval: DateInterval?, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController {
-        let model = BaseWorkoutBuilderModel(ftManager: ftManager)
+        let model = CreateWorkoutBuilderModel(ftManager: ftManager)
         let vc = WorkoutBuilderViewController(model: model)
         vc.delegate = delegate
         return vc
