@@ -58,4 +58,9 @@ public extension UIButton {
         return button
     }
     
+    func setBusy(_ isBusy: Bool) {
+        self.isEnabled = !isBusy
+        self.configuration?.showsActivityIndicator = isBusy
+    }
+    
 }

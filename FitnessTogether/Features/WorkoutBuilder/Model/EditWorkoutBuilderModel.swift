@@ -1,35 +1,56 @@
 
+import Foundation
 import FTDomainData
 
-public final class EditWorkoutBuilderModel: BaseWorkoutBuilderModel {
+public final class EditWorkoutBuilderModel: WorkoutBuilderModel {
     
+    let ftManager: any FTManager
     let editingWorkoutId: String
-    var editingWorkout: FTWorkout?
     
-    init(workoutId: String, ftManager: any FTManager) {
+    init(ftManager: any FTManager, workoutId: String){
+        self.ftManager = ftManager
         self.editingWorkoutId = workoutId
-        super.init(ftManager: ftManager)
-        let metaState = states[0] as! WorkoutBuilderMetaState
-        let exerciseState = states[1] as! WorkoutBuilderExerciseState
-        setInitialData(metaState: metaState, exerciseState: exerciseState)
     }
     
     //MARK: - Start Data
-    private func setInitialData(metaState: WorkoutBuilderMetaState, exerciseState: WorkoutBuilderExerciseState) {
-        
-        ftmanager.workout.get(workoutId: editingWorkoutId, completion: { [weak self] result in
+    public func saveWorkout(workout: FTWorkoutCreate, completion: ((Result<FTWorkout, any Error>) -> (Void))?) {
+        ftManager.workout.edit(workoutId: editingWorkoutId, newData: workout, completion: { result in
+            switch result {
+                
+            case .success(let workout):
+                completion?(.success(workout))
+                
+            case .failure(let error):
+                print(error.localizedDescription)
+                completion?(.failure(error))
+            }
+        })
+    }
+    
+    public func getClients(completion: @escaping (([FTUser]) -> Void)) {
+        ftManager.user.getClients(completion: { result in
+            switch result {
+                
+            case .success(let users):
+                completion(users)
+                
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        })
+    }
+    
+    public func getInitialWorkoutData(completion: @escaping ((FTWorkoutCreate?) -> Void)) {
+        ftManager.workout.get(workoutId: editingWorkoutId, completion: { [weak self] result in
             guard let self else { return }
             switch result {
                 
             case .success(let workout):
-                editingWorkout = workout
-                metaState.workoutKindSelecter.selectedWorkoutKind = workout.workoutKind
-                metaState.descriptionTextView.text = workout.description
-                metaState.dateTimeView.date = workout.startDate
-                print(workout.exercises)
-                metaState.clientSelecter.selectClient(id: getClient(workout: workout))
-                exerciseState.exercises = workout.exercises?.compactMap(getExerciseCreate) ?? []
-                
+                let workoutData = FTWorkoutCreate(description: workout.description,
+                                                  startDate: workout.startDate ?? Date(),
+                                                  userId: getClientId(workout: workout),
+                                                  workoutKind: workout.workoutKind)
+                completion(workoutData)
                 
             case .failure(let error):
                 print("EditWorkoutBuilderModel " + error.localizedDescription)
@@ -37,19 +58,8 @@ public final class EditWorkoutBuilderModel: BaseWorkoutBuilderModel {
         })
     }
     
-    private func getClient(workout: FTWorkout) -> String {
-        guard let clientPart = workout.participants.first(where: { $0.role == .client }) else { return "" }
-        return clientPart.userId
+    private func getClientId(workout: FTWorkout) -> String {
+        guard let part = workout.participants.first(where: { $0.role == .client }) else { return "" }
+        return part.userId
     }
-    
-    private func getExerciseCreate(exercise: FTExercise?) -> FTExerciseCreate? {
-        guard let exercise else { return nil }
-        return FTExerciseCreate(name: exercise.name, description: exercise.description, muscleKinds: exercise.muscleKinds, complexity: exercise.сomplexity, workoutId: exercise.workoutId)
-    }
-    
-    //MARK: - Other
-    public override func saveWorkoutAndExercises(completion: ((Result<Void, any Error>) -> (Void))?) {
-        
-    }
-    
 }

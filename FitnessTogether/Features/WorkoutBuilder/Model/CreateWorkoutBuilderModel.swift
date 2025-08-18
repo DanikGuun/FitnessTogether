@@ -1,73 +1,60 @@
 
 import FTDomainData
 
-public final class CreateWorkoutBuilderModel: BaseWorkoutBuilderModel {
+public final class CreateWorkoutBuilderModel: WorkoutBuilderModel {
     
-    public override func saveWorkoutAndExercises(completion: ((Result<Void, Error>) -> (Void))?) {
-        completion?(.success(Void()))
-        getUserId(resultCompletion: completion) { [weak self] userId in
-            guard let self else { return }
-            workout.userId = userId
-            
-            addWorkout(resultCompletion: completion) { workout in
-                for i in 0..<self.exercises.count {
-                    self.exercises[i].workoutId = workout.id
-                }
-                
-                self.addExercises(resultCompletion: completion) { result in
-                    switch result {
-                    case .success(): completion?(.success(Void()))
-                    case .failure(let error): completion?(.failure(error))
-                    }
-                }
-            }
-        }
+    var ftManager: FTManager!
+    
+    init(ftManager: FTManager!) {
+        self.ftManager = ftManager
     }
     
-    private func getUserId(resultCompletion: ((Result<Void, Error>) -> (Void))?, completion: @escaping (String) -> (Void)) {
-        ftmanager.user.current { result in
-            switch result {
-                
-            case .success(let user):
-                completion(user.id)
-                
-            case .failure(let error):
-                resultCompletion?(.failure(error))
-            }
-            
-        }
-    }
-    
-    private func addWorkout(resultCompletion: ((Result<Void, Error>) -> (Void))?, completion: @escaping ((FTWorkout) -> (Void))) {
-        ftmanager.workout.create(data: workout, completion: { result in
+    public func saveWorkout(workout: FTWorkoutCreate, completion: ((Result<FTWorkout, any Error>) -> (Void))?) {
+        ftManager.workout.create(data: workout, completion: { result in
             switch result {
                 
             case .success(let workout):
-                completion(workout)
+                completion?(.success(workout))
                 
             case .failure(let error):
-                resultCompletion?(.failure(error))
+                print("CreateWorkoutBuilderModel " + error.localizedDescription)
+                completion?(.failure(error))
             }
         })
     }
     
-    private func addExercises(resultCompletion: ((Result<Void, Error>) -> (Void))?, completion: @escaping (Result<Void, Error>) -> (Void)) {
-        var count = 0
-        for exercise in exercises {
-            ftmanager.exercise.create(data: exercise, completion: { result in
-                switch result {
-                case .success(let exercise):
-                    count += 1
-                    if count == self.exercises.count {
-                        completion(.success(()))
-                    }
-                    
-                case .failure(let error):
-                    resultCompletion?(.failure(error))
-                    return
-                }
-            })
-        }
+    public func getClients(completion: @escaping (([FTUser]) -> Void)) {
+        ftManager.user.getClients(completion: { result in
+            switch result {
+                
+            case .success(let users):
+                completion(users)
+                
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        })
     }
+    
+    public func getInitialWorkoutData(completion: ((FTWorkoutCreate?) -> Void)) { }
+    
+//    private func addExercises(resultCompletion: ((Result<Void, Error>) -> (Void))?, completion: @escaping (Result<Void, Error>) -> (Void)) {
+//        var count = 0
+//        for exercise in exercises {
+//            ftmanager.exercise.create(data: exercise, completion: { result in
+//                switch result {
+//                case .success(let exercise):
+//                    count += 1
+//                    if count == self.exercises.count {
+//                        completion(.success(()))
+//                    }
+//                    
+//                case .failure(let error):
+//                    resultCompletion?(.failure(error))
+//                    return
+//                }
+//            })
+//        }
+//    }
     
 }

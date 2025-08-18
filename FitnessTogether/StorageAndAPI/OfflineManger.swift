@@ -119,7 +119,11 @@ public class OfflineWorkoutInterface: FTWorkoutInterface {
         
     }
     
-    public func create(data: FTWorkoutCreate, completion: FTCompletion<FTWorkout>) { print("Cresate") }
+    public func create(data: FTWorkoutCreate, completion: FTCompletion<FTWorkout>) {
+        let workout = getWorkoutFromCreate(data)
+        workouts.append(workout)
+        completion?(.success(workout))
+    }
     
     public func get(workoutId: String, completion: FTCompletion<FTWorkout>) {
         if let workout = workouts.first(where: { $0.id == workoutId }) {
@@ -131,10 +135,23 @@ public class OfflineWorkoutInterface: FTWorkoutInterface {
         completion?(.success(workouts))
     }
     
-    public func edit(workoutId: String, newData data: FTWorkoutCreate, completion: FTCompletion<FTWorkout>) { }
+    public func edit(workoutId: String, newData data: FTWorkoutCreate, completion: FTCompletion<FTWorkout>) {
+        guard let index = workouts.firstIndex(where: { $0.id == workoutId }) else { return }
+        let workout = getWorkoutFromCreate(data, id: workoutId)
+        workouts[index] = workout
+        completion?(.success(workout))
+    }
     
     public func delete(workoutId: String, completion: FTCompletion<Void>) { }
     
+    private func getWorkoutFromCreate(_ workout: FTWorkoutCreate, id: String? = nil) -> FTWorkout {
+        var newId = UUID().uuidString
+        if let id { newId = id }
+        let formatter = ISO8601DateFormatter()
+        let part = FTWorkoutParticipant(workoutId: newId, userId: workout.userId, role: .coach)
+        let newWorkout = FTWorkout(id: newId, description: workout.description, startDate: formatter.date(from: workout.startDate), participants: [part])
+        return newWorkout
+    }
     
 }
 
@@ -146,19 +163,37 @@ public class OfflineExerciseInterface: FTExerciseInterface {
         
     }
     
-    public func create(data: FTExerciseCreate, completion: FTCompletion<FTExercise>) { }
+    public func create(data: FTExerciseCreate, completion: FTCompletion<FTExercise>) {
+        let exercise = getExerciseFromCreate(data)
+        exercises.append(exercise)
+    }
     
-    public func get(exerciseId: String, completion: FTCompletion<FTExercise>) { }
+    public func get(exerciseId: String, completion: FTCompletion<FTExercise>) {
+        guard let exercise = exercises.first(where: { $0.id == exerciseId }) else { return }
+        completion?(.success(exercise))
+    }
     
     public func get(workoutId: String, completion: FTCompletion<[FTExercise]>) {
         let exercises = exercises.filter { $0.workoutId == workoutId }
         completion?(.success(exercises))
     }
     
-    public func update(exerciseId: String, data: FTExerciseCreate, completion: FTCompletion<FTExercise>) { }
+    public func update(exerciseId: String, data: FTExerciseCreate, completion: FTCompletion<FTExercise>) {
+        let index = exercises.firstIndex(where: { $0.id == exerciseId })!
+        let exercise = getExerciseFromCreate(data, id: exerciseId)
+        exercises[index] = exercise
+    }
     
     public func delete(exerciseId: String, completion: FTCompletion<Void>) { }
     
+    private func getExerciseFromCreate(_ data: FTExerciseCreate, id: String? = nil) -> FTExercise {
+        var newId = UUID().uuidString
+        if let id { newId = id }
+        let exercise = FTExercise(id: newId, name: data.name, description: data.description,
+                                  muscleKinds: data.muscleKinds, сomplexity: data.complexity,
+                                  statistics: [], workoutId: data.workoutId)
+        return exercise
+    }
     
 }
 

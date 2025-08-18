@@ -54,13 +54,31 @@ extension BaseCoachCoordinator: CalendarViewControllerDelegate {
 
 extension BaseCoachCoordinator: WorkoutBuilderViewControllerDelegate {
     
-    public func workoutBuilderVCRequestToOpenAddExerciseScreen(_ vc: UIViewController, delegate: (any ExerciseCreateViewControllerDelegate)?) {
-        let vc = factory.makeCreateExerciseVC(delegate: delegate)
-        currentVC?.present(vc, animated: needAnimate)
+    public func workoutBuilderVCDidFinish(_ vc: UIViewController, withId workoutId: String) {
+        let vc = factory.makeExerciseListVC(workoutId: workoutId, delegate: self)
+        show(vc)
     }
     
-    public func workoutBuilderVCDidFinish(_ vc: UIViewController) {
-        navigationVC.popViewController(animated: needAnimate)
+}
+
+extension BaseCoachCoordinator: ExerciseListViewControllerDelegate {
+    
+    public func exerciseBuilderVCDidFinish(_ vc: ExerciseListViewController) {
+        
     }
+    
+    public func exerciseBuilderVCrequestToOpenAddExerciseVC(_ vc: ExerciseListViewController, workoutId: String) {
+        let vc = factory.makeExerciseCreateVC(workoutId: workoutId, delegate: self)
+        show(vc)
+    }
+    
+    public func exerciseBuilderVCrequestToOpenEditExerciseVC(_ vc: ExerciseListViewController, exerciseId: String) {
+        
+    }
+    
+}
+
+extension BaseCoachCoordinator: ExerciseBuilderViewControllerDelegate {
+    
     
 }

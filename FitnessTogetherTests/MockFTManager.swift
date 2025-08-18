@@ -59,24 +59,37 @@ class MockWorkoutInterface: FTWorkoutInterface {
     var workouts: [FTWorkout] = []
     
     func create(data: FTWorkoutCreate, completion: FTCompletion<FTWorkout>) {
-        let id = UUID().uuidString
-        let formatter = ISO8601DateFormatter()
-        let part = FTWorkoutParticipant(workoutId: id, userId: data.userId, role: .coach)
-        let workout = FTWorkout(id: id, startDate: formatter.date(from: data.startDate), participants: [part])
+        let workout = getWorkoutFromCreate(data)
         workouts.append(workout)
         completion?(.success(workout))
     }
     
-    func get(workoutId: String, completion: FTCompletion<FTWorkout>) {}
+    func get(workoutId: String, completion: FTCompletion<FTWorkout>) {
+        let workout = workouts.first(where: { $0.id == workoutId })!
+        completion?(.success(workout))
+    }
     
     func getAll(completion: FTCompletion<[FTWorkout]>) {
         completion?(.success(workouts))
     }
     
-    func edit(workoutId: String, newData data: FTWorkoutCreate, completion: FTCompletion<FTWorkout>) {}
+    func edit(workoutId: String, newData data: FTWorkoutCreate, completion: FTCompletion<FTWorkout>) {
+        let index = workouts.firstIndex(of: workouts.first(where: { $0.id == workoutId })!)!
+        let workout = getWorkoutFromCreate(data, id: workoutId)
+        workouts[index] = workout
+        
+    }
     
     func delete(workoutId: String, completion: FTCompletion<Void>) {}
     
+    private func getWorkoutFromCreate(_ workout: FTWorkoutCreate, id: String? = nil) -> FTWorkout {
+        var newId = UUID().uuidString
+        if let id { newId = id }
+        let formatter = ISO8601DateFormatter()
+        let part = FTWorkoutParticipant(workoutId: newId, userId: workout.userId, role: .coach)
+        let newWorkout = FTWorkout(id: newId, description: workout.description, startDate: formatter.date(from: workout.startDate), participants: [part])
+        return newWorkout
+    }
     
 }
 

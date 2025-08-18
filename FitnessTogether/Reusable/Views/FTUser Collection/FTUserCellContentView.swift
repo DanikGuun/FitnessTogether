@@ -9,7 +9,7 @@ public class FTUserCollectionContentView: UIView, UIContentView {
     private let imageView = UIImageView()
     private let imageMaskLayer = CAShapeLayer()
     
-    private let lineWidth: CGFloat = 1
+    private var lineWidth: CGFloat = 1
     
     //MARK: - Lifecycle
     public convenience init(configuration: any UIContentConfiguration){
@@ -25,11 +25,6 @@ public class FTUserCollectionContentView: UIView, UIContentView {
     required init?(coder: NSCoder) {
         configuration = FTUserCellConfiguration()
         super.init(coder: coder)
-    }
-    
-    public override func tintColorDidChange() {
-        tintColor = (viewController?.isOverlapsed ?? false) ? .systemGray4 : .ftOrange
-        setNeedsDisplay()
     }
     
     //MARK: - Layout
@@ -78,6 +73,11 @@ public class FTUserCollectionContentView: UIView, UIContentView {
         subtitleLabel.font = DC.Font.cellTitle
         subtitleLabel.textColor = .secondaryLabel
     }
+
+    public override func tintColorDidChange() {
+        tintColor = (viewController?.isOverlapsed ?? false) ? .systemGray4 : .ftOrange
+        setNeedsDisplay()
+    }
     
     private func updateConfiguration() {
         let conf = getConfiguration()
@@ -88,6 +88,8 @@ public class FTUserCollectionContentView: UIView, UIContentView {
         
         subtitleLabel.text = conf.subtitle
         subtitleLabel.textColor = conf.isSelected ? .systemBackground : .label
+        
+        self.lineWidth = conf.lineWidth
         
         if let title = conf.attributedTitle { titleLabel.attributedText = title }
         if let subtitle = conf.attributedSubtitle { titleLabel.attributedText = subtitle }

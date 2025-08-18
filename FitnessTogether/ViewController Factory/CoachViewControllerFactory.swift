@@ -10,7 +10,8 @@ public protocol CoachViewControllerFactory {
     func makeProfileVC() -> UIViewController
     func makeAddWorkoutVC(startInterval: DateInterval?, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController
     func makeEditWorkoutVC(workoutId: String, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController
-    func makeCreateExerciseVC(delegate: (any ExerciseCreateViewControllerDelegate)?) -> UIViewController
+    func makeExerciseListVC(workoutId: String, delegate: (any ExerciseListViewControllerDelegate)?) -> UIViewController
+    func makeExerciseCreateVC(workoutId: String, delegate: (any ExerciseBuilderViewControllerDelegate)?) -> UIViewController
 }
 
 public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
@@ -73,14 +74,22 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
     }
     
     public func makeEditWorkoutVC(workoutId: String, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController {
-        let model = EditWorkoutBuilderModel(workoutId: workoutId, ftManager: ftManager)
+        let model = EditWorkoutBuilderModel(ftManager: ftManager, workoutId: workoutId)
         let vc = WorkoutBuilderViewController(model: model)
         vc.delegate = delegate
         return vc
     }
     
-    public func makeCreateExerciseVC(delegate: (any ExerciseCreateViewControllerDelegate)?) -> UIViewController {
-        let vc = ExerciseCreateViewController()
+    public func makeExerciseListVC(workoutId: String, delegate: (any ExerciseListViewControllerDelegate)?) -> UIViewController {
+        let model = BaseExerciseModel(ftManager: ftManager, workoutId: workoutId)
+        let vc = ExerciseListViewController(model: model)
+        vc.delegate = delegate
+        return vc
+    }
+    
+    public func makeExerciseCreateVC(workoutId: String, delegate: (any ExerciseBuilderViewControllerDelegate)?) -> UIViewController {
+        let model = ExerciseBuilderCreateModel(ftManager: ftManager, workoutId: workoutId)
+        let vc = ExerciseBuilderViewController(model: model)
         vc.delegate = delegate
         return vc
     }

@@ -4,14 +4,14 @@ import XCTest
 import FTDomainData
 @testable import FitnessTogether
 
-final class CreateWorkoutBuilderModelTests: XCTestCase {
+final class EditWorkoutBuilderModelTests: XCTestCase {
     
     var ftManager: MockFTManager!
-    var model: CreateWorkoutBuilderModel!
+    var model: EditWorkoutBuilderModel!
     
     override func setUp() {
         ftManager = MockFTManager()
-        model = CreateWorkoutBuilderModel(ftManager: ftManager)
+        model = EditWorkoutBuilderModel(ftManager: ftManager, workoutId: "Test")
         super.setUp()
     }
     
@@ -22,12 +22,14 @@ final class CreateWorkoutBuilderModelTests: XCTestCase {
     }
     
     func test_SaveWorkout() {
-        let workoutCreate = FTWorkoutCreate(description: "Test")
+        let workoutCreate = FTWorkout(id: "Test", description: "top")
+        ftManager._workout.workouts = [workoutCreate]
+        let newData = FTWorkoutCreate(description: "ne top")
         
-        model.saveWorkout(workout: workoutCreate, completion: nil)
+        model.saveWorkout(workout: newData, completion: nil)
         
         let workout = ftManager._workout.workouts.first
-        XCTAssertEqual(workout?.description, workoutCreate.description)
+        XCTAssertEqual(workout?.description, newData.description)
         
     }
     
@@ -41,10 +43,14 @@ final class CreateWorkoutBuilderModelTests: XCTestCase {
         XCTAssertEqual(clients.first?.firstName, user.firstName)
     }
     
-    func test_GetInitialDataEmpty() {
-        var workout: FTWorkoutCreate?
-        model.getInitialWorkoutData(completion: { workout = $0 })
-        XCTAssertNil(workout)
+    func test_GetInitialData() {
+        let workout = FTWorkout(id: "Test", description: "top description")
+        ftManager._workout.workouts = [workout]
+        
+        var data: FTWorkoutCreate?
+        model.getInitialWorkoutData(completion: { data = $0 })
+        
+        XCTAssertEqual(data?.description, workout.description)
     }
     
 }

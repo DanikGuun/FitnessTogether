@@ -59,8 +59,8 @@
 				Model/Main/BaseMainModelTests.swift,
 				Model/Main/ClientMainModelTests.swift,
 				Model/Main/CoachMainModelTests.swift,
-				"Model/Workout Builder/BaseWorkoutBuilderModelTests.swift",
 				"Model/Workout Builder/CreateWorkoutBuilderModelTests.swift",
+				"Model/Workout Builder/EditWorkoutBuilderModelTests.swift",
 				RecoverPassword/MockRecoverNetworkManager.swift,
 				RecoverPassword/PasswordRecoverCodeStateTests.swift,
 				RecoverPassword/PasswordRecoverEmailStateTests.swift,
@@ -72,8 +72,6 @@
 				Registration/RegistrationStates/RegistrationCredintalsStateTests.swift,
 				Registration/RegistrationStates/RegistrationPersonalDataStateTests.swift,
 				Registration/RegistrationStates/RegistrationRoleStateTests.swift,
-				WorkoutBuilder/WorkoutBuilderExerciseStateTests.swift,
-				WorkoutBuilder/WorkoutBuilderMetaStateTests.swift,
 			);
 			target = 568E984B2E28E9C8007144F7 /* FitnessTogether */;
 		};
@@ -90,8 +88,8 @@
 				Model/Main/BaseMainModelTests.swift,
 				Model/Main/ClientMainModelTests.swift,
 				Model/Main/CoachMainModelTests.swift,
-				"Model/Workout Builder/BaseWorkoutBuilderModelTests.swift",
 				"Model/Workout Builder/CreateWorkoutBuilderModelTests.swift",
+				"Model/Workout Builder/EditWorkoutBuilderModelTests.swift",
 				RecoverPassword/MockRecoverNetworkManager.swift,
 				RecoverPassword/PasswordRecoverCodeStateTests.swift,
 				RecoverPassword/PasswordRecoverEmailStateTests.swift,
@@ -103,8 +101,6 @@
 				Registration/RegistrationStates/RegistrationCredintalsStateTests.swift,
 				Registration/RegistrationStates/RegistrationPersonalDataStateTests.swift,
 				Registration/RegistrationStates/RegistrationRoleStateTests.swift,
-				WorkoutBuilder/WorkoutBuilderExerciseStateTests.swift,
-				WorkoutBuilder/WorkoutBuilderMetaStateTests.swift,
 			);
 			target = 568E98612E28E9C9007144F7 /* FitnessTogetherTests */;
 		};

@@ -69,7 +69,7 @@ fileprivate class MockCoachVCFactory: CoachViewControllerFactory {
         return vc("EditWorkout")
     }
     
-    func makeCreateExerciseVC(delegate: (any ExerciseCreateViewControllerDelegate)?) -> UIViewController {
+    func makeExerciseCreateVC(delegate: (any ExerciseBuilderViewControllerDelegate)?) -> UIViewController {
         return vc("CreateExercise")
     }
     

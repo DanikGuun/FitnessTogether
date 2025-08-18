@@ -79,6 +79,7 @@ public class MainWorkoutCollectionView: UIView, MainWorkoutView, DisclosableView
         conf.image = item.image
         conf.title = item.title
         conf.subtitle = dateFormatter.string(from: item.date).capitalized(with: .actual)
+        conf.lineWidth = 1
         return conf
     }
     
