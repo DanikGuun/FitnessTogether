@@ -55,16 +55,18 @@ extension BaseCoachCoordinator: CalendarViewControllerDelegate {
 extension BaseCoachCoordinator: WorkoutBuilderViewControllerDelegate {
     
     public func workoutBuilderVCDidFinish(_ vc: UIViewController, withId workoutId: String) {
+        factory.changeWorkoutBuilderToEditModel(vc, workoutId: workoutId)
         let vc = factory.makeExerciseListVC(workoutId: workoutId, delegate: self)
         show(vc)
     }
+
     
 }
 
 extension BaseCoachCoordinator: ExerciseListViewControllerDelegate {
     
     public func exerciseBuilderVCDidFinish(_ vc: ExerciseListViewController) {
-        
+        navigationVC.popToViewController(tabBarVC, animated: true)
     }
     
     public func exerciseBuilderVCrequestToOpenAddExerciseVC(_ vc: ExerciseListViewController, workoutId: String) {

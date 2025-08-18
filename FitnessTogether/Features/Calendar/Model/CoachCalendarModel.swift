@@ -80,13 +80,15 @@ public final class CoachCalendarModel: CalendarModel {
         let clientId = workout.participants.first(where: { $0.role == .client })?.userId ?? ""
         let user = clients.first(where: { $0.id == clientId }) ?? FTUser()
         
+        let id = workout.id
         let name = user.lastName + " " + user.firstName
         let color = workout.workoutKind.color
         let column = getWorkoutColumn(workout)
         let start = getStartTime(workout)
-        let duration = getDuration(workout)
+        let duration = workout.duration
         
-        let item = WorkoutTimelineItem(title: name,
+        let item = WorkoutTimelineItem(id: id,
+                                       title: name,
                                        color: color,
                                        column: column,
                                        start: start,
@@ -108,10 +110,4 @@ public final class CoachCalendarModel: CalendarModel {
         return startInterval
     }
     
-    private func getDuration(_ workout: FTWorkout) -> TimeInterval {
-        let startDate = workout.startDate ?? Date()
-        let endDate = workout.endDate ?? Date()
-        let durationInterval = abs(endDate.timeIntervalSince(startDate))
-        return durationInterval
-    }
 }

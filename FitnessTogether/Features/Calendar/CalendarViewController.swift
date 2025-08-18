@@ -2,7 +2,7 @@
 import UIKit
 import SnapKit
 
-public final class CalendarViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, TimelineDelegate {
+public final class CalendarViewController: UIViewController, UICollectionViewDelegate, UICollectionViewDataSource, WorkoutTimelineDelegate {
     
     public var model: CalendarModel!
     public var delegate: CalendarViewControllerDelegate?
@@ -29,6 +29,12 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
         setup()
+    }
+    
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        collection.reloadItems(at: collection.indexPathsForVisibleItems)
+        
     }
     
     private func setup() {
@@ -143,7 +149,6 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
             cell.contentConfiguration = conf
         })
         
-        
         return cell
     }
     
@@ -189,6 +194,10 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
     }
     
     //MARK: - TimelineDelegate
+    public func workoutTimeline(_ timeline: WorkoutsTimelineView, didSelect workout: WorkoutTimelineItem) {
+        delegate?.calendarViewControllerGoToEditWorkout(self, workoutId: workout.id)
+    }
+    
     public func timeline(_ timeline: TimeLineView, heightChanged height: CGFloat) {
         TimelineCellContentConfiguration.timelineHeight = height
     }

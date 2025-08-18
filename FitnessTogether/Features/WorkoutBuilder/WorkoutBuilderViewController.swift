@@ -43,6 +43,10 @@ public final class WorkoutBuilderViewController: FTViewController {
         setup()
     }
     
+    public override func viewDidAppear(_ animated: Bool) {
+        super.viewDidAppear(animated)
+    }
+    
     //MARK: - UI
     
     private func setup() {

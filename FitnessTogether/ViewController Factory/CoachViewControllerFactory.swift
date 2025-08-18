@@ -10,6 +10,7 @@ public protocol CoachViewControllerFactory {
     func makeProfileVC() -> UIViewController
     func makeAddWorkoutVC(startInterval: DateInterval?, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController
     func makeEditWorkoutVC(workoutId: String, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController
+    func changeWorkoutBuilderToEditModel(_ vc: UIViewController, workoutId: String)
     func makeExerciseListVC(workoutId: String, delegate: (any ExerciseListViewControllerDelegate)?) -> UIViewController
     func makeExerciseCreateVC(workoutId: String, delegate: (any ExerciseBuilderViewControllerDelegate)?) -> UIViewController
 }
@@ -70,7 +71,14 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         let model = CreateWorkoutBuilderModel(ftManager: ftManager)
         let vc = WorkoutBuilderViewController(model: model)
         vc.delegate = delegate
+        if let date = startInterval?.start { vc.dateTimeView.date = date }
         return vc
+    }
+    
+    public func changeWorkoutBuilderToEditModel(_ vc: UIViewController, workoutId: String) {
+        if let vc = vc as? WorkoutBuilderViewController {
+            vc.model = vc.model as? EditWorkoutBuilderModel ?? EditWorkoutBuilderModel(ftManager: ftManager, workoutId: workoutId)
+        }
     }
     
     public func makeEditWorkoutVC(workoutId: String, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController {

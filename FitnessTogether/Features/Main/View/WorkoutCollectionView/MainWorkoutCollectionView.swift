@@ -31,10 +31,16 @@ public class MainWorkoutCollectionView: UIView, MainWorkoutView, DisclosableView
         super.init(coder: coder)
     }
     
+    public override func layoutSubviews() {
+        super.layoutSubviews()
+        collectionView.setNeedsLayout()
+    }
+    
     private func setup() {
         setupCollectionView()
         setupNoDataLabel()
     }
+    
     
     //MARK: - CollectionView
     private func setupCollectionView() {

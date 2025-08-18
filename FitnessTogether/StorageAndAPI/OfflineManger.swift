@@ -27,7 +27,7 @@ public class OfflineManger: FTManager {
         
         var coaches: [FTUser] = []
         var workouts: [FTWorkout] = []
-        for name in ["Здоровяк", "Громила", "Чертяга"] {
+        for name in ["Здоровяк"] { //, "Громила", "Чертяга"
             //сам тренер
             var coach = FTUser(firstName: name, role: .coach, id: name)
             let pairs = clients.map { FTClientCoachPair(clientId: $0.id, client: $0, coachId: coach.id, coach: coach) }
@@ -35,11 +35,11 @@ public class OfflineManger: FTManager {
             coaches.append(coach)
             
             //его тренировки
-            for _ in 0...15 {
+            for _ in 0...1 {
                 let date = refDate//Calendar.current.date(byAdding: .day, value: Int.random(in: 0..<7), to: refDate)
                 let random = getRandomCurrentWeekDate(refDate)
                 let type = FTWorkoutKind.allCases.randomElement()!
-                var workout = FTWorkout(id: UUID().uuidString, startDate: random, endDate: random.addingTimeInterval(CGFloat.random(in: 0..<3*3600)), workoutKind: type)
+                var workout = FTWorkout(id: UUID().uuidString, startDate: random, duration: 5400, workoutKind: type)
                 let client = clients.randomElement()!
                 let part1 = FTWorkoutParticipant(workoutId: workout.id, userId: client.id, role: .client)
                 let part2 = FTWorkoutParticipant(workoutId: workout.id, userId: coach.id, role: .coach)
@@ -52,11 +52,12 @@ public class OfflineManger: FTManager {
         }
         
         _workout.workouts = workouts
+        _workout.coachId = coaches.first!.id
         _user.user = coaches.first!
     }
     
     private func getRandomCurrentWeekDate(_ refDate: Date) -> Date {
-        let daysToAdd = Int.random(in: 0..<14).cgf
+        let daysToAdd = Int.random(in: 0..<7).cgf
         let startWeek = Calendar.current.dateInterval(of: .weekOfYear, for: refDate)!.start
         var day = startWeek.addingTimeInterval(daysToAdd * 24.cgf * 3600.cgf)
         let startTime = CGFloat.random(in: 0..<21*3600)
@@ -114,6 +115,7 @@ public class OfflineUserInterface: FTUserInterface {
 public class OfflineWorkoutInterface: FTWorkoutInterface {
     
     var workouts: [FTWorkout] = []
+    var coachId: String = ""
     
     init() {
         
@@ -148,8 +150,9 @@ public class OfflineWorkoutInterface: FTWorkoutInterface {
         var newId = UUID().uuidString
         if let id { newId = id }
         let formatter = ISO8601DateFormatter()
-        let part = FTWorkoutParticipant(workoutId: newId, userId: workout.userId, role: .coach)
-        let newWorkout = FTWorkout(id: newId, description: workout.description, startDate: formatter.date(from: workout.startDate), participants: [part])
+        let part = FTWorkoutParticipant(workoutId: newId, userId: workout.userId, role: .client)
+        let part2 = FTWorkoutParticipant(workoutId: newId, userId: coachId, role: .coach)
+        let newWorkout = FTWorkout(id: newId, description: workout.description, startDate: formatter.date(from: workout.startDate), duration: 5400, participants: [part, part2])
         return newWorkout
     }
     

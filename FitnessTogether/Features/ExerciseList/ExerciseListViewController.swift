@@ -19,7 +19,7 @@ public final class ExerciseListViewController: FTViewController {
     var disclosureButton: DisclosureButton!
 
     lazy var addExerciseButton = UIButton.ftPlain(title: "Добавить упражнение", handler: addExerciseButtonPressed)
-    lazy var addWorkoutButton = UIButton.ftFilled(title: "Добавить тренировку", handler: addWorkoutButtonPressed)
+    lazy var addWorkoutButton = UIButton.ftFilled(title: "Сохранить упражнения", handler: saveExercisesButtonPressed)
 
     var exercises: [FTExerciseCreate] = []
     
@@ -84,7 +84,7 @@ public final class ExerciseListViewController: FTViewController {
         delegate?.exerciseBuilderVCrequestToOpenAddExerciseVC(self, workoutId: model.workoutId)
     }
 
-    private func addWorkoutButtonPressed(_ action: UIAction) {
+    private func saveExercisesButtonPressed(_ action: UIAction) {
         delegate?.exerciseBuilderVCDidFinish(self)
     }
 

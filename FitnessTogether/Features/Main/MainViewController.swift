@@ -31,6 +31,12 @@ public final class MainWorkoutsViewController: FTViewController {
         setupViews()
     }
     
+    public override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        self.updateItems()
+    }
+    
+    
     //MARK: - UI
     private func setupViews() {
         addStackSubview(UILabel.headline("Тренировки на неделю"))
@@ -38,7 +44,6 @@ public final class MainWorkoutsViewController: FTViewController {
         setupDisclosureButton()
         setupAddWorkoutButton()
         addSpacing(.fixed(50))
-        updateItems()
     }
     
     private func setupTrainsCollectionView() {
@@ -48,7 +53,6 @@ public final class MainWorkoutsViewController: FTViewController {
     
     private func itemDidPressed(_ item: WorkoutItem) {
         guard let id = item.id else { return }
-        print(id)
         delegate?.mainVC(self, requestToOpenWorkoutWithId: id)
     }
     
