@@ -68,7 +68,7 @@ public class OfflineManger: FTManager {
     private func getRandomExercises(for workout: FTWorkout) -> [FTExercise] {
         var exercieses: [FTExercise] = []
         for _ in 0..<10 {
-            let ex = FTExercise(id: UUID().uuidString, name: "WorkoutName", description: "Some description", muscleKinds: [.abs, .biceps], сomplexity: .hard, statistics: [], workoutId: workout.id, workout: workout)
+            let ex = FTExercise(id: UUID().uuidString, name: "WorkoutName", description: "Some description", muscleKinds: [.abs, .biceps], сomplexity: Int.random(in: 0...10), statistics: [], workoutId: workout.id, workout: workout)
             exercieses.append(ex)
         }
         return exercieses
@@ -169,6 +169,7 @@ public class OfflineExerciseInterface: FTExerciseInterface {
     public func create(data: FTExerciseCreate, completion: FTCompletion<FTExercise>) {
         let exercise = getExerciseFromCreate(data)
         exercises.append(exercise)
+        completion?(.success(exercise))
     }
     
     public func get(exerciseId: String, completion: FTCompletion<FTExercise>) {
@@ -186,6 +187,7 @@ public class OfflineExerciseInterface: FTExerciseInterface {
         let oldExercise = exercises[index]
         let exercise = getExerciseFromCreate(data, id: exerciseId, workoutId: oldExercise.workoutId)
         exercises[index] = exercise
+        completion?(.success(exercise))
     }
     
     public func delete(exerciseId: String, completion: FTCompletion<Void>) { }

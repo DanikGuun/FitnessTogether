@@ -70,17 +70,17 @@ extension BaseCoachCoordinator: WorkoutBuilderViewControllerDelegate {
 
 extension BaseCoachCoordinator: ExerciseListViewControllerDelegate {
     
-    public func exerciseBuilderVCDidFinish(_ vc: ExerciseListViewController) {
-        navigationVC.popToViewController(tabBarVC, animated: true)
+    public func exerciseListVCDidFinish(_ vc: ExerciseListViewController) {
+        navigationVC.popToViewController(tabBarVC, animated: needAnimate)
     }
     
-    public func exerciseBuilderVCrequestToOpenAddExerciseVC(_ vc: ExerciseListViewController, workoutId: String) {
-        let vc = factory.makeExerciseCreateVC(workoutId: workoutId, delegate: self)
+    public func exerciseListVCrequestToOpenAddExerciseVC(_ vc: ExerciseListViewController, workoutId: String) {
+        let vc = factory.makeCreateExerciseVC(workoutId: workoutId, delegate: self)
         show(vc)
     }
     
-    public func exerciseBuilderVCrequestToOpenEditExerciseVC(_ vc: ExerciseListViewController, exerciseId: String) {
-        let vc = factory.makeEditExerciseVC(exerciseId: exerciseId, delegate: self)
+    public func exerciseListVCrequestToOpenEditExerciseVC(_ vc: ExerciseListViewController, workoutId: String, exerciseId: String) {
+        let vc = factory.makeEditExerciseVC(workoutId: workoutId, exerciseId: exerciseId, delegate: self)
         show(vc)
     }
     
@@ -88,5 +88,8 @@ extension BaseCoachCoordinator: ExerciseListViewControllerDelegate {
 
 extension BaseCoachCoordinator: ExerciseBuilderViewControllerDelegate {
     
+    public func exerciseBuilderVCDidFinish(_ vc: ExerciseBuilderViewController) {
+        navigationVC.popViewController(animated: needAnimate)
+    }
     
 }

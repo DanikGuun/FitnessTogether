@@ -6,6 +6,9 @@ public final class ExerciseBuilderCreateModel: ExerciseBuilderModel {
     var ftManager: (any FTManager)
     let workoutId: String
     
+    public var mainTitle: String = "Создать упражнения"
+    public var addButtonTitle: String = "Добавить"
+    
     init(ftManager: (any FTManager), workoutId: String) {
         self.ftManager = ftManager
         self.workoutId = workoutId
@@ -27,6 +30,10 @@ public final class ExerciseBuilderCreateModel: ExerciseBuilderModel {
                 
             }
         })
+    }
+    
+    public func getInitialExerciseData(completion: @escaping ((FTExerciseCreate) -> Void)) {
+        
     }
     
 }

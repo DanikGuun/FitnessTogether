@@ -102,15 +102,35 @@ class MockExerciseInterface: FTExerciseInterface {
         completion?(.success(exercise))
     }
     
-    func get(exerciseId: String, completion: FTCompletion<FTExercise>) {}
+    func get(exerciseId: String, completion: FTCompletion<FTExercise>) {
+        let exercise = exercises.first(where: { $0.id == exerciseId })!
+        completion?(.success(exercise))
+    }
     
-    func get(workoutId: String, completion: FTCompletion<[FTExercise]>) {}
+    func get(workoutId: String, completion: FTCompletion<[FTExercise]>) {
+        let exercises = exercises.filter { $0.workoutId == workoutId }
+        completion?(.success(exercises))
+    }
     
-    func update(exerciseId: String, data: FTExerciseCreate, completion: FTCompletion<FTExercise>) {}
+    func update(exerciseId: String, data: FTExerciseCreate, completion: FTCompletion<FTExercise>) {
+        let index = exercises.firstIndex(where: { $0.id == exerciseId })!
+        let oldExercise = exercises[index]
+        let exercise = getExerciseFromCreate(data, id: exerciseId, workoutId: oldExercise.workoutId)
+        exercises[index] = exercise
+    }
     
     func delete(exerciseId: String, completion: FTCompletion<Void>) {}
     
-    
+    private func getExerciseFromCreate(_ data: FTExerciseCreate, id: String? = nil, workoutId: String? = nil) -> FTExercise {
+        var newId = UUID().uuidString
+        var workout: String = data.workoutId
+        if let id { newId = id }
+        if let workoutId { workout = workoutId }
+        let exercise = FTExercise(id: newId, name: data.name, description: data.description,
+                                  muscleKinds: data.muscleKinds, сomplexity: data.complexity,
+                                  statistics: [], workoutId: workout)
+        return exercise
+    }
 }
 
 class MockSetInterface: FTSetInterface {

@@ -5,6 +5,9 @@ public final class CreateWorkoutBuilderModel: WorkoutBuilderModel {
     
     var ftManager: FTManager!
     
+    public var mainTitle: String = "Создать тренировку"
+    public var addButtonTitle: String = "Сохранить"
+    
     init(ftManager: FTManager!) {
         self.ftManager = ftManager
     }

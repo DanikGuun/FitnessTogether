@@ -7,6 +7,9 @@ public final class EditWorkoutBuilderModel: WorkoutBuilderModel {
     let ftManager: any FTManager
     let editingWorkoutId: String
     
+    public var mainTitle: String = "Изменить тренировку"
+    public var addButtonTitle: String = "Сохранить"
+    
     init(ftManager: any FTManager, workoutId: String){
         self.ftManager = ftManager
         self.editingWorkoutId = workoutId

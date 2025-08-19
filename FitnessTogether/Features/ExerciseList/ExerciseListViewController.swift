@@ -3,9 +3,9 @@ import UIKit
 import FTDomainData
 
 public protocol ExerciseListViewControllerDelegate {
-    func exerciseBuilderVCDidFinish(_ vc: ExerciseListViewController)
-    func exerciseBuilderVCrequestToOpenAddExerciseVC(_ vc: ExerciseListViewController, workoutId: String)
-    func exerciseBuilderVCrequestToOpenEditExerciseVC(_ vc: ExerciseListViewController, exerciseId: String)
+    func exerciseListVCDidFinish(_ vc: ExerciseListViewController)
+    func exerciseListVCrequestToOpenAddExerciseVC(_ vc: ExerciseListViewController, workoutId: String)
+    func exerciseListVCrequestToOpenEditExerciseVC(_ vc: ExerciseListViewController, workoutId: String, exerciseId: String)
 }
 
 public final class ExerciseListViewController: FTViewController {
@@ -86,17 +86,17 @@ public final class ExerciseListViewController: FTViewController {
     }
 
     private func addExerciseButtonPressed(_ action: UIAction) {
-        delegate?.exerciseBuilderVCrequestToOpenAddExerciseVC(self, workoutId: model.workoutId)
+        delegate?.exerciseListVCrequestToOpenAddExerciseVC(self, workoutId: model.workoutId)
     }
 
     private func saveExercisesButtonPressed(_ action: UIAction) {
-        delegate?.exerciseBuilderVCDidFinish(self)
+        delegate?.exerciseListVCDidFinish(self)
     }
 
     //MARK: - Exercises
     private func exerciseDidSelect(_ exercise: ExerciseCollectionItem) {
         guard let id = exercise.id else { return }
-        delegate?.exerciseBuilderVCrequestToOpenEditExerciseVC(self, exerciseId: id)
+        delegate?.exerciseListVCrequestToOpenEditExerciseVC(self, workoutId: model.workoutId, exerciseId: id)
     }
     
     private func updateItems() {
@@ -110,7 +110,7 @@ public final class ExerciseListViewController: FTViewController {
 }
 
 public extension ExerciseListViewControllerDelegate {
-    func exerciseBuilderVCDidFinish(_ vc: ExerciseListViewController) {}
-    func exerciseBuilderVCrequestToOpenAddExerciseVC(_ vc: ExerciseListViewController, workoutId: String) {}
-    func exerciseBuilderVCrequestToOpenEditExerciseVC(_ vc: ExerciseListViewController, exerciseId: String) {}
+    func exerciseListVCDidFinish(_ vc: ExerciseListViewController) {}
+    func exerciseListVCrequestToOpenAddExerciseVC(_ vc: ExerciseListViewController, workoutId: String) {}
+    func exerciseListVCrequestToOpenEditExerciseVC(_ vc: ExerciseListViewController, workoutId: String, exerciseId: String) {}
 }

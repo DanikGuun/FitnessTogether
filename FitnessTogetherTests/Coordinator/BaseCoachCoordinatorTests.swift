@@ -69,8 +69,24 @@ fileprivate class MockCoachVCFactory: CoachViewControllerFactory {
         return vc("EditWorkout")
     }
     
-    func makeExerciseCreateVC(delegate: (any ExerciseBuilderViewControllerDelegate)?) -> UIViewController {
+    func makeCreateExerciseVC(delegate: (any ExerciseBuilderViewControllerDelegate)?) -> UIViewController {
         return vc("CreateExercise")
+    }
+    
+    func makeEditExerciseVC(workoutId: String, exerciseId: String, delegate: (any FitnessTogether.ExerciseBuilderViewControllerDelegate)?) -> UIViewController {
+        return vc("EditExercise")
+    }
+    
+    func changeWorkoutBuilderToEditModel(_ vc: UIViewController, workoutId: String) {
+        
+    }
+    
+    func makeExerciseListVC(workoutId: String, delegate: (any FitnessTogether.ExerciseListViewControllerDelegate)?) -> UIViewController {
+        return vc("ExerciseList")
+    }
+    
+    func makeCreateExerciseVC(workoutId: String, delegate: (any FitnessTogether.ExerciseBuilderViewControllerDelegate)?) -> UIViewController {
+        return vc("ExerciseCreate")
     }
     
     private func vc(_ title: String) -> UIViewController {

@@ -21,7 +21,7 @@ public final class WorkoutBuilderViewController: FTViewController {
     var clientSelecter = ClientListCollectionView()
     var clientDisclosureButton: DisclosureButton!
     
-    var nextButton = UIButton.ftFilled(title: "Далее")
+    lazy var nextButton = UIButton.ftFilled(title: model.addButtonTitle)
     
     //MARK: - Lifecycle
     public convenience init(model: WorkoutBuilderModel) {
@@ -50,7 +50,7 @@ public final class WorkoutBuilderViewController: FTViewController {
     //MARK: - UI
     
     private func setup() {
-        setupTitle(titleLabel, text: "Конструктор тренировок")
+        setupTitle(titleLabel, text: model.mainTitle)
         setupSubtitle()
         addSpacing(.fixed(20))
         

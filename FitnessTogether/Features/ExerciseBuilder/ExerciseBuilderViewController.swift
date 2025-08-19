@@ -1,17 +1,35 @@
 
 import UIKit
+import OutlineTextField
 import FTDomainData
 
 public protocol ExerciseBuilderViewControllerDelegate {
-    
+    func exerciseBuilderVCDidFinish(_ vc: ExerciseBuilderViewController)
 }
 
-public final class ExerciseBuilderViewController: FTViewController {
+public final class ExerciseBuilderViewController: FTViewController, UITextFieldDelegate {
     
     public var delegate: (any ExerciseBuilderViewControllerDelegate)?
     var model: (any ExerciseBuilderModel)!
     
-    private var nameTitle = UILabel()
+    var complexity: Int {
+        get { Int(complexitySlider.fill * 10) }
+        set {
+            complexitySlider.fill = Double(newValue) / 10
+            complexityUpdated(nil)
+        }
+    }
+    
+    var mainTitle = UILabel()
+    var nameTitle = UILabel()
+    var nameTextField = OutlinedTextField.ftTextField(placeholder: "Название")
+    var descriptionTitle = UILabel()
+    var descriptionTextView = AutoSizeTextView()
+    var muscleKindTitle = UILabel()
+    var muscleKindSelecter = MuscleKindSelecter()
+    var complexityTitle = UILabel()
+    var complexitySlider = ComplexitySlider()
+    lazy var addExerciseButton = UIButton.ftFilled(title: model.addButtonTitle, handler: addExerciseButtonPressed)
     
     //MARK: - Lifecycle
     public convenience init(model: (any ExerciseBuilderModel)) {
@@ -29,18 +47,115 @@ public final class ExerciseBuilderViewController: FTViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        setupInitialData()
     }
     
     private func setup() {
+        setupMainTitle()
+        addSpacing(.fixed(25))
+        setupTitle(nameTitle, title: "Название")
+        setupNameTextField()
+        addSpacing(.fixed(DC.Layout.spacing))
         
+        setupTitle(descriptionTitle, title: "Описание")
+        setupDescriptionTextView()
+        addStackSubview(UIView.underlineView(.systemGray4))
+        addSpacing(.fixed(DC.Layout.spacing))
+        
+        setupTitle(muscleKindTitle, title: "Группы мышц")
+        setupMuscleKindSelecter()
+        addSpacing(.fixed(DC.Layout.spacing))
+        
+        setupTitle(complexityTitle, title: "Сложность: 0")
+        setupComplexitySlider()
+        addSpacing(.fixed(50))
+        
+        addStackSubview(addExerciseButton)
+    }
+    
+    private func setupMainTitle() {
+        addStackSubview(mainTitle)
+        mainTitle.font = DC.Font.headline
+        mainTitle.text = model.mainTitle
+        mainTitle.textAlignment = .center
     }
     
     private func setupTitle(_ label: UILabel, title text: String) {
-        
+        label.font = DC.Font.headline
+        label.text = text
+        addStackSubview(label)
+    }
+    
+    private func setupNameTextField() {
+        addStackSubview(nameTextField)
+        nameTextField.delegate = self
+    }
+    
+    public func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        view.endEditing(true)
+        return true
+    }
+    
+    private func setupDescriptionTextView() {
+        descriptionTextView.font = DC.Font.additionalInfo
+        descriptionTextView.textColor = .systemGray
+        addStackSubview(descriptionTextView, spaceAfter: .fixed(0))
+    }
+    
+    private func setupMuscleKindSelecter() {
+        addStackSubview(muscleKindSelecter)
+        muscleKindSelecter.selectionDidChange = { [weak self] _ in
+            self?.view.endEditing(true)
+        }
+    }
+    
+    private func setupComplexitySlider() {
+        addStackSubview(complexitySlider)
+        complexitySlider.addAction(UIAction(handler: complexityUpdated), for: .valueChanged)
+    }
+    
+    private func setupInitialData() {
+        model.getInitialExerciseData(completion: { [weak self] exercise in
+            guard let self else { return }
+            nameTextField.text = exercise.name
+            descriptionTextView.text = exercise.description
+            muscleKindSelecter.selectedMuscleKinds = exercise.muscleKinds
+            complexity = exercise.complexity
+        })
+    }
+    
+    //MARK: - Actions
+    private func complexityUpdated(_ action: UIAction?) {
+        let value = Int(complexitySlider.fill * 10)
+        complexityTitle.text = "Сложность: \(value)"
+        view.endEditing(true)
+    }
+    
+    private func addExerciseButtonPressed(_ action: UIAction?) {
+        let data = getExerciseData()
+        model.saveExercise(data, completion: { [weak self] result in
+            guard let self else { return }
+            switch result {
+                
+            case .success(_):
+                delegate?.exerciseBuilderVCDidFinish(self)
+                
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        })
+    }
+    
+    private func getExerciseData() -> FTExerciseCreate {
+        let name = nameTextField.text ?? ""
+        let description = descriptionTextView.text ?? ""
+        let complexity = complexity
+        let muscleKinds = muscleKindSelecter.selectedMuscleKinds
+        return FTExerciseCreate(name: name, description: description, muscleKinds: muscleKinds, complexity: complexity)
     }
     
 }
 
 public extension ExerciseBuilderViewControllerDelegate {
-    
+    func exerciseBuilderVCDidFinish(_ vc: ExerciseBuilderViewController) {}
 }

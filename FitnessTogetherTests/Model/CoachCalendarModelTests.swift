@@ -187,7 +187,7 @@ final class CoachCalendarModelTests: XCTestCase {
         let expectedColor = workout.workoutKind.color
         let expectedColumn = (Calendar.actual.component(.weekday, from: refDate) - 2 + 7) % 7
         let expectedStart = workout.startDate!.timeIntervalSince(startDay)
-        let expectedDuration = workout.endDate!.timeIntervalSince(workout.startDate!)
+        let expectedDuration = workout.duration
         
         XCTAssertEqual(item?.title, expectedTitle)
         XCTAssertEqual(item?.color, expectedColor)
