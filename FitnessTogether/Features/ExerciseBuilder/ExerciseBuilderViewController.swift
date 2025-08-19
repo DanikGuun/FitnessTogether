@@ -6,10 +6,12 @@ public protocol ExerciseBuilderViewControllerDelegate {
     
 }
 
-public final class ExerciseBuilderViewController: UIViewController {
+public final class ExerciseBuilderViewController: FTViewController {
     
     public var delegate: (any ExerciseBuilderViewControllerDelegate)?
     var model: (any ExerciseBuilderModel)!
+    
+    private var nameTitle = UILabel()
     
     //MARK: - Lifecycle
     public convenience init(model: (any ExerciseBuilderModel)) {
@@ -25,18 +27,16 @@ public final class ExerciseBuilderViewController: UIViewController {
     }
     
     public override func viewDidLoad() {
-        view.backgroundColor = .systemBackground
+        super.viewDidLoad()
+        setup()
+    }
+    
+    private func setup() {
         
-        let button = UIButton(configuration: .filled())
-        button.setTitle("Добавить", for: .normal)
-        button.addAction(UIAction(handler: { _ in
-            let exer = FTExerciseCreate(name: "Новая Упражнения ебать", description: "Не ну реально ахуй же")
-            self.model.saveExercise(exer, completion: nil)
-            self.dismiss(animated: true)
-        }), for: .touchUpInside)
+    }
+    
+    private func setupTitle(_ label: UILabel, title text: String) {
         
-        view.addSubview(button)
-        button.snp.makeConstraints { $0.center.equalToSuperview() }
     }
     
 }

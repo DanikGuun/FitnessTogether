@@ -49,10 +49,10 @@ public final class ExerciseListViewController: FTViewController {
     
     //MARK: - UI
     private func setup() {
-        setupTitle(titleLabel, text: "Конструктор тренировок")
+        setupTitle(titleLabel, text: "Список упражнений")
         setupSubtitle()
         addStackSubview(selectExercisesLabel)
-        addStackSubview(exerciseCollectionView)
+        setupExerciseCollection()
         setupDisclosureButton()
         addStackSubview(addExerciseButton)
         addStackSubview(addWorkoutButton)
@@ -69,8 +69,13 @@ public final class ExerciseListViewController: FTViewController {
         subtitleLabel.font = DC.Font.additionalInfo
         subtitleLabel.textColor = .systemGray3
         subtitleLabel.textAlignment = .center
-        subtitleLabel.text = "Соберите тренировку"
+        subtitleLabel.text = "Выберите упраженения"
         addStackSubview(subtitleLabel)
+    }
+    
+    private func setupExerciseCollection() {
+        addStackSubview(exerciseCollectionView)
+        exerciseCollectionView.itemDidPressed = exerciseDidSelect
     }
 
     private func setupDisclosureButton() {
@@ -89,9 +94,14 @@ public final class ExerciseListViewController: FTViewController {
     }
 
     //MARK: - Exercises
+    private func exerciseDidSelect(_ exercise: ExerciseCollectionItem) {
+        guard let id = exercise.id else { return }
+        delegate?.exerciseBuilderVCrequestToOpenEditExerciseVC(self, exerciseId: id)
+    }
+    
     private func updateItems() {
         model.getExercises(completion: { [weak self] exercises in
-            let items = exercises.map { ExerciseCollectionItem(title: $0.name, subtitle: $0.description, image: nil) }
+            let items = exercises.map { ExerciseCollectionItem(id: $0.id, title: $0.name, subtitle: $0.description, image: nil) }
             self?.exerciseCollectionView.items = items
         })
     }

@@ -9,6 +9,7 @@ public final class ExerciseCollectionView: UICollectionView, DisclosableView, UI
     public var isDisclosed: Bool = false
 
     var items: [ExerciseCollectionItem] = [] { didSet { itemsHasUpdated() } }
+    public var itemDidPressed: ((ExerciseCollectionItem) -> Void)?
     var emptyItemsLabel = UILabel()
     
     //MARK: - Lifecycle
@@ -59,6 +60,8 @@ public final class ExerciseCollectionView: UICollectionView, DisclosableView, UI
     
     public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         collectionView.deselectItem(at: indexPath, animated: true)
+        guard let item = items[safe: indexPath.item] else { return }
+        itemDidPressed?(item)
     }
     
     private func setupEmptyLabel() {
@@ -93,6 +96,7 @@ public final class ExerciseCollectionView: UICollectionView, DisclosableView, UI
 }
 
 public struct ExerciseCollectionItem {
+    public var id: String?
     public var title: String?
     public var subtitle: String?
     public var image: UIImage?

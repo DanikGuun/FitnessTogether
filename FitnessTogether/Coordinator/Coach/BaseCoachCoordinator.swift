@@ -36,6 +36,11 @@ extension BaseCoachCoordinator: MainViewControllerDelegate {
         show(vc)
     }
     
+    public func mainVCRequestToOpenAddWorkout(_ vc: UIViewController) {
+        let vc = factory.makeAddWorkoutVC(startInterval: nil, delegate: self)
+        show(vc)
+    }
+    
 }
 
 extension BaseCoachCoordinator: CalendarViewControllerDelegate {
@@ -75,7 +80,8 @@ extension BaseCoachCoordinator: ExerciseListViewControllerDelegate {
     }
     
     public func exerciseBuilderVCrequestToOpenEditExerciseVC(_ vc: ExerciseListViewController, exerciseId: String) {
-        
+        let vc = factory.makeEditExerciseVC(exerciseId: exerciseId, delegate: self)
+        show(vc)
     }
     
 }

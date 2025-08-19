@@ -3,6 +3,7 @@ import UIKit
 
 public protocol MainViewControllerDelegate {
     func mainVC(_ vc: UIViewController, requestToOpenWorkoutWithId workoutId: String)
+    func mainVCRequestToOpenAddWorkout(_ vc: UIViewController)
 }
 
 public final class MainWorkoutsViewController: FTViewController {
@@ -64,6 +65,8 @@ public final class MainWorkoutsViewController: FTViewController {
     
     private func addWorkoutButtonPressed(_ action: UIAction) {
         updateItems()
+        delegate?.mainVCRequestToOpenAddWorkout(self)
+        
     }
     
     private func setupDisclosureButton() {
@@ -89,5 +92,6 @@ public final class MainWorkoutsViewController: FTViewController {
 }
 
 public extension MainViewControllerDelegate {
-    func mainVC(_ vc: MainWorkoutsViewController, requestToOpen workoutId: String) {}
+    func mainVC(_ vc: UIViewController, requestToOpenWorkoutWithId workoutId: String) {}
+    func mainVCRequestToOpenAddWorkout(_ vc: UIViewController) {}
 }

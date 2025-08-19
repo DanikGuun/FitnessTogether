@@ -183,18 +183,21 @@ public class OfflineExerciseInterface: FTExerciseInterface {
     
     public func update(exerciseId: String, data: FTExerciseCreate, completion: FTCompletion<FTExercise>) {
         let index = exercises.firstIndex(where: { $0.id == exerciseId })!
-        let exercise = getExerciseFromCreate(data, id: exerciseId)
+        let oldExercise = exercises[index]
+        let exercise = getExerciseFromCreate(data, id: exerciseId, workoutId: oldExercise.workoutId)
         exercises[index] = exercise
     }
     
     public func delete(exerciseId: String, completion: FTCompletion<Void>) { }
     
-    private func getExerciseFromCreate(_ data: FTExerciseCreate, id: String? = nil) -> FTExercise {
+    private func getExerciseFromCreate(_ data: FTExerciseCreate, id: String? = nil, workoutId: String? = nil) -> FTExercise {
         var newId = UUID().uuidString
+        var workout: String = data.workoutId
         if let id { newId = id }
+        if let workoutId { workout = workoutId }
         let exercise = FTExercise(id: newId, name: data.name, description: data.description,
                                   muscleKinds: data.muscleKinds, сomplexity: data.complexity,
-                                  statistics: [], workoutId: data.workoutId)
+                                  statistics: [], workoutId: workout)
         return exercise
     }
     
