@@ -3,9 +3,9 @@ import UIKit
 import FTDomainData
 
 public protocol ExerciseListViewControllerDelegate {
-    func exerciseListVCDidFinish(_ vc: ExerciseListViewController)
-    func exerciseListVCrequestToOpenAddExerciseVC(_ vc: ExerciseListViewController, workoutId: String)
-    func exerciseListVCrequestToOpenEditExerciseVC(_ vc: ExerciseListViewController, workoutId: String, exerciseId: String)
+    func exerciseListVCDidFinish(_ vc: UIViewController)
+    func exerciseListVCrequestToOpenAddExerciseVC(_ vc: UIViewController, workoutId: String)
+    func exerciseListVCrequestToOpenEditExerciseVC(_ vc: UIViewController, workoutId: String, exerciseId: String)
 }
 
 public final class ExerciseListViewController: FTViewController {
@@ -110,7 +110,7 @@ public final class ExerciseListViewController: FTViewController {
 }
 
 public extension ExerciseListViewControllerDelegate {
-    func exerciseListVCDidFinish(_ vc: ExerciseListViewController) {}
-    func exerciseListVCrequestToOpenAddExerciseVC(_ vc: ExerciseListViewController, workoutId: String) {}
-    func exerciseListVCrequestToOpenEditExerciseVC(_ vc: ExerciseListViewController, workoutId: String, exerciseId: String) {}
+    func exerciseListVCDidFinish(_ vc: UIViewController) {}
+    func exerciseListVCrequestToOpenAddExerciseVC(_ vc: UIViewController, workoutId: String) {}
+    func exerciseListVCrequestToOpenEditExerciseVC(_ vc: UIViewController, workoutId: String, exerciseId: String) {}
 }

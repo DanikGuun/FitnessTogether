@@ -4,7 +4,7 @@ import OutlineTextField
 import FTDomainData
 
 public protocol ExerciseBuilderViewControllerDelegate {
-    func exerciseBuilderVCDidFinish(_ vc: ExerciseBuilderViewController)
+    func exerciseBuilderVCDidFinish(_ vc: UIViewController)
 }
 
 public final class ExerciseBuilderViewController: FTViewController, UITextFieldDelegate {
@@ -157,5 +157,5 @@ public final class ExerciseBuilderViewController: FTViewController, UITextFieldD
 }
 
 public extension ExerciseBuilderViewControllerDelegate {
-    func exerciseBuilderVCDidFinish(_ vc: ExerciseBuilderViewController) {}
+    func exerciseBuilderVCDidFinish(_ vc: UIViewController) {}
 }

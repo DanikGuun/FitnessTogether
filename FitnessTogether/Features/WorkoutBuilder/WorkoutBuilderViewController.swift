@@ -196,5 +196,5 @@ public protocol WorkoutBuilderViewControllerDelegate {
 }
 
 public extension WorkoutBuilderViewControllerDelegate {
-    func workoutBuilderVCDidFinish(_ vc: UIViewController) {}
+    func workoutBuilderVCDidFinish(_ vc: UIViewController, withId workoutId: String) {}
 }
