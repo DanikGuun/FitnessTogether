@@ -9,6 +9,7 @@ public protocol MainModel {
 public class BaseMainModel: MainModel {
     
     let ftManager: FTManager
+    var refDate = Date()
     
     public init(ftManager: FTManager) {
         self.ftManager = ftManager
@@ -64,8 +65,10 @@ public class BaseMainModel: MainModel {
     }
     
     internal func filterWorkouts(_ workouts: [FTWorkout], user: FTUser) -> [FTWorkout] {
-        var interval = Calendar.current.dateInterval(of: .weekOfYear, for: Date())!
-        interval.start = Date().addingTimeInterval(-2 * 3600)
+        var interval = Calendar.current.dateInterval(of: .weekOfYear, for: refDate)!
+        let end = interval.end
+        interval.start = refDate.addingTimeInterval(-2 * 3600) //сейчас -2 часа, чтобы прошедшие тренировки не отображались
+        interval.end = end
         return workouts.filter { workout in
             guard let role = workout.participants.first(where: { $0.userId == user.id })?.role else { return false }
             return role.userRole == user.role && //чтобы роль совпдала
