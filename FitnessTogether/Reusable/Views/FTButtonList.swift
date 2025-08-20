@@ -1,13 +1,12 @@
 
 import UIKit
 
-public class FTButtonList: UIScrollView {
+public class FTButtonList: UIControl {
     
-    public var buttonConfigurationUpdateHandler: ((UIButton) -> ())? {
-        didSet { buttons.forEach { $0.configurationUpdateHandler = buttonConfigurationUpdateHandler } }
-    }
     public private(set) var buttons: [UIButton] = []
+    public override var intrinsicContentSize: CGSize { CGSize(width: superview?.bounds.width ?? 0, height: 44) }
     
+    private var mainScroll = UIScrollView()
     private var stackView = UIStackView()
     
     //MARK: - Lifecycle
@@ -24,20 +23,33 @@ public class FTButtonList: UIScrollView {
     }
     
     public override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
-        if let button = buttons.first(where: { $0.frame.contains(point) }) {
+        if let button = buttons.first(where: { isPointInButton(button: $0, point: point) }) {
             return button
         }
         return super.hitTest(point, with: event)
     }
     
+    private func isPointInButton(button: UIButton, point: CGPoint) -> Bool {
+        let point = mainScroll.convert(point, from: self)
+        return button.frame.contains(point)
+    }
+    
+    //MARK: - UI
     internal func setup() {
+        setupMainScroll()
         setupStackView()
         clipsToBounds = false
-        showsHorizontalScrollIndicator = false
+    }
+    
+    private func setupMainScroll() {
+        addSubview(mainScroll)
+        mainScroll.snp.makeConstraints { $0.edges.equalToSuperview() }
+        mainScroll.showsHorizontalScrollIndicator = false
+        mainScroll.clipsToBounds = false
     }
 
     private func setupStackView() {
-        addSubview(stackView)
+        mainScroll.addSubview(stackView)
         stackView.snp.makeConstraints { maker in
             maker.edges.equalToSuperview()
             maker.height.equalToSuperview()
@@ -48,13 +60,49 @@ public class FTButtonList: UIScrollView {
         stackView.alignment = .leading
     }
     
+    private func configurationUpdateHandler(_ button: UIButton) {
+        var conf = button.configuration ?? UIButton.Configuration.plain()
+        
+        conf.baseBackgroundColor = .systemBackground
+        conf.baseForegroundColor = .label
+        
+        conf.background.strokeColor = button.isSelected ? .ftOrange : .clear
+        conf.background.strokeWidth = 1
+        conf.background.cornerRadius = 8
+        conf.contentInsets = UIEdgeInsets(top: 5, left: 10, bottom: 5, right: 10).nsInsets
+        
+        button.configuration = conf
+    }
+    
+    //MARK: - Buttons
+    public func setButtons(titles: [String]) {
+        let buttons = titles.map { title in
+            let button = UIButton(configuration: .filled())
+            button.configuration?.title = title
+            return button
+        }
+        setButtons(buttons)
+    }
+    
     public func setButtons(_ buttons: [UIButton]) {
         self.buttons = buttons
         stackView.arrangedSubviews.forEach { $0.removeFromSuperview() }
-        buttons.forEach { stackView.addArrangedSubview($0) }
-        if let updater = buttonConfigurationUpdateHandler {
-            buttons.forEach { $0.configurationUpdateHandler = updater }
-        }
+        buttons.forEach(setupButton)
     }
     
+    internal func setupButton(_ button: UIButton) {
+        
+        stackView.addArrangedSubview(button)
+        button.configurationUpdateHandler = configurationUpdateHandler
+        button.setContentHuggingPriority(.required, for: .horizontal)
+        button.setContentCompressionResistancePriority(.required, for: .horizontal)
+        
+        button.makeCornerAndShadow(radius: 0, shadowRadius: 2, opacity: 0.2)
+        button.addAction(UIAction(handler: buttonPressed), for: .touchUpInside)
+        buttons.append(button)
+    }
+    
+    internal func buttonPressed(_ action: UIAction) {
+        
+    }
 }

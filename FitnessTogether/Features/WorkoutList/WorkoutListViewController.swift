@@ -2,8 +2,9 @@
 import UIKit
 
 public protocol WorkoutListViewControllerDelegate {
-    func mainVC(_ vc: UIViewController, requestToOpenWorkoutWithId workoutId: String)
-    func mainVCRequestToOpenAddWorkout(_ vc: UIViewController)
+    func workoutListVC(_ vc: UIViewController, requestToOpenWorkoutWithId workoutId: String)
+    func workoutListRequestToOpenAddWorkout(_ vc: UIViewController)
+    func workoutListRequestToOpenFilter(_ vc: UIViewController, delegate: (any WorkoutFilterViewControllerDelegate)?)
 }
 
 public final class WorkoutListViewController: FTViewController {
@@ -11,6 +12,7 @@ public final class WorkoutListViewController: FTViewController {
     var model: WorkoutListModel!
     var delegate: (any WorkoutListViewControllerDelegate)?
     
+    private var mainTitleLabel = UILabel.headline("Тренировки на неделю")
     private var workoutCollection: WorkoutListView = WorkoutListCollectionView()
     private var disclosureButton: DisclosureButton!
     
@@ -40,21 +42,17 @@ public final class WorkoutListViewController: FTViewController {
     
     //MARK: - UI
     private func setupViews() {
-        addStackSubview(UILabel.headline("Тренировки на неделю"))
+        addStackSubview(mainTitleLabel)
         setupTrainsCollectionView()
         setupDisclosureButton()
         setupAddWorkoutButton()
         addSpacing(.fixed(50))
+        setupFilterButton()
     }
     
     private func setupTrainsCollectionView() {
         addStackSubview(workoutCollection, height: 1)
         workoutCollection.itemDidPressed = itemDidPressed
-    }
-    
-    private func itemDidPressed(_ item: WorkoutItem) {
-        guard let id = item.id else { return }
-        delegate?.mainVC(self, requestToOpenWorkoutWithId: id)
     }
     
     private func setupAddWorkoutButton() {
@@ -63,17 +61,38 @@ public final class WorkoutListViewController: FTViewController {
         button.addAction(UIAction(handler: addWorkoutButtonPressed), for: .touchUpInside)
     }
     
-    private func addWorkoutButtonPressed(_ action: UIAction) {
-        updateItems()
-        delegate?.mainVCRequestToOpenAddWorkout(self)
-        
-    }
-    
     private func setupDisclosureButton() {
         guard let collection = workoutCollection as? DisclosableView else { return }
         disclosureButton = DisclosureButton(viewToDisclosure: collection)
         addStackSubview(disclosureButton, height: DC.Size.smallButtonHeight)
         disclosureButton.backgroundColor = .systemBackground
+    }
+    
+    private func setupFilterButton() {
+        let button = UIButton(configuration: .plain())
+        mainTitleLabel.addSubview(button)
+        mainTitleLabel.isUserInteractionEnabled = true
+        button.snp.makeConstraints { $0.top.bottom.trailing.equalToSuperview() }
+        
+        let image = UIImage(named: "filter")
+        button.setImage(image, for: .normal)
+        button.tintColor = .label
+        button.addAction(UIAction(handler: filterButtonPressed), for: .touchUpInside)
+    }
+    
+    //MARK: - Actions
+    private func addWorkoutButtonPressed(_ action: UIAction) {
+        updateItems()
+        delegate?.workoutListRequestToOpenAddWorkout(self)
+    }
+    
+    private func itemDidPressed(_ item: WorkoutItem) {
+        guard let id = item.id else { return }
+        delegate?.workoutListVC(self, requestToOpenWorkoutWithId: id)
+    }
+    
+    private func filterButtonPressed(_ action: UIAction) {
+        delegate?.workoutListRequestToOpenFilter(self, delegate: nil)
     }
     
     //MARK: - Data
@@ -92,6 +111,7 @@ public final class WorkoutListViewController: FTViewController {
 }
 
 public extension WorkoutListViewControllerDelegate {
-    func mainVC(_ vc: UIViewController, requestToOpenWorkoutWithId workoutId: String) {}
-    func mainVCRequestToOpenAddWorkout(_ vc: UIViewController) {}
+    func workoutListVC(_ vc: UIViewController, requestToOpenWorkoutWithId workoutId: String) {}
+    func workoutListRequestToOpenAddWorkout(_ vc: UIViewController) {}
+    func workoutListRequestToOpenFilter(_ vc: UIViewController, delegate: (any WorkoutFilterViewControllerDelegate)?) {}
 }

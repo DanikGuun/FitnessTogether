@@ -28,7 +28,7 @@ final class BaseCoachCoordinatorTests: XCTestCase {
     }
     
     func test_GoToEditWorkout_FromMain() {
-        coordinator.mainVC(UIViewController(), requestToOpenWorkoutWithId: "id")
+        coordinator.workoutListVC(UIViewController(), requestToOpenWorkoutWithId: "id")
         XCTAssertEqual(coordinator.currentVC?.title, "EditWorkout")
     }
     

@@ -4,7 +4,7 @@ import UIKit
 public final class ExerciseCollectionView: UICollectionView, DisclosableView, UICollectionViewDataSource, UICollectionViewDelegate {
     //Disclosing
     public var fullHeight: CGFloat { max(contentSize.height, emptyItemsLabel.bounds.height) }
-    public var maximumCollapsedHeight: CGFloat = 440
+    public var maximumCollapsedHeight: CGFloat = 370
     public var disclosureButton: DisclosureButton?
     public var isDisclosed: Bool = false
 
@@ -75,7 +75,7 @@ public final class ExerciseCollectionView: UICollectionView, DisclosableView, UI
     
     private func itemsHasUpdated() {
         reloadData()
-        disclosureButton?.isHidden = items.count <= 6
+        disclosureButton?.isHidden = items.count <= 5
         emptyItemsLabel.isHidden = !items.isEmpty
     }
     

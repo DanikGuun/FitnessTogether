@@ -31,14 +31,19 @@ public final class BaseCoachCoordinator: NSObject, CoachCoordinator {
 
 extension BaseCoachCoordinator: WorkoutListViewControllerDelegate {
     
-    public func mainVC(_ vc: UIViewController, requestToOpenWorkoutWithId workoutId: String) {
+    public func workoutListVC(_ vc: UIViewController, requestToOpenWorkoutWithId workoutId: String) {
         let vc = factory.makeEditWorkoutVC(workoutId: workoutId, delegate: self)
         show(vc)
     }
     
-    public func mainVCRequestToOpenAddWorkout(_ vc: UIViewController) {
+    public func workoutListRequestToOpenAddWorkout(_ vc: UIViewController) {
         let vc = factory.makeAddWorkoutVC(startInterval: nil, delegate: self)
         show(vc)
+    }
+    
+    public func workoutListRequestToOpenFilter(_ vc: UIViewController, delegate: (any WorkoutFilterViewControllerDelegate)?) {
+        let vc = factory.makeFilterVC(delegate: delegate)
+        currentVC?.present(vc, animated: needAnimate)
     }
     
 }

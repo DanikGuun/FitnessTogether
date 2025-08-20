@@ -36,6 +36,21 @@ public extension UIView {
         }
     }
     
+    func constraintWidth(_ width: CGFloat) {
+        self.translatesAutoresizingMaskIntoConstraints = false
+        if let constraint = self.constraints.first(where: { $0.identifier == "widthConstraint" }) {
+            constraint.constant = width
+            updateConstraints()
+            superview?.layoutIfNeeded()
+            setNeedsDisplay()
+        }
+        else {
+            let constraint = heightAnchor.constraint(equalToConstant: width)
+            constraint.identifier = "width"
+            constraint.isActive = true
+        }
+    }
+        
     func makeCornerAndShadow(radius: CGFloat = 15, shadowRadius: CGFloat = 3, color: UIColor = .black, opacity: Float = 0.5) {
         self.layer.cornerRadius = radius
         self.layer.masksToBounds = false

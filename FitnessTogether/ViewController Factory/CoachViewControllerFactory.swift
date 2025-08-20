@@ -14,6 +14,7 @@ public protocol CoachViewControllerFactory {
     func makeExerciseListVC(workoutId: String, delegate: (any ExerciseListViewControllerDelegate)?) -> UIViewController
     func makeCreateExerciseVC(workoutId: String, delegate: (any ExerciseBuilderViewControllerDelegate)?) -> UIViewController
     func makeEditExerciseVC(workoutId: String, exerciseId: String, delegate: (any ExerciseBuilderViewControllerDelegate)?) -> UIViewController
+    func makeFilterVC(delegate: (any WorkoutFilterViewControllerDelegate)?) -> UIViewController
 }
 
 public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
@@ -118,6 +119,12 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
     public func makeEditExerciseVC(workoutId: String, exerciseId: String, delegate: (any ExerciseBuilderViewControllerDelegate)?) -> UIViewController {
         let model = ExerciseBuilderEditModel(ftManager: ftManager, workoutId: workoutId, exerciseId: exerciseId)
         let vc = ExerciseBuilderViewController(model: model)
+        vc.delegate = delegate
+        return vc
+    }
+    
+    public func makeFilterVC(delegate: (any WorkoutFilterViewControllerDelegate)?) -> UIViewController {
+        let vc = WorkoutFilterViewController()
         vc.delegate = delegate
         return vc
     }

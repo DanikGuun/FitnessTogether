@@ -104,9 +104,9 @@ public final class ExerciseBuilderViewController: FTViewController, UITextFieldD
     
     private func setupMuscleKindSelecter() {
         addStackSubview(muscleKindSelecter)
-        muscleKindSelecter.selectionDidChange = { [weak self] _ in
+        muscleKindSelecter.addAction(UIAction(handler: { [weak self] _ in
             self?.view.endEditing(true)
-        }
+        }), for: .valueChanged)
     }
     
     private func setupComplexitySlider() {
