@@ -21,7 +21,7 @@ public class FTImageAndTitleButton: UIControl {
         super.init(coder: coder)
     }
     
-    private func setup() {
+    public func setup() {
         setupTitleLabel()
         setupImageView()
         backgroundColor = .systemBackground

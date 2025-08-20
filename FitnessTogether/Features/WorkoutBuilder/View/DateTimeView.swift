@@ -15,7 +15,7 @@ public class DateTimeView: UIStackView {
     public var dateHasChanged: ((Date?) -> Void)?
     
     private var dateLabel = UILabel()
-    private var dateButton = FTImageAndTitleButton()
+    private var dateButton = FTDateButton()
     
     private var timeLabel = UILabel()
     private var timeButton = FTImageAndTitleButton()
@@ -61,9 +61,7 @@ public class DateTimeView: UIStackView {
     }
     
     private func setupDateButton() {
-        dateButton.titleLabel.text = "дд.мм.гггг"
-        dateButton.imageView.image = UIImage(named: "calendar")
-        dateButton.addAction(UIAction(handler: dateButtonPressed), for: .touchUpInside)
+        dateButton.addAction(UIAction(handler: dateSelected), for: .valueChanged)
     }
     
     private func setupTimeButton() {
@@ -74,25 +72,12 @@ public class DateTimeView: UIStackView {
     }
     
     //MARK: - Actions
-    private func dateButtonPressed(_ action: UIAction) {
-        let controller = getDatePickerController(pickerMode: .date, handler: dateSelected)
-        viewController?.presentPopover(controller, size: CGSize(width: bounds.width, height: 250), sourceView: dateButton, arrowDirections: [.down, .up])
-    }
-    
-    private func dateSelected(_ action: UIAction) {
-        guard let picker = action.sender as? UIDatePicker else { return }
-        
-        let components = Calendar.current.dateComponents([.day, .month, .year], from: picker.date)
-        var currentDateComponents = Calendar.current.allComponents(from: date ?? Date())
-        currentDateComponents.day = components.day
-        currentDateComponents.month = components.month
-        currentDateComponents.year = components.year
-        
-        date = Calendar.current.date(from: currentDateComponents)
+    private func dateSelected(_ action: UIAction?) {
+        date = dateButton.date
     }
     
     private func timeButtonPressed(_ action: UIAction) {
-        let controller = getDatePickerController(pickerMode: .time, handler: timeSelected)
+        let controller = UIDatePicker.ftDatePickerController(pickerMode: .time, startDate: date, handler: timeSelected)
         viewController?.presentPopover(controller, size: CGSize(width: bounds.width, height: 150), sourceView: timeButton, arrowDirections: [.down, .up])
     }
     
@@ -106,22 +91,6 @@ public class DateTimeView: UIStackView {
         currentDateComponents.second = 0
         
         date = Calendar.current.date(from: currentDateComponents)
-    }
-    
-    private func getDatePickerController(pickerMode: UIDatePicker.Mode, handler: @escaping (UIAction) -> ()) -> UIViewController {
-        let controller = UIViewController()
-        let picker = UIDatePicker()
-        controller.view.addSubview(picker)
-        picker.addAction(UIAction(handler: handler), for: .valueChanged)
-        
-        picker.snp.makeConstraints { $0.edges.equalToSuperview() }
-        picker.datePickerMode = pickerMode
-        picker.preferredDatePickerStyle = .wheels
-        picker.locale = Locale.actual
-        picker.date = date ?? Date()
-        picker.minuteInterval = 5
-        
-        return controller
     }
     
     private func updateButtonTitles() {
