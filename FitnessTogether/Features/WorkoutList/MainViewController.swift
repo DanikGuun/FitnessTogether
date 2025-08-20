@@ -1,17 +1,17 @@
 
 import UIKit
 
-public protocol MainViewControllerDelegate {
+public protocol WorkoutListViewControllerDelegate {
     func mainVC(_ vc: UIViewController, requestToOpenWorkoutWithId workoutId: String)
     func mainVCRequestToOpenAddWorkout(_ vc: UIViewController)
 }
 
-public final class MainWorkoutsViewController: FTViewController {
+public final class WorkoutListViewController: FTViewController {
     
     var model: WorkoutListModel!
-    var delegate: (any MainViewControllerDelegate)?
+    var delegate: (any WorkoutListViewControllerDelegate)?
     
-    private var workoutCollection: MainWorkoutView = MainWorkoutCollectionView()
+    private var workoutCollection: WorkoutListView = WorkoutListCollectionView()
     private var disclosureButton: DisclosureButton!
     
     //MARK: - Lifecycle
@@ -91,7 +91,7 @@ public final class MainWorkoutsViewController: FTViewController {
 
 }
 
-public extension MainViewControllerDelegate {
+public extension WorkoutListViewControllerDelegate {
     func mainVC(_ vc: UIViewController, requestToOpenWorkoutWithId workoutId: String) {}
     func mainVCRequestToOpenAddWorkout(_ vc: UIViewController) {}
 }

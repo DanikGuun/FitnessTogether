@@ -32,7 +32,15 @@ public class BaseClientViewControllerFactory: ClientViewControllerFactory {
     
     public func makeMainVC() -> UIViewController {
         let model = ClientWorkoutListModel(ftManager: ftManager)
-        let vc = MainWorkoutsViewController(model: model)
+        model.additionalFilter = { workout in
+            var interval = Calendar.current.dateInterval(of: .weekOfYear, for: Date())!
+            let end = interval.end
+            interval.start = Date().addingTimeInterval(-2 * 3600) //сейчас -2 часа, чтобы прошедшие тренировки не отображались
+            interval.end = end
+            return interval.contains(workout.startDate ?? Date())
+        }
+        
+        let vc = WorkoutListViewController(model: model)
         vc.tabBarItem = UITabBarItem(title: "Главная", image: UIImage(named: "house"), selectedImage: UIImage(named: "house.fill"))
         return vc
     }

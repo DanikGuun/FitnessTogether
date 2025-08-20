@@ -87,14 +87,14 @@ final class BaseCoachCoordinatorTests: XCTestCase {
 fileprivate class MockCoachVCFactory: CoachViewControllerFactory {
     var wasChangeWorkoutBuilderToEditCalled = false
     
-    func makeTabBarVC(mainDeleage: (any MainViewControllerDelegate)?, calendarDelegate: (any FitnessTogether.CalendarViewControllerDelegate)?) -> UITabBarController {
+    func makeTabBarVC(workoutListDeleage: (any WorkoutListViewControllerDelegate)?, calendarDelegate: (any FitnessTogether.CalendarViewControllerDelegate)?) -> UITabBarController {
         let vcs = [makeMainVC(delegate: nil), makeCalendarVC(delegate: nil), makeProfileVC()]
         let controller = UITabBarController()
         controller.viewControllers = vcs
         return controller
     }
     
-    func makeMainVC(delegate: (any MainViewControllerDelegate)?) -> UIViewController {
+    func makeMainVC(delegate: (any WorkoutListViewControllerDelegate)?) -> UIViewController {
         return vc("Main")
     }
     

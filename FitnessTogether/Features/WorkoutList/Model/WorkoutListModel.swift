@@ -3,13 +3,17 @@ import UIKit
 import FTDomainData
 
 public protocol WorkoutListModel {
+    var additionalFilter: ((FTWorkout) -> Bool) { get set }
     func getItems(completion: @escaping ([WorkoutItem]) -> Void)
 }
 
 public class BaseWorkoutListModel: WorkoutListModel {
     
+    var role: FTUserRole { .coach }
     let ftManager: FTManager
     var refDate = Date()
+    
+    public var additionalFilter: ((FTWorkout) -> Bool) = { _ in true}
     
     public init(ftManager: FTManager) {
         self.ftManager = ftManager
@@ -65,14 +69,12 @@ public class BaseWorkoutListModel: WorkoutListModel {
     }
     
     internal func filterWorkouts(_ workouts: [FTWorkout], user: FTUser) -> [FTWorkout] {
-        var interval = Calendar.current.dateInterval(of: .weekOfYear, for: refDate)!
-        let end = interval.end
-        interval.start = refDate.addingTimeInterval(-2 * 3600) //сейчас -2 часа, чтобы прошедшие тренировки не отображались
-        interval.end = end
-        return workouts.filter { workout in
+
+        return workouts.filter { [weak self] workout in
+            guard let self else { return false }
             guard let role = workout.participants.first(where: { $0.userId == user.id })?.role else { return false }
-            return role.userRole == user.role && //чтобы роль совпдала
-            interval.contains(workout.startDate ?? Date())
+            return role.userRole == self.role && //чтобы роль совпдала
+            additionalFilter(workout)
         }
     }
 }

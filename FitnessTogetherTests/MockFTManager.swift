@@ -6,16 +6,29 @@ import FTDomainData
 
 class MockFTManager: FTManager {
     
+    var email: any FitnessTogether.FTEmailInterface { _email }
     var user: any FitnessTogether.FTUserInterface { _user }
     var workout: any FitnessTogether.FTWorkoutInterface { _workout }
     var exercise: any FitnessTogether.FTExerciseInterface { _exercise }
     var set: any FitnessTogether.FTSetInterface { _set }
     
-    
+    var _email = MockEmailInterface()
     var _user = MockUserInterface()
     var _workout = MockWorkoutInterface()
     var _exercise = MockExerciseInterface()
     var _set = MockSetInterface()
+    
+}
+
+class MockEmailInterface: FTEmailInterface {
+    
+    func forgotPassword(data: FTForgotPasswordEmail, completion: FTCompletion<FTResetCode>) {
+        completion?(.success(FTResetCode(resetCode: "1")))
+    }
+    
+    func resetPassword(data: FTResetPassword, completion: FTCompletion<Void>) {
+        completion?(.success(()))
+    }
     
 }
 

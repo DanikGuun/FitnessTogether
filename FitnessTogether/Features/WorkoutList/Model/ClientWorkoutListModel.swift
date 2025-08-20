@@ -6,6 +6,8 @@ import UIKit
 
 public final class ClientWorkoutListModel: BaseWorkoutListModel {
 
+    override var role: FTUserRole { .client }
+    
     public override func workoutsToItems(_ workouts: [FTWorkout], completion: @escaping ([WorkoutItem]) -> Void) {
         
         let items: [WorkoutItem] = workouts.compactMap { workout in

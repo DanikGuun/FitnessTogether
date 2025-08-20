@@ -52,13 +52,20 @@ public final class CoachCalendarModel: CalendarModel {
     
     private func filterWorkouts(_ workouts: [FTWorkout], user: FTUser, for interval: DateInterval) -> [FTWorkout] {
         let filteredWorkouts = workouts.filter { workout in
-            let userParticipant = workout.participants.first { $0.userId == user.id }
-            let isRoleMatch = userParticipant?.role.userRole == user.role
             let isDateInInterval = interval.contains(workout.startDate ?? Date())
-            return isRoleMatch && isDateInInterval
+            return isDateInInterval
         }
         return filteredWorkouts
     }
+//    private func filterWorkouts(_ workouts: [FTWorkout], user: FTUser, for interval: DateInterval) -> [FTWorkout] {
+//        let filteredWorkouts = workouts.filter { workout in
+//            let userParticipant = workout.participants.first { $0.userId == user.id }
+//            let isRoleMatch = userParticipant?.role.userRole == user.role
+//            let isDateInInterval = interval.contains(workout.startDate ?? Date())
+//            return isRoleMatch && isDateInInterval
+//        }
+//        return filteredWorkouts
+//    }
     
     private func workoutsToItems(_ workouts: [FTWorkout], completion: @escaping ([WorkoutTimelineItem]) -> Void) {
         ftManager.user.getClients(completion: { [weak self] result in

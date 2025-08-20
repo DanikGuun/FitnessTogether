@@ -17,7 +17,7 @@ public final class BaseCoachCoordinator: NSObject, CoachCoordinator {
     init(factory: CoachViewControllerFactory) {
         self.factory = factory
         super.init()
-        self.tabBarVC = factory.makeTabBarVC(mainDeleage: self, calendarDelegate: self)
+        self.tabBarVC = factory.makeTabBarVC(workoutListDeleage: self, calendarDelegate: self)
         self.navigationVC = UINavigationController(rootViewController: tabBarVC)
         tabBarVC.selectedIndex = 0
 
@@ -29,7 +29,7 @@ public final class BaseCoachCoordinator: NSObject, CoachCoordinator {
     
 }
 
-extension BaseCoachCoordinator: MainViewControllerDelegate {
+extension BaseCoachCoordinator: WorkoutListViewControllerDelegate {
     
     public func mainVC(_ vc: UIViewController, requestToOpenWorkoutWithId workoutId: String) {
         let vc = factory.makeEditWorkoutVC(workoutId: workoutId, delegate: self)

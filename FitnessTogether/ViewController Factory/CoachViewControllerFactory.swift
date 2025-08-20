@@ -3,10 +3,10 @@ import UIKit
 import FTDomainData
 
 public protocol CoachViewControllerFactory {
-    func makeTabBarVC(mainDeleage: (any MainViewControllerDelegate)?, calendarDelegate: CalendarViewControllerDelegate?) -> UITabBarController
-    func makeMainVC(delegate: (any MainViewControllerDelegate)?) -> UIViewController
+    func makeTabBarVC(workoutListDeleage: (any WorkoutListViewControllerDelegate)?, calendarDelegate: CalendarViewControllerDelegate?) -> UITabBarController
+    func makeMainVC(delegate: (any WorkoutListViewControllerDelegate)?) -> UIViewController
     func makeCalendarVC(delegate: CalendarViewControllerDelegate?) -> UIViewController
-    func makeWorkoutsVC() -> UIViewController
+    func makeWorkoutsVC(delegate: (any WorkoutListViewControllerDelegate)?) -> UIViewController
     func makeProfileVC() -> UIViewController
     func makeAddWorkoutVC(startInterval: DateInterval?, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController
     func makeEditWorkoutVC(workoutId: String, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController
@@ -24,25 +24,34 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         self.ftManager = ftManager
     }
     
-    public func makeTabBarVC(mainDeleage: (any MainViewControllerDelegate)?, calendarDelegate: CalendarViewControllerDelegate?) -> UITabBarController {
+    //MARK: - Tab
+    public func makeTabBarVC(workoutListDeleage: (any WorkoutListViewControllerDelegate)?, calendarDelegate: CalendarViewControllerDelegate?) -> UITabBarController {
         let tabBarController = FTTabBarController()
         
         let tabBar = FTTabBar()
         tabBarController.setValue(tabBar, forKey: "tabBar")
         
         tabBarController.viewControllers = [
-            makeMainVC(delegate: mainDeleage),
+            makeMainVC(delegate: workoutListDeleage),
             makeCalendarVC(delegate: calendarDelegate),
-            makeWorkoutsVC(),
+            makeWorkoutsVC(delegate: workoutListDeleage),
             makeProfileVC()
         ]
         
         return tabBarController
     }
     
-    public func makeMainVC(delegate: (any MainViewControllerDelegate)?) -> UIViewController {
+    public func makeMainVC(delegate: (any WorkoutListViewControllerDelegate)?) -> UIViewController {
         let model = CoachWorkoutListModel(ftManager: ftManager)
-        let vc = MainWorkoutsViewController(model: model)
+        model.additionalFilter = { workout in
+            var interval = Calendar.current.dateInterval(of: .weekOfYear, for: Date())!
+            let end = interval.end
+            interval.start = Date().addingTimeInterval(-2 * 3600) //сейчас -2 часа, чтобы прошедшие тренировки не отображались
+            interval.end = end
+            return interval.contains(workout.startDate ?? Date())
+        }
+        
+        let vc = WorkoutListViewController(model: model)
         vc.delegate = delegate
         vc.tabBarItem = UITabBarItem(title: "Главная", image: UIImage(named: "house"), selectedImage: UIImage(named: "house.fill"))
         return vc
@@ -56,8 +65,10 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         return vc
     }
     
-    public func makeWorkoutsVC() -> UIViewController {
-        let vc = UIViewController()
+    public func makeWorkoutsVC(delegate: (any WorkoutListViewControllerDelegate)?) -> UIViewController {
+        let model = ClientWorkoutListModel(ftManager: ftManager)
+        let vc = WorkoutListViewController(model: model)
+        vc.delegate = delegate
         vc.tabBarItem = UITabBarItem(title: "Тренировки", image: UIImage(named: "barbell"), selectedImage: UIImage(named: "barbell.fill"))
         return vc
     }
@@ -68,6 +79,7 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         return vc
     }
     
+    //MARK: - Other
     public func makeAddWorkoutVC(startInterval: DateInterval?, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController {
         let model = CreateWorkoutBuilderModel(ftManager: ftManager)
         let vc = WorkoutBuilderViewController(model: model)

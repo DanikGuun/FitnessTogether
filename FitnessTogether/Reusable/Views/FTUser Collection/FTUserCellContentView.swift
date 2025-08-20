@@ -55,8 +55,8 @@ public class FTUserCollectionContentView: UIView, UIContentView {
         addSubview(titleLabel)
         titleLabel.snp.makeConstraints { [weak self] maker in
             guard let self = self else { return }
-            maker.leading.equalTo(imageView.snp.trailing).offset(20)
-            maker.trailing.equalTo(subtitleLabel.snp.leading).offset(8)
+            maker.leading.equalTo(imageView.snp.trailing).offset(10)
+            maker.trailing.equalTo(subtitleLabel.snp.leading).offset(-8)
             maker.top.bottom.equalToSuperview()
         }
         titleLabel.snp.contentHuggingHorizontalPriority = 750
@@ -87,7 +87,7 @@ public class FTUserCollectionContentView: UIView, UIContentView {
         titleLabel.textColor = conf.isSelected ? .systemBackground : .label
         
         subtitleLabel.text = conf.subtitle
-        subtitleLabel.textColor = conf.isSelected ? .systemBackground : .label
+        subtitleLabel.textColor = conf.isSelected ? .systemBackground : .secondaryLabel
         
         self.lineWidth = conf.lineWidth
         

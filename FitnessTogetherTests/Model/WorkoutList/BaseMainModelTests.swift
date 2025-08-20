@@ -8,10 +8,19 @@ final class BaseWorkoutListModelTests: XCTestCase {
     
     var ftManager: MockFTManager!
     var model: BaseWorkoutListModel!
+    var refDate: Date = Date()
     
     override func setUp() {
         ftManager = MockFTManager()
         model = BaseWorkoutListModel(ftManager: ftManager)
+        model.additionalFilter = { [weak self] workout in
+            guard let self else { return false }
+            var interval = Calendar.current.dateInterval(of: .weekOfYear, for: refDate)!
+            let end = interval.end
+            interval.start = refDate.addingTimeInterval(-2 * 3600) //сейчас -2 часа, чтобы прошедшие тренировки не отображались
+            interval.end = end
+            return interval.contains(workout.startDate ?? Date())
+        }
         super.setUp()
     }
     
@@ -20,8 +29,6 @@ final class BaseWorkoutListModelTests: XCTestCase {
         model = nil
         super.tearDown()
     }
-    
-    let refDate = Date()
     
     func test_GetWorkouts_WorkoutOutOfDate_NextWeek() {
         let client = FTUser(firstName: "Client", role: .client, id: "ClientId")
@@ -86,7 +93,7 @@ final class BaseWorkoutListModelTests: XCTestCase {
         workout.participants = [workoutPaticipant1, workoutPaticipant2]
         
         //берем примерно середину недели
-        model.refDate = Calendar.current.dateInterval(of: .weekOfYear, for: refDate)!.end.addingTimeInterval(-3 * 24 * 60 * 60)
+        refDate = Calendar.current.dateInterval(of: .weekOfYear, for: refDate)!.end.addingTimeInterval(-3 * 24 * 60 * 60)
         
         ftManager._user.user = coach
         ftManager._workout.workouts = [workout]

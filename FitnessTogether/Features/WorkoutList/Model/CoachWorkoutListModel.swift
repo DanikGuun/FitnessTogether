@@ -5,6 +5,7 @@ import UIKit
 
 public final class CoachWorkoutListModel: BaseWorkoutListModel {
 
+    override var role: FTUserRole { .coach }
     
     public override func workoutsToItems(_ workouts: [FTWorkout], completion: @escaping ([WorkoutItem]) -> Void) {
         

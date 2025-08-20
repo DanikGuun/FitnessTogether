@@ -32,12 +32,13 @@ public class OfflineManger: FTManager {
         for name in ["Здоровяк"] { //, "Громила", "Чертяга"
             //сам тренер
             var coach = FTUser(firstName: name, role: .coach, id: name)
+            clients.append(coach) //типа тренер сам занимается
             let pairs = clients.map { FTClientCoachPair(clientId: $0.id, client: $0, coachId: coach.id, coach: coach) }
             coach.clients = pairs
             coaches.append(coach)
             
             //его тренировки
-            for _ in 0...1 {
+            for _ in 0...8 {
                 let date = refDate//Calendar.current.date(byAdding: .day, value: Int.random(in: 0..<7), to: refDate)
                 let random = getRandomCurrentWeekDate(refDate)
                 let type = FTWorkoutKind.allCases.randomElement()!
@@ -166,7 +167,7 @@ public class OfflineWorkoutInterface: FTWorkoutInterface {
         let formatter = ISO8601DateFormatter()
         let part = FTWorkoutParticipant(workoutId: newId, userId: workout.userId, role: .client)
         let part2 = FTWorkoutParticipant(workoutId: newId, userId: coachId, role: .coach)
-        let newWorkout = FTWorkout(id: newId, description: workout.description, startDate: formatter.date(from: workout.startDate), duration: 5400, participants: [part, part2])
+        let newWorkout = FTWorkout(id: newId, description: workout.description, startDate: formatter.date(from: workout.startDate), duration: 5400, workoutKind: workout.workoutKind, participants: [part, part2])
         return newWorkout
     }
     

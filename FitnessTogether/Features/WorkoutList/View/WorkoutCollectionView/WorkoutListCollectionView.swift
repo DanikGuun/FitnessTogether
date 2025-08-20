@@ -1,7 +1,7 @@
  
 import UIKit
 
-public class MainWorkoutCollectionView: UIView, MainWorkoutView, DisclosableView, UICollectionViewDelegate, UICollectionViewDataSource {
+public class WorkoutListCollectionView: UIView, WorkoutListView, DisclosableView, UICollectionViewDelegate, UICollectionViewDataSource {
     
     
     //Disclosing
@@ -15,7 +15,7 @@ public class MainWorkoutCollectionView: UIView, MainWorkoutView, DisclosableView
     public var needShowTitleIfEmpty: Bool = true
     public var contentSize: CGSize { getContentSize() }
     
-    private var collectionView = UICollectionView(frame: .zero, collectionViewLayout: MainWorkoutCollectionView.makeLayout())
+    private var collectionView = UICollectionView(frame: .zero, collectionViewLayout: WorkoutListCollectionView.makeLayout())
     private var noDataLabel = UILabel()
     
     //MARK: - Lifecycle
