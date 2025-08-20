@@ -4,14 +4,14 @@ import XCTest
 import FTDomainData
 @testable import FitnessTogether
 
-final class BaseMainModelTests: XCTestCase {
+final class BaseWorkoutListModelTests: XCTestCase {
     
     var ftManager: MockFTManager!
-    var model: BaseMainModel!
+    var model: BaseWorkoutListModel!
     
     override func setUp() {
         ftManager = MockFTManager()
-        model = BaseMainModel(ftManager: ftManager)
+        model = BaseWorkoutListModel(ftManager: ftManager)
         super.setUp()
     }
     

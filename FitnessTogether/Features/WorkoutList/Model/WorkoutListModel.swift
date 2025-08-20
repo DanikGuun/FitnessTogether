@@ -2,11 +2,11 @@
 import UIKit
 import FTDomainData
 
-public protocol MainModel {
+public protocol WorkoutListModel {
     func getItems(completion: @escaping ([WorkoutItem]) -> Void)
 }
 
-public class BaseMainModel: MainModel {
+public class BaseWorkoutListModel: WorkoutListModel {
     
     let ftManager: FTManager
     var refDate = Date()

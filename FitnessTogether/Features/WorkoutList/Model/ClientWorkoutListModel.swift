@@ -4,7 +4,7 @@ import FTDomainData
 import Foundation
 import UIKit
 
-public final class ClientMainModel: BaseMainModel {
+public final class ClientWorkoutListModel: BaseWorkoutListModel {
 
     public override func workoutsToItems(_ workouts: [FTWorkout], completion: @escaping ([WorkoutItem]) -> Void) {
         

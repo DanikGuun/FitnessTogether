@@ -31,7 +31,7 @@ public class BaseClientViewControllerFactory: ClientViewControllerFactory {
     }
     
     public func makeMainVC() -> UIViewController {
-        let model = ClientMainModel(ftManager: ftManager)
+        let model = ClientWorkoutListModel(ftManager: ftManager)
         let vc = MainWorkoutsViewController(model: model)
         vc.tabBarItem = UITabBarItem(title: "Главная", image: UIImage(named: "house"), selectedImage: UIImage(named: "house.fill"))
         return vc

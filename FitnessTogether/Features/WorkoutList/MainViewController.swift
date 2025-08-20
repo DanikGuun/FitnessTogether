@@ -8,14 +8,14 @@ public protocol MainViewControllerDelegate {
 
 public final class MainWorkoutsViewController: FTViewController {
     
-    var model: MainModel!
+    var model: WorkoutListModel!
     var delegate: (any MainViewControllerDelegate)?
     
     private var workoutCollection: MainWorkoutView = MainWorkoutCollectionView()
     private var disclosureButton: DisclosureButton!
     
     //MARK: - Lifecycle
-    public convenience init(model: MainModel) {
+    public convenience init(model: WorkoutListModel) {
         self.init(nibName: nil, bundle: nil)
         self.model = model
     }

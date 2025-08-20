@@ -41,7 +41,7 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
     }
     
     public func makeMainVC(delegate: (any MainViewControllerDelegate)?) -> UIViewController {
-        let model = CoachMainModel(ftManager: ftManager)
+        let model = CoachWorkoutListModel(ftManager: ftManager)
         let vc = MainWorkoutsViewController(model: model)
         vc.delegate = delegate
         vc.tabBarItem = UITabBarItem(title: "Главная", image: UIImage(named: "house"), selectedImage: UIImage(named: "house.fill"))
