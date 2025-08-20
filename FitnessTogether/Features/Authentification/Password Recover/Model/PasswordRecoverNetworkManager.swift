@@ -1,5 +1,6 @@
 
 import Foundation
+import FTDomainData
 
 public protocol PasswordRecoverNetworkManager {
     func isEmailExist(_ email: String, completion: @escaping ((ValidatorResult) -> ()))
@@ -10,42 +11,60 @@ public protocol PasswordRecoverNetworkManager {
 
 public class PasswordRecoverNetwork: PasswordRecoverNetworkManager {
     
+    let ftManager: any FTManager
+    
+    private var email: String = ""
+    private var resetCode: String = ""
+    
+    init(ftManager: any FTManager) {
+        self.ftManager = ftManager
+    }
+    
     public func isEmailExist(_ email: String, completion: @escaping ((ValidatorResult) -> ())) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            sleep(1)
-            DispatchQueue.main.sync {
-                completion(.valid)
-            }
-        }
+        completion(.valid)
     }
     
     public func sendEmailCode(_ email: String, completion: @escaping ((ValidatorResult) -> ())) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            sleep(1)
-            DispatchQueue.main.sync {
+        self.email = email
+        let data = FTForgotPasswordEmail(email: email)
+        
+        ftManager.email.forgotPassword(data: data, completion: { [weak self] result in
+            switch result {
+                
+            case .success(let reset):
+                self?.resetCode = reset.resetCode
                 completion(.valid)
+                
+            case .failure(let error):
+                print(error.localizedDescription)
+                completion(.invalid(message: "Ошибка отправки кода, повторите попытку позже"))
             }
-        }
+        })
     }
     
     public func sendEmailCodeAgain(completion: ((ValidatorResult) -> ())?) {
-        DispatchQueue.global(qos: .userInitiated).async {
-            sleep(1)
-            DispatchQueue.main.sync {
+        let data = FTForgotPasswordEmail(email: email)
+        
+        ftManager.email.forgotPassword(data: data, completion: { [weak self] result in
+            switch result {
+                
+            case .success(let reset):
+                self?.resetCode = reset.resetCode
                 completion?(.valid)
+                
+            case .failure(let error):
+                print(error.localizedDescription)
+                completion?(.invalid(message: "Ошибка отправки кода, повторите попытку позже"))
             }
-        }
+        })
     }
     
     public func isEmailCodeValid(_ code: String, completion: @escaping ((ValidatorResult) -> ())) {
-        let isValid = code == "12345"
-        let result = isValid ? ValidatorResult.valid : .invalid(message: "Неверный код")
-        DispatchQueue.global(qos: .userInitiated).async {
-            sleep(1)
-            DispatchQueue.main.sync {
-                completion(result)
-            }
+        guard code == resetCode else {
+            completion(.invalid(message: "Неверный код"))
+            return
         }
+        completion(.valid)
     }
     
 }

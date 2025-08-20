@@ -40,7 +40,7 @@ public final class BaseAuthViewControllerFactory: AuthViewControllerFactory {
     }
     
     public func makePasswordRecoveryVC(delegate: (any PasswordRecoverControllerDelegate)?) -> UIViewController {
-        let model = BasePasswordRecoverModel(validator: validator, emailConfirmer: emailConfirmer)
+        let model = BasePasswordRecoverModel(ftManager: ftManager, validator: validator)
         let vc = PasswordRecoverViewController(model: model)
         vc.delegate = delegate
         return vc

@@ -1,5 +1,6 @@
 
 import UIKit
+import FTDomainData
 
 public final class PasswordRecoverCodeState: BaseFieldsScreenState, PasswordRecoverState {
     
@@ -12,8 +13,8 @@ public final class PasswordRecoverCodeState: BaseFieldsScreenState, PasswordReco
         self.recoverManager = recoverManager
     }
     
-    public func apply() {
-        
+    public func apply(to resetData: inout FTResetPassword) {
+        resetData.resetCode = codeTextField.text
     }
     
     public override func viewsToPresent() -> [UIView] {

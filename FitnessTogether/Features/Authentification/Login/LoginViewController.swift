@@ -105,7 +105,7 @@ public final class LoginViewController: FTViewController, UITextFieldDelegate {
     
     private func setLoginButtonBusy(_ busy: Bool) {
         loginButton.configuration?.showsActivityIndicator = busy
-        loginButton.isEnabled = busy
+        loginButton.isEnabled = !busy
     }
     
     private func setupRecoverPasswordButton() {

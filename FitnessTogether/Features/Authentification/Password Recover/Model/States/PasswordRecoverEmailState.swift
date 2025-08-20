@@ -1,5 +1,6 @@
 
 import UIKit
+import FTDomainData
 import OutlineTextField
 
 public final class PasswordRecoverEmailState: BaseFieldsScreenState, PasswordRecoverState, UITextFieldDelegate {
@@ -12,8 +13,8 @@ public final class PasswordRecoverEmailState: BaseFieldsScreenState, PasswordRec
         return [titleLabel, UIView.spaceView(24), emailTextField, nextButton]
     }
     
-    public func apply() {
-        
+    public func apply(to resetData: inout FTResetPassword) {
+        resetData.email = emailTextField.text ?? ""
     }
     
     public init(validator: Validator, recoverManager: any PasswordRecoverNetworkManager) {
@@ -45,11 +46,12 @@ public final class PasswordRecoverEmailState: BaseFieldsScreenState, PasswordRec
             setNextButtonBusy(true)
             recoverManager.isEmailExist(email) { [weak self] result in
                 guard let self else { return }
-                setNextButtonBusy(false)
                 let isValid = updateFieldInConsistWithValidate(emailTextField, result: result)
                 if isValid {
-                    delegate?.screenStateGoNext(self)
-                    recoverManager.sendEmailCode(email, completion: { _ in })
+                    recoverManager.sendEmailCode(email, completion: { _ in
+                        self.delegate?.screenStateGoNext(self)
+                        self.setNextButtonBusy(false)
+                    })
                 }
             }
         }

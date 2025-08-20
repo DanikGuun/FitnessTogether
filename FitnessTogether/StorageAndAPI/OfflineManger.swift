@@ -3,11 +3,13 @@ import FTDomainData
 import Foundation
 
 public class OfflineManger: FTManager {
+    public var email: any FTEmailInterface { _email }
     public var user: any FTUserInterface { _user }
     public var workout: any FTWorkoutInterface { _workout }
     public var exercise: any FTExerciseInterface { _exercise }
     public var set: any FTSetInterface { _set }
     
+    var _email = OfflineEmailInterface()
     var _user = OfflineUserInterface()
     var _workout = OfflineWorkoutInterface()
     var _exercise = OfflineExerciseInterface()
@@ -72,6 +74,18 @@ public class OfflineManger: FTManager {
             exercieses.append(ex)
         }
         return exercieses
+    }
+    
+}
+
+public class OfflineEmailInterface: FTEmailInterface {
+    
+    public func forgotPassword(data: FTForgotPasswordEmail, completion: FTCompletion<FTResetCode>) {
+        completion?(.success(FTResetCode(resetCode: "")))
+    }
+    
+    public func resetPassword(data: FTResetPassword, completion: FTCompletion<Void>) {
+        completion?(.success(()))
     }
     
 }

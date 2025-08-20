@@ -1,10 +1,11 @@
 
+import FTDomainData
 import Foundation
 
 public protocol PasswordRecoverModel {
     var stepCount: Int { get }
     var currentStep: Int { get }
-    //тут будет структура сброса
+    var resetPasswordData: FTResetPassword { get set }
     func goNext() -> (any PasswordRecoverState)?
     func getPreviousState() -> (any PasswordRecoverState)?
     func resetPassword(completion: ((Result<Void, Error>) -> ())?)
@@ -13,11 +14,14 @@ public protocol PasswordRecoverModel {
 public final class BasePasswordRecoverModel: PasswordRecoverModel {
     public let stepCount: Int = 3
     public var currentStep = -1
+    public var resetPasswordData = FTResetPassword()
     
+    let ftManager: FTManager
     private var states: [(any PasswordRecoverState)] = []
     
-    init(validator: any Validator, emailConfirmer: any EmailConfirmer) {
-        let recoverManager = PasswordRecoverNetwork()
+    init(ftManager: any FTManager, validator: any Validator) {
+        self.ftManager = ftManager
+        let recoverManager = PasswordRecoverNetwork(ftManager: ftManager)
         self.states = [
             PasswordRecoverEmailState(validator: validator, recoverManager: recoverManager),
             PasswordRecoverCodeState(recoverManager: recoverManager),
@@ -26,7 +30,7 @@ public final class BasePasswordRecoverModel: PasswordRecoverModel {
     }
     
     public func goNext() -> (any PasswordRecoverState)? {
-        states[safe: currentStep]?.apply()
+        states[safe: currentStep]?.apply(to: &resetPasswordData)
         guard let state = getNextState() else { return nil }
         return state
     }
@@ -44,13 +48,19 @@ public final class BasePasswordRecoverModel: PasswordRecoverModel {
     public func resetPassword(completion: ((Result<Void, Error>) -> ())?) {
         let state = getCurrentState()
         state?.setNextButtonBusy(true)
-        DispatchQueue.global().async {
-            sleep(3)
-            DispatchQueue.main.sync {
+
+        ftManager.email.resetPassword(data: resetPasswordData, completion: { result in
+            switch result {
+                
+            case .success(_):
                 state?.setNextButtonBusy(false)
-                completion?(.success(Void()))
+                completion?(.success(()))
+                
+            case .failure(let error):
+                print(error.localizedDescription)
+                completion?(.failure(error))
             }
-        }
+        })
     }
     
     private func getCurrentState() -> (any PasswordRecoverState)? {

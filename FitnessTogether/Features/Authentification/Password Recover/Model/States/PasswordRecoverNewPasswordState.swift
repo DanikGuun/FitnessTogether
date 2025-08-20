@@ -1,5 +1,6 @@
 
 import OutlineTextField
+import FTDomainData
 import UIKit
 
 public final class PasswordRecoverNewPasswordState: BaseFieldsScreenState, PasswordRecoverState, UITextFieldDelegate {
@@ -9,8 +10,8 @@ public final class PasswordRecoverNewPasswordState: BaseFieldsScreenState, Passw
     var passwordVisibleButton = UIButton(configuration: .plain())
     var confirmPasswordVisibleButton = UIButton(configuration: .plain())
     
-    public func apply() {
-        
+    public func apply(to resetData: inout FTResetPassword) {
+        resetData.newPassword = passwordTextField.text ?? ""
     }
     
     public override func viewsToPresent() -> [UIView] {

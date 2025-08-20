@@ -4,10 +4,16 @@ import FTDomainData
 import FTApi
 
 public protocol FTManager {
+    var email: FTEmailInterface { get }
     var user: FTUserInterface { get }
     var workout: FTWorkoutInterface { get }
     var exercise: FTExerciseInterface { get }
     var set: FTSetInterface { get }
+}
+
+public protocol FTEmailInterface {
+    func forgotPassword(data: FTForgotPasswordEmail, completion: FTCompletion<FTResetCode>)
+    func resetPassword(data: FTResetPassword, completion: FTCompletion<Void>)
 }
 
 public protocol FTUserInterface {

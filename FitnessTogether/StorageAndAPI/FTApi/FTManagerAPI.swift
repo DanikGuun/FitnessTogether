@@ -5,6 +5,7 @@ import Foundation
 
 public final class FTManagerAPI: FTManager {
 
+    public var email: any FTEmailInterface
     public var user: any FTUserInterface
     public var workout: any FTWorkoutInterface
     public var exercise: any FTExerciseInterface
@@ -12,12 +13,29 @@ public final class FTManagerAPI: FTManager {
     
     public init() {
         let api = FTApi()
+        email = FTEmailApiAdapter(emailAPI: api.email)
         user = FTUserApiAdapter(userAPI: api.user)
         workout = FTWorkoutApiAdapter(workoutAPI: api.workout)
         exercise = FTExerciseApiAdapter(exerciseAPI: api.exercise)
         set = FTSetApiAdapter(setAPI: api.set)
     }
     
+}
+
+fileprivate final class FTEmailApiAdapter: FTEmailInterface {
+    var emailAPI: FTEmailManager
+    
+    init(emailAPI: FTEmailManager) {
+        self.emailAPI = emailAPI
+    }
+    
+    func forgotPassword(data: FTForgotPasswordEmail, completion: FTCompletion<FTResetCode>) {
+        emailAPI.forgotPassword(data: data, completion: completion)
+    }
+    
+    func resetPassword(data: FTResetPassword, completion: FTCompletion<Void>) {
+        emailAPI.resetPassword(data: data, completion: completion)
+    }
 }
 
 fileprivate final class FTUserApiAdapter: FTUserInterface {
