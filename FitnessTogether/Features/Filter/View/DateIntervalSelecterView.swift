@@ -3,18 +3,15 @@ import UIKit
 
 public final class DateIntervalSelecterView: FTButtonList {
     
-    
-    lazy var titlesAndIntervals : [(String, DateInterval)] = {
-        let calendar = Calendar.current
-        let refDate = Date()
-        return [
-            ("Неделя", intervalToToday(calendar.date(byAdding: .weekOfYear, value: -1, to: refDate))),
-            ("Месяц", intervalToToday(calendar.date(byAdding: .month, value: -1, to: refDate))),
-            ("3 месяца", intervalToToday(calendar.date(byAdding: .month, value: -3, to: refDate))),
-            ("Полгода", intervalToToday(calendar.date(byAdding: .month, value: -6, to: refDate))),
-            ("Год", intervalToToday(calendar.date(byAdding: .year, value: -1, to: refDate))),
-        ]
-    }()
+    public var selectedInterval: FTFilterDateInterval {
+        get {
+            let selectedIndex = buttons.firstIndex(where: { $0.isSelected == true }) ?? 0
+            return FTFilterDateInterval.allCases[selectedIndex]
+        }
+        set {
+            selectInterval(interval: newValue)
+        }
+    }
     
     override func setup() {
         super.setup()
@@ -23,8 +20,9 @@ public final class DateIntervalSelecterView: FTButtonList {
     
     //MARK: - Buttons
     private func setupButtons() {
-        let titles = titlesAndIntervals.map { $0.0 }
+        let titles = FTFilterDateInterval.allCases.map { $0.title }
         setButtons(titles: titles)
+        selectInterval(interval: .week)
     }
     
     override func setupButton(_ button: UIButton) {
@@ -35,13 +33,14 @@ public final class DateIntervalSelecterView: FTButtonList {
     override func buttonPressed(_ action: UIAction) {
         guard let button = action.sender as? UIButton else { return }
         buttons.forEach { $0.isSelected = $0 == button }
+        
         sendActions(for: .valueChanged)
     }
-    
-    //MARK: - Other
-    private func intervalToToday(_ start: Date?) -> DateInterval {
-        let start = start ?? Date()
-        return DateInterval(start: start, end: Date())
+
+    //MARK: - Actions
+    private func selectInterval(interval: FTFilterDateInterval) {
+        let title = interval.title
+        buttons.forEach { $0.isSelected = $0.configuration?.title == title }
     }
     
 }

@@ -17,6 +17,7 @@ public class OfflineManger: FTManager {
     
     init() {
         setupWorkoutsList()
+        setupSets()
     }
     
     private func setupWorkoutsList() {
@@ -57,6 +58,18 @@ public class OfflineManger: FTManager {
         _workout.workouts = workouts
         _workout.coachId = coaches.first!.id
         _user.user = coaches.first!
+    }
+    
+    private func setupSets() {
+        let exercises = _exercise.exercises
+        var sets: [FTSet] = []
+        for exercise in exercises {
+            for _ in 0..<5 {
+                let set = FTSet(id: UUID().uuidString, amount: Int.random(in: 0...100), exerciseId: exercise.id, weight: Int.random(in: 0...100))
+                sets.append(set)
+            }
+        }
+        _set.sets = sets
     }
     
     private func getRandomCurrentWeekDate(_ refDate: Date) -> Date {
@@ -165,7 +178,7 @@ public class OfflineWorkoutInterface: FTWorkoutInterface {
         var newId = UUID().uuidString
         if let id { newId = id }
         let formatter = ISO8601DateFormatter()
-        let part = FTWorkoutParticipant(workoutId: newId, userId: workout.userId, role: .client)
+        let part = FTWorkoutParticipant(workoutId: newId, userId: workout.userId!, role: .client)
         let part2 = FTWorkoutParticipant(workoutId: newId, userId: coachId, role: .coach)
         let newWorkout = FTWorkout(id: newId, description: workout.description, startDate: formatter.date(from: workout.startDate), duration: 5400, workoutKind: workout.workoutKind, participants: [part, part2])
         return newWorkout
@@ -209,7 +222,7 @@ public class OfflineExerciseInterface: FTExerciseInterface {
     
     private func getExerciseFromCreate(_ data: FTExerciseCreate, id: String? = nil, workoutId: String? = nil) -> FTExercise {
         var newId = UUID().uuidString
-        var workout: String = data.workoutId
+        var workout: String = data.workoutId ?? ""
         if let id { newId = id }
         if let workoutId { workout = workoutId }
         let exercise = FTExercise(id: newId, name: data.name, description: data.description,
@@ -222,19 +235,33 @@ public class OfflineExerciseInterface: FTExerciseInterface {
 
 public class OfflineSetInterface: FTSetInterface {
     
+    public var sets: [FTSet] = []
+    
     init() {
         
     }
     
-    public func create(data: FTSetCreate, completion: FTCompletion<FTSet>) { }
+    public func create(data: FTSetCreate, completion: FTCompletion<FTSet>) {
+        print("no set create")
+    }
     
-    public func get(setId: String, completion: FTCompletion<FTSet>) { }
+    public func get(setId: String, completion: FTCompletion<FTSet>) {
+        let set = sets.first(where: { $0.id == setId })!
+        completion?(.success(set))
+    }
     
-    public func get(exerciseId: String, completion: FTCompletion<[FTSet]>) { }
+    public func get(exerciseId: String, completion: FTCompletion<[FTSet]>) {
+        let sets = self.sets.filter({ $0.exerciseId == exerciseId })
+        completion?(.success(sets))
+    }
     
-    public func edit(setId: String, newData data: FTSetCreate, completion: FTCompletion<FTSet>) { }
+    public func edit(setId: String, newData data: FTSetCreate, completion: FTCompletion<FTSet>) {
+        print("no set edit")
+    }
     
-    public func delete(setId: String, completion: FTCompletion<Void>) { }
+    public func delete(setId: String, completion: FTCompletion<Void>) {
+        print("no set delete")
+    }
     
     
 }

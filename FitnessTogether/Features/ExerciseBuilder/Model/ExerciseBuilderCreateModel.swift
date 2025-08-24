@@ -4,7 +4,8 @@ import FTDomainData
 public final class ExerciseBuilderCreateModel: ExerciseBuilderModel {
     
     var ftManager: (any FTManager)
-    let workoutId: String
+    public let workoutId: String
+    public private(set) var exerciseId: String? = nil
     
     public var mainTitle: String = "Создать упражнения"
     public var addButtonTitle: String = "Добавить"
@@ -18,10 +19,11 @@ public final class ExerciseBuilderCreateModel: ExerciseBuilderModel {
         var exercise = exercise
         exercise.workoutId = workoutId
         
-        ftManager.exercise.create(data: exercise, completion: { result in
+        ftManager.exercise.create(data: exercise, completion: { [weak self] result in
             switch result {
                 
-            case .success(_):
+            case .success(let exercise):
+                self?.exerciseId = exercise.id
                 completion?(.success(Void()))
                 
             case .failure(let error):

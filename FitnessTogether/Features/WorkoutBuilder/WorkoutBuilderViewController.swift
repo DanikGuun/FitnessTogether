@@ -175,7 +175,7 @@ public final class WorkoutBuilderViewController: FTViewController {
     }
     
     private func getWorkoutData() -> FTWorkoutCreate {
-        let kind = workoutKindSelecter.selectedWorkoutKind
+        let kind = workoutKindSelecter.selectedWorkoutKind ?? .none
         let description = descriptionTextView.text ?? ""
         let date = dateTimeView.date!
         let clientId = clientSelecter.selectedItem!.id

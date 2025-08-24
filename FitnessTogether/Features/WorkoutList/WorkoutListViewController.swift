@@ -1,5 +1,6 @@
 
 import UIKit
+import FTDomainData
 
 public protocol WorkoutListViewControllerDelegate {
     func workoutListVC(_ vc: UIViewController, requestToOpenWorkoutWithId workoutId: String)
@@ -7,14 +8,16 @@ public protocol WorkoutListViewControllerDelegate {
     func workoutListRequestToOpenFilter(_ vc: UIViewController, delegate: (any WorkoutFilterViewControllerDelegate)?)
 }
 
-public final class WorkoutListViewController: FTViewController {
+public final class WorkoutListViewController: FTViewController, WorkoutFilterViewControllerDelegate {
     
     var model: WorkoutListModel!
     var delegate: (any WorkoutListViewControllerDelegate)?
     
-    private var mainTitleLabel = UILabel.headline("Тренировки на неделю")
-    private var workoutCollection: WorkoutListView = WorkoutListCollectionView()
-    private var disclosureButton: DisclosureButton!
+    var mainTitleLabel = UILabel.headline("Тренировки на неделю")
+    var filterButton = UIButton(configuration: .plain())
+    var workoutCollection: WorkoutListView = WorkoutListCollectionView()
+    var disclosureButton: DisclosureButton!
+    
     
     //MARK: - Lifecycle
     public convenience init(model: WorkoutListModel) {
@@ -69,15 +72,14 @@ public final class WorkoutListViewController: FTViewController {
     }
     
     private func setupFilterButton() {
-        let button = UIButton(configuration: .plain())
-        mainTitleLabel.addSubview(button)
+        mainTitleLabel.addSubview(filterButton)
         mainTitleLabel.isUserInteractionEnabled = true
-        button.snp.makeConstraints { $0.top.bottom.trailing.equalToSuperview() }
+        filterButton.snp.makeConstraints { $0.top.bottom.trailing.equalToSuperview() }
         
         let image = UIImage(named: "filter")
-        button.setImage(image, for: .normal)
-        button.tintColor = .label
-        button.addAction(UIAction(handler: filterButtonPressed), for: .touchUpInside)
+        filterButton.setImage(image, for: .normal)
+        filterButton.tintColor = .label
+        filterButton.addAction(UIAction(handler: filterButtonPressed), for: .touchUpInside)
     }
     
     //MARK: - Actions
@@ -92,7 +94,27 @@ public final class WorkoutListViewController: FTViewController {
     }
     
     private func filterButtonPressed(_ action: UIAction) {
-        delegate?.workoutListRequestToOpenFilter(self, delegate: nil)
+        delegate?.workoutListRequestToOpenFilter(self, delegate: self)
+    }
+    
+    //MARK: - Workout Filter\
+    public func workoutFilterVCGetDefaultBag(_ vc: UIViewController) -> FTFilterBag {
+        return model.initialFilterBag
+    }
+    
+    public func workoutFilterVCGetInitialBag(_ vc: UIViewController) -> FTFilterBag {
+        return model.currentFilterBag
+    }
+    
+    public func workoutFilter(_ vc: UIViewController, getWorkoutsCountFor filterBag: FTFilterBag, completion: @escaping (Int) -> Void) {
+        model.getItems(withFilter: filterBag, completion: { items in
+            completion(items.count)
+        })
+    }
+    
+    public func workoutFilterVC(_ vc: UIViewController, didSelect filterBag: FTFilterBag) {
+        model.currentFilterBag = filterBag
+        updateItems()
     }
     
     //MARK: - Data

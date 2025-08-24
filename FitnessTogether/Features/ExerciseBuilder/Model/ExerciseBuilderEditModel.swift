@@ -3,8 +3,8 @@ import FTDomainData
 public final class ExerciseBuilderEditModel: ExerciseBuilderModel {
     
     var ftManager: (any FTManager)
-    let workoutId: String
-    let exerciseId: String
+    public let workoutId: String
+    public var exerciseId: String?
     
     public var mainTitle: String = "Изменить упражнение"
     public var addButtonTitle: String = "Сохранить"
@@ -19,7 +19,7 @@ public final class ExerciseBuilderEditModel: ExerciseBuilderModel {
         var exercise = exercise
         exercise.workoutId = workoutId
         
-        ftManager.exercise.update(exerciseId: exerciseId, data: exercise, completion: { result in
+        ftManager.exercise.update(exerciseId: exerciseId!, data: exercise, completion: { result in
             switch result {
                 
             case .success(_):
@@ -34,7 +34,7 @@ public final class ExerciseBuilderEditModel: ExerciseBuilderModel {
     }
     
     public func getInitialExerciseData(completion: @escaping ((FTExerciseCreate) -> Void)) {
-        ftManager.exercise.get(exerciseId: exerciseId, completion: { [weak self] result in
+        ftManager.exercise.get(exerciseId: exerciseId!, completion: { [weak self] result in
             guard let self else { return }
             switch result {
                 

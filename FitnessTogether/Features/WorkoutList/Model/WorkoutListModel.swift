@@ -3,24 +3,30 @@ import UIKit
 import FTDomainData
 
 public protocol WorkoutListModel {
-    var additionalFilter: ((FTWorkout) -> Bool) { get set }
+    
+    var initialFilterBag: FTFilterBag { get set }
+    var currentFilterBag: FTFilterBag { get set }
     func getItems(completion: @escaping ([WorkoutItem]) -> Void)
+    func getItems(withFilter filter: FTFilterBag, completion: @escaping ([WorkoutItem]) -> Void)
 }
 
 public class BaseWorkoutListModel: WorkoutListModel {
-    
+    public var initialFilterBag: FTFilterBag = FTFilterBag()
+    public var currentFilterBag: FTFilterBag = FTFilterBag()
     var role: FTUserRole { .coach }
     let ftManager: FTManager
     var refDate = Date()
-    
-    public var additionalFilter: ((FTWorkout) -> Bool) = { _ in true}
     
     public init(ftManager: FTManager) {
         self.ftManager = ftManager
     }
     
     public func getItems(completion: @escaping ([WorkoutItem]) -> Void) {
-        getNearestWorkouts(completion: { [weak self] workouts in
+        getItems(withFilter: currentFilterBag, completion: completion)
+    }
+    
+    public func getItems(withFilter filter: FTFilterBag, completion: @escaping ([WorkoutItem]) -> Void) {
+        getNearestWorkouts(filter: filter, completion: { [weak self] workouts in
             guard let self else { return }
             
             workoutsToItems(workouts, completion: completion)
@@ -33,13 +39,13 @@ public class BaseWorkoutListModel: WorkoutListModel {
         completion([])
     }
     
-    internal func getNearestWorkouts(completion: @escaping ([FTWorkout]) -> Void) {
+    internal func getNearestWorkouts(filter: FTFilterBag, completion: @escaping ([FTWorkout]) -> Void) {
         ftManager.user.current(completion: { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let user):
                 
-                getFilteredWorkouts(coach: user, completion: { workouts in
+                getFilteredWorkouts(coach: user, filter: filter, completion: { workouts in
                     let sorted = workouts.sorted(by: { ($0.startDate ?? Date()) < ($1.startDate ?? Date()) })
                     completion(sorted)
                 })
@@ -51,13 +57,13 @@ public class BaseWorkoutListModel: WorkoutListModel {
         })
     }
     
-    private func getFilteredWorkouts(coach: FTUser, completion: @escaping ([FTWorkout]) -> Void) {
+    private func getFilteredWorkouts(coach: FTUser, filter: FTFilterBag, completion: @escaping ([FTWorkout]) -> Void) {
         ftManager.workout.getAll(completion: { [weak self] result in
             guard let self else { return }
             switch result {
             case .success(let workouts):
                 
-                let filteredWorkouts = filterWorkouts(workouts, user: coach)
+                let filteredWorkouts = filterWorkouts(workouts, filter: filter, user: coach)
                 completion(filteredWorkouts)
                 
             case .failure(let error):
@@ -68,13 +74,13 @@ public class BaseWorkoutListModel: WorkoutListModel {
         })
     }
     
-    internal func filterWorkouts(_ workouts: [FTWorkout], user: FTUser) -> [FTWorkout] {
+    internal func filterWorkouts(_ workouts: [FTWorkout], filter: FTFilterBag, user: FTUser) -> [FTWorkout] {
 
         return workouts.filter { [weak self] workout in
             guard let self else { return false }
-            guard let role = workout.participants.first(where: { $0.userId == user.id })?.role else { return false }
+            guard let role = workout.participants?.first(where: { $0.userId == user.id })?.role else { return false }
             return role.userRole == self.role && //чтобы роль совпдала
-            additionalFilter(workout)
+                    filter.shouldInclude(workout)
         }
     }
 }

@@ -3,7 +3,29 @@ import UIKit
 
 public class FTDateButton: FTImageAndTitleButton {
      
-    var date = Date()
+    var date: Date {
+        get {
+            return _date
+        }
+        set {
+            if let maxDate = maximumDate {
+                _date = min(newValue, maxDate)
+            }
+            else {
+                _date = newValue
+            }
+            updateLabel()
+        }
+    }
+    private var _date = Date()
+    
+    var maximumDate: Date? = nil {
+        didSet {
+            if let maximumDate {
+                date = min(date, maximumDate)
+            }
+        }
+    }
     
     public override func setup() {
         super.setup()
@@ -17,7 +39,7 @@ public class FTDateButton: FTImageAndTitleButton {
     }
     
     private func dateButtonPressed(_ action: UIAction) {
-        let controller = UIDatePicker.ftDatePickerController(pickerMode: .date, startDate: date, handler: dateSelected)
+        let controller = UIDatePicker.ftDatePickerController(pickerMode: .date, startDate: date, maxDate: maximumDate, handler: dateSelected)
         let width = viewController?.view.bounds.width ?? 350
         viewController?.presentPopover(controller, size: CGSize(width: width, height: 250), sourceView: self, arrowDirections: [.down, .up])
     }
@@ -32,7 +54,6 @@ public class FTDateButton: FTImageAndTitleButton {
         currentDateComponents.year = components.year
         
         date = Calendar.current.date(from: currentDateComponents)!
-        updateLabel()
         sendActions(for: .valueChanged)
     }
     

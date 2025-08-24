@@ -84,7 +84,7 @@ public final class CoachCalendarModel: CalendarModel {
     }
     
     private func workoutToItem(_ workout: FTWorkout, clients: [FTUser]) -> WorkoutTimelineItem {
-        let clientId = workout.participants.first(where: { $0.role == .client })?.userId ?? ""
+        let clientId = workout.participants?.first(where: { $0.role == .client })?.userId ?? ""
         let user = clients.first(where: { $0.id == clientId }) ?? FTUser()
         
         let id = workout.id

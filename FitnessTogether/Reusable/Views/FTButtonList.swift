@@ -75,6 +75,20 @@ public class FTButtonList: UIControl {
     }
     
     //MARK: - Buttons
+    
+    public func addButton(withTitle title: String, at index: Int = 0) {
+        let button = UIButton(configuration: .filled())
+        button.configuration?.title = title
+        setupButton(button)
+        stackView.insertArrangedSubview(button, at: index)
+        buttons.insert(button, at: index)
+    }
+    
+    public func selectButton(at index: Int) {
+        buttons.forEach { $0.isSelected = false }
+        buttons[index].isSelected = true
+    }
+    
     public func setButtons(titles: [String]) {
         let buttons = titles.map { title in
             let button = UIButton(configuration: .filled())

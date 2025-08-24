@@ -5,6 +5,7 @@ import FTDomainData
 
 public protocol ExerciseBuilderViewControllerDelegate {
     func exerciseBuilderVCDidFinish(_ vc: UIViewController)
+    func exerciseBuilderVCGoToSetList(_ vc: UIViewController, exerciseId: String)
 }
 
 public final class ExerciseBuilderViewController: FTViewController, UITextFieldDelegate {
@@ -29,6 +30,7 @@ public final class ExerciseBuilderViewController: FTViewController, UITextFieldD
     var muscleKindSelecter = MuscleKindSelecter()
     var complexityTitle = UILabel()
     var complexitySlider = ComplexitySlider()
+    lazy var goToSetButton = UIButton.ftPlain(title: "Добавить подходы", handler: goToSetListButtonPressed)
     lazy var addExerciseButton = UIButton.ftFilled(title: model.addButtonTitle, handler: addExerciseButtonPressed)
     
     //MARK: - Lifecycle
@@ -70,6 +72,7 @@ public final class ExerciseBuilderViewController: FTViewController, UITextFieldD
         setupComplexitySlider()
         addSpacing(.fixed(50))
         
+        addStackSubview(goToSetButton)
         addStackSubview(addExerciseButton)
     }
     
@@ -131,6 +134,31 @@ public final class ExerciseBuilderViewController: FTViewController, UITextFieldD
         view.endEditing(true)
     }
     
+    private func goToSetListButtonPressed(_ action: UIAction?) {
+        model.saveExercise(getExerciseData(), completion: { [weak self] result in
+            guard let self else { return }
+            switch result {
+            case .success(_):
+                delegate?.exerciseBuilderVCGoToSetList(self, exerciseId: model.exerciseId!)
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        })
+    }
+    
+    private func presentAddExericsePopover() {
+        let label = UILabel()
+        label.font = DC.Font.headline
+        label.text = "Для начала сохраните упражнение"
+        label.numberOfLines = 0
+        
+        let controller = UIViewController()
+        controller.view.addSubview(label)
+        label.snp.makeConstraints { $0.edges.equalToSuperview().inset(50) }
+        
+        presentPopover(controller, size: CGSize(width: stackView.bounds.width, height: 150), sourceView: view)
+    }
+    
     private func addExerciseButtonPressed(_ action: UIAction?) {
         let data = getExerciseData()
         model.saveExercise(data, completion: { [weak self] result in
@@ -158,4 +186,5 @@ public final class ExerciseBuilderViewController: FTViewController, UITextFieldD
 
 public extension ExerciseBuilderViewControllerDelegate {
     func exerciseBuilderVCDidFinish(_ vc: UIViewController) {}
+    func exerciseBuilderVCGoToSetList(_ vc: UIViewController, exerciseId: String) {}
 }

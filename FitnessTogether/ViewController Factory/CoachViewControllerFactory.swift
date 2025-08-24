@@ -10,11 +10,13 @@ public protocol CoachViewControllerFactory {
     func makeProfileVC() -> UIViewController
     func makeAddWorkoutVC(startInterval: DateInterval?, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController
     func makeEditWorkoutVC(workoutId: String, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController
-    func changeWorkoutBuilderToEditModel(_ vc: UIViewController, workoutId: String)
+    func changeWorkoutBuilderToEditModel(_ vc: UIViewController)
     func makeExerciseListVC(workoutId: String, delegate: (any ExerciseListViewControllerDelegate)?) -> UIViewController
     func makeCreateExerciseVC(workoutId: String, delegate: (any ExerciseBuilderViewControllerDelegate)?) -> UIViewController
+    func changeExerciseBuilderToEditModel(_ vc: UIViewController)
     func makeEditExerciseVC(workoutId: String, exerciseId: String, delegate: (any ExerciseBuilderViewControllerDelegate)?) -> UIViewController
     func makeFilterVC(delegate: (any WorkoutFilterViewControllerDelegate)?) -> UIViewController
+    func makeSetListVC(exerciseId: String, delegate: (any SetListViewControllerDelegate)) -> UIViewController
 }
 
 public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
@@ -44,15 +46,12 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
     
     public func makeMainVC(delegate: (any WorkoutListViewControllerDelegate)?) -> UIViewController {
         let model = CoachWorkoutListModel(ftManager: ftManager)
-        model.additionalFilter = { workout in
-            var interval = Calendar.current.dateInterval(of: .weekOfYear, for: Date())!
-            let end = interval.end
-            interval.start = Date().addingTimeInterval(-2 * 3600) //сейчас -2 часа, чтобы прошедшие тренировки не отображались
-            interval.end = end
-            return interval.contains(workout.startDate ?? Date())
-        }
+        let bag = FTFilterBag(dateInterval: .custom(getThisWeekInterval()))
+        model.initialFilterBag = bag
+        model.currentFilterBag = bag
         
         let vc = WorkoutListViewController(model: model)
+        vc.filterButton.isHidden = true
         vc.delegate = delegate
         vc.tabBarItem = UITabBarItem(title: "Главная", image: UIImage(named: "house"), selectedImage: UIImage(named: "house.fill"))
         return vc
@@ -68,6 +67,7 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
     
     public func makeWorkoutsVC(delegate: (any WorkoutListViewControllerDelegate)?) -> UIViewController {
         let model = ClientWorkoutListModel(ftManager: ftManager)
+        
         let vc = WorkoutListViewController(model: model)
         vc.delegate = delegate
         vc.tabBarItem = UITabBarItem(title: "Тренировки", image: UIImage(named: "barbell"), selectedImage: UIImage(named: "barbell.fill"))
@@ -89,10 +89,11 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         return vc
     }
     
-    public func changeWorkoutBuilderToEditModel(_ vc: UIViewController, workoutId: String) {
-        if let vc = vc as? WorkoutBuilderViewController {
-            vc.model = vc.model as? EditWorkoutBuilderModel ?? EditWorkoutBuilderModel(ftManager: ftManager, workoutId: workoutId)
-        }
+    public func changeWorkoutBuilderToEditModel(_ vc: UIViewController) {
+        guard let vc = vc as? WorkoutBuilderViewController,
+                let workoutId = vc.model.workoutId else { return }
+        let model = EditWorkoutBuilderModel(ftManager: ftManager, workoutId: workoutId)
+        vc.model = model
     }
     
     public func makeEditWorkoutVC(workoutId: String, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController {
@@ -116,6 +117,14 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         return vc
     }
     
+    public func changeExerciseBuilderToEditModel(_ vc: UIViewController) {
+        guard let vc = vc as? ExerciseBuilderViewController else { return }
+        let oldModel = vc.model
+        guard let exerciseId = oldModel!.exerciseId else { return }
+        let model = ExerciseBuilderEditModel(ftManager: ftManager, workoutId: oldModel!.workoutId, exerciseId: exerciseId)
+        vc.model = model
+    }
+    
     public func makeEditExerciseVC(workoutId: String, exerciseId: String, delegate: (any ExerciseBuilderViewControllerDelegate)?) -> UIViewController {
         let model = ExerciseBuilderEditModel(ftManager: ftManager, workoutId: workoutId, exerciseId: exerciseId)
         let vc = ExerciseBuilderViewController(model: model)
@@ -129,4 +138,19 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         return vc
     }
     
+    public func makeSetListVC(exerciseId: String, delegate: (any SetListViewControllerDelegate)) -> UIViewController {
+        let model = BaseSetListModel(ftManager: ftManager, exerciseId: exerciseId)
+        let vc = SetListViewController(model: model)
+        vc.delegate = delegate
+        return vc
+    }
+    
+    //MARK: - Other
+    private func getThisWeekInterval() -> DateInterval {
+        var interval = Calendar.current.dateInterval(of: .weekOfYear, for: Date())!
+        let end = interval.end
+        interval.start = Date().addingTimeInterval(-2 * 3600) //сейчас -2 часа, чтобы прошедшие тренировки не отображались
+        interval.end = end
+        return interval
+    }
 }

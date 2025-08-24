@@ -35,7 +35,7 @@ extension UIViewController: UIPopoverPresentationControllerDelegate {
         presentation.sourceRect = sourceView?.bounds ?? .zero
         presentation.delegate = self
         
-        self.navigationController?.present(controller, animated: true)
+        self.present(controller, animated: true)
     }
     
     public func adaptivePresentationStyle(for controller: UIPresentationController) -> UIModalPresentationStyle {

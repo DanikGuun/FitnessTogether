@@ -7,6 +7,7 @@ public class DateTimeView: UIStackView {
         get { return _date }
         set {
             _date = getRoundedDate(newValue)
+            dateButton.date = _date ?? Date()
             updateButtonTitles()
             dateHasChanged?(_date)
         }

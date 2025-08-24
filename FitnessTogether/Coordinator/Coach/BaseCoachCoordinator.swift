@@ -65,7 +65,7 @@ extension BaseCoachCoordinator: CalendarViewControllerDelegate {
 extension BaseCoachCoordinator: WorkoutBuilderViewControllerDelegate {
     
     public func workoutBuilderVCDidFinish(_ vc: UIViewController, withId workoutId: String) {
-        factory.changeWorkoutBuilderToEditModel(vc, workoutId: workoutId)
+        factory.changeWorkoutBuilderToEditModel(vc)
         let vc = factory.makeExerciseListVC(workoutId: workoutId, delegate: self)
         show(vc)
     }
@@ -94,6 +94,28 @@ extension BaseCoachCoordinator: ExerciseBuilderViewControllerDelegate {
     
     public func exerciseBuilderVCDidFinish(_ vc: UIViewController) {
         navigationVC.popViewController(animated: needAnimate)
+    }
+    
+    public func exerciseBuilderVCGoToSetList(_ vc: UIViewController, exerciseId: String) {
+        factory.changeExerciseBuilderToEditModel(vc)
+        let vc = factory.makeSetListVC(exerciseId: exerciseId, delegate: self)
+        show(vc)
+    }
+    
+}
+
+extension BaseCoachCoordinator: SetListViewControllerDelegate {
+    
+    public func setListVCDidFinish(_ vc: UIViewController) {
+        navigationVC.popViewController(animated: needAnimate)
+    }
+    
+    public func setListVCRequestToOpenAddSetVC(_ vc: UIViewController, exerciseId: String) {
+        print("Add to id: \(exerciseId)")
+    }
+    
+    public func setListVCRequestToOpenEditSetVC(_ vc: UIViewController, setId: String, exerciseId: String) {
+        print("Edit \(setId) to id: \(exerciseId)")
     }
     
 }

@@ -32,15 +32,12 @@ public class BaseClientViewControllerFactory: ClientViewControllerFactory {
     
     public func makeMainVC() -> UIViewController {
         let model = ClientWorkoutListModel(ftManager: ftManager)
-        model.additionalFilter = { workout in
-            var interval = Calendar.current.dateInterval(of: .weekOfYear, for: Date())!
-            let end = interval.end
-            interval.start = Date().addingTimeInterval(-2 * 3600) //сейчас -2 часа, чтобы прошедшие тренировки не отображались
-            interval.end = end
-            return interval.contains(workout.startDate ?? Date())
-        }
+        let bag = FTFilterBag(dateInterval: .custom(getThisWeekInterval()))
+        model.initialFilterBag = bag
+        model.currentFilterBag = bag
         
         let vc = WorkoutListViewController(model: model)
+        vc.filterButton.isHidden = true
         vc.tabBarItem = UITabBarItem(title: "Главная", image: UIImage(named: "house"), selectedImage: UIImage(named: "house.fill"))
         return vc
     }
@@ -55,5 +52,14 @@ public class BaseClientViewControllerFactory: ClientViewControllerFactory {
         let vc = UIViewController()
         vc.tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(named: "figure"), selectedImage: UIImage(named: "figure.fill"))
         return vc
+    }
+    
+    //MARK: - Other
+    private func getThisWeekInterval() -> DateInterval {
+        var interval = Calendar.current.dateInterval(of: .weekOfYear, for: Date())!
+        let end = interval.end
+        interval.start = Date().addingTimeInterval(-2 * 3600) //сейчас -2 часа, чтобы прошедшие тренировки не отображались
+        interval.end = end
+        return interval
     }
 }
