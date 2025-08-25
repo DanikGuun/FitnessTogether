@@ -66,10 +66,14 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
     }
     
     public func makeWorkoutsVC(delegate: (any WorkoutListViewControllerDelegate)?) -> UIViewController {
+        let bag = FTFilterBag(dateInterval: .allTime, workoutKind: nil)
         let model = ClientWorkoutListModel(ftManager: ftManager)
+        model.initialFilterBag = bag
+        model.currentFilterBag = bag
         
         let vc = WorkoutListViewController(model: model)
         vc.delegate = delegate
+        vc.mainTitleLabel.text = "Мои тренировки"
         vc.tabBarItem = UITabBarItem(title: "Тренировки", image: UIImage(named: "barbell"), selectedImage: UIImage(named: "barbell.fill"))
         return vc
     }

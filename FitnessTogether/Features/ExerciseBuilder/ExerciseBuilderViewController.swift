@@ -146,19 +146,6 @@ public final class ExerciseBuilderViewController: FTViewController, UITextFieldD
         })
     }
     
-    private func presentAddExericsePopover() {
-        let label = UILabel()
-        label.font = DC.Font.headline
-        label.text = "Для начала сохраните упражнение"
-        label.numberOfLines = 0
-        
-        let controller = UIViewController()
-        controller.view.addSubview(label)
-        label.snp.makeConstraints { $0.edges.equalToSuperview().inset(50) }
-        
-        presentPopover(controller, size: CGSize(width: stackView.bounds.width, height: 150), sourceView: view)
-    }
-    
     private func addExerciseButtonPressed(_ action: UIAction?) {
         let data = getExerciseData()
         model.saveExercise(data, completion: { [weak self] result in

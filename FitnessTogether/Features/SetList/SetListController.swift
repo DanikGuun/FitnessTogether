@@ -42,7 +42,7 @@ public final class SetListViewController: FTViewController {
     
     //MARK: - UI
     private func setup() {
-        setupTitle(mainTitle, text: "Ебическая бомба")
+        setupMainTitle()
         addSpacing(.fixed(40))
         setupTitle(setListTitle, text: "Список подходов")
         setupCollectionHedline()
@@ -51,6 +51,13 @@ public final class SetListViewController: FTViewController {
         addStackSubview(addSetButton)
         setupFinishButton()
         addSpacing(.fixed(100))
+    }
+    
+    private func setupMainTitle() {
+        model.getExerciseName(completion: { [weak self] name in
+            guard let self else { return }
+            setupTitle(mainTitle, text: name)
+        })
     }
     
     private func setupTitle(_ label: UILabel, text: String) {
@@ -105,20 +112,34 @@ public final class SetListViewController: FTViewController {
     
     //MARK: - Actions
     private func setDidSelect(setItem: SetCollectionItem) {
-        delegate?.setListVCRequestToOpenEditSetVC(self, setId: setItem.id, exerciseId: model.exerciseId)
+        delegate?.setListVCRequestToOpenEditSetVC(self, setId: setItem.id!, exerciseId: model.exerciseId)
     }
     
     private func addSetButtonPressed(_ action: UIAction?) {
         delegate?.setListVCRequestToOpenAddSetVC(self, exerciseId: model.exerciseId)
+        setCollection.appendItem()
     }
     
     private func finishButtonPressed(_ action: UIAction?) {
-        delegate?.setListVCDidFinish(self)
+        let items = setCollection.items
+        finishButton.setBusy(true)
+        model.saveSets(items, completion: { [weak self] result in
+            guard let self else { return }
+            switch result {
+                
+            case .success(_):
+                delegate?.setListVCDidFinish(self)
+                finishButton.setBusy(false)
+                
+            case .failure(let error):
+                print(error.localizedDescription)
+            }
+        })
     }
     
     private func updateItems() {
         model.getSets(completion: { [weak self] sets in
-            let items = sets.map { SetCollectionItem(id: $0.id, count: $0.amount, weight: $0.weight) }
+            let items = sets.map { SetCollectionItem(id: $0.id, number: $0.number, count: $0.amount, weight: $0.weight) }
             self?.setCollection.items = items
         })
     }

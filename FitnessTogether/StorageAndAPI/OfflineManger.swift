@@ -242,7 +242,9 @@ public class OfflineSetInterface: FTSetInterface {
     }
     
     public func create(data: FTSetCreate, completion: FTCompletion<FTSet>) {
-        print("no set create")
+        let set = getSetFromCreate(data)
+        sets.append(set)
+        completion?(.success(set))
     }
     
     public func get(setId: String, completion: FTCompletion<FTSet>) {
@@ -256,12 +258,21 @@ public class OfflineSetInterface: FTSetInterface {
     }
     
     public func edit(setId: String, newData data: FTSetCreate, completion: FTCompletion<FTSet>) {
-        print("no set edit")
+        let set = getSetFromCreate(data, oldId: setId)
+        if let index = sets.firstIndex(of: sets.first(where: { $0.id == setId })!) {
+            sets[index] = set
+        }
+        completion?(.success(set))
     }
     
     public func delete(setId: String, completion: FTCompletion<Void>) {
         print("no set delete")
     }
     
+    private func getSetFromCreate(_ create: FTSetCreate, oldId: String? = nil) -> FTSet {
+        let id = oldId ?? UUID().uuidString
+        let set = FTSet(id: id, number: create.number, amount: create.amount, exerciseId: create.exerciseId, exercise: nil, weight: create.weight)
+        return set
+    }
     
 }
