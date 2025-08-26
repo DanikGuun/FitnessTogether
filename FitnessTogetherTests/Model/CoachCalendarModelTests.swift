@@ -84,17 +84,18 @@ final class CoachCalendarModelTests: XCTestCase {
     
     func test_GetItems_CoachHasClientRole() {
         let client = FTUser(firstName: "Client", role: .client, id: "ClientId")
-        var coach = FTUser(firstName: "Coach", role: .coach, id: "CoachId")
+        var coach = FTUser(firstName: "Coach", lastName: "last", role: .coach, id: "CoachId")
         
-        let pair = FTClientCoachPair(clientId: client.id, client: client, coachId: coach.id, coach: coach)
-        coach.clients = [pair]
+        let pair1 = FTClientCoachPair(clientId: client.id, client: client, coachId: coach.id, coach: coach)
+        let pair2 = FTClientCoachPair(clientId: coach.id, client: coach, coachId: coach.id, coach: coach)
+        coach.clients = [pair1, pair2]
         
         var workout = FTWorkout(id: "workoutId", startDate: refDate)
         
         let workoutPaticipant1 = FTWorkoutParticipant(workoutId: workout.id, userId: client.id, role: .client)
         let workoutPaticipant2 = FTWorkoutParticipant(workoutId: workout.id, userId: coach.id, role: .client)
         
-        workout.participants = [workoutPaticipant1, workoutPaticipant2]
+        workout.participants = [workoutPaticipant2, workoutPaticipant1]
         
         ftManager._user.user = coach
         ftManager._workout.workouts = [workout]
@@ -104,7 +105,7 @@ final class CoachCalendarModelTests: XCTestCase {
             item = items.first
         })
         
-        XCTAssertNil(item)
+        XCTAssertEqual(item?.title, coach.lastName + " " + coach.firstName)
     }
     
     func test_GetItems_Correct() {

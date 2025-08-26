@@ -24,6 +24,7 @@ public enum FTFilterDateInterval: CaseIterable {
     public static var allCases: [FTFilterDateInterval] = [.week, .month, .threeMonths, .halfYear, .year, .allTime, .custom(DateInterval())]
     
     case week
+    case toEndOfWeek
     case month
     case threeMonths
     case halfYear
@@ -35,6 +36,8 @@ public enum FTFilterDateInterval: CaseIterable {
         switch self {
         case .week:
             return "Неделя"
+        case .toEndOfWeek:
+            return "Текущая неделя"
         case .month:
             return "Месяц"
         case .threeMonths:
@@ -51,11 +54,17 @@ public enum FTFilterDateInterval: CaseIterable {
     }
     
     public var dateInterval: DateInterval {
+        let calendar = Calendar.current
+        
         if case .custom(let interval) = self  {
             return interval
         }
+        else if case .toEndOfWeek = self {
+            var weekInterval = calendar.dateInterval(of: .weekOfYear, for: Date())!
+            weekInterval.start = Date().addingTimeInterval(-2 * 3600)
+            return weekInterval
+        }
 
-        let calendar = Calendar.current
         let endDate = Date()
         
         let startDate: Date = {

@@ -61,9 +61,14 @@ class MockUserInterface: FTUserInterface {
     
     func addClientToCoach(clientId: String, completion: FTCompletion<Void>) {}
     
-    func getClients(completion: FTCompletion<[FTUser]>) {
-        let clients = user?.clients.map { $0.client } ?? []
-        completion?(.success(clients))
+    public func getClients(completion: FTCompletion<[FTUser]>) {
+        let clients = user?.clients.map { $0.client }
+        completion?(.success(clients ?? []))
+    }
+    
+    public func getCoaches(completion: FTCompletion<[FTUser]>) {
+        let coaches = user?.coaches.map { $0.coach }
+        completion?(.success(coaches ?? []))
     }
     
 }
@@ -99,7 +104,7 @@ class MockWorkoutInterface: FTWorkoutInterface {
         var newId = UUID().uuidString
         if let id { newId = id }
         let formatter = ISO8601DateFormatter()
-        let part = FTWorkoutParticipant(workoutId: newId, userId: workout.userId, role: .coach)
+        let part = FTWorkoutParticipant(workoutId: newId, userId: workout.userId ?? "", role: .coach)
         let newWorkout = FTWorkout(id: newId, description: workout.description, startDate: formatter.date(from: workout.startDate), participants: [part])
         return newWorkout
     }
@@ -136,7 +141,7 @@ class MockExerciseInterface: FTExerciseInterface {
     
     private func getExerciseFromCreate(_ data: FTExerciseCreate, id: String? = nil, workoutId: String? = nil) -> FTExercise {
         var newId = UUID().uuidString
-        var workout: String = data.workoutId
+        var workout: String = data.workoutId!
         if let id { newId = id }
         if let workoutId { workout = workoutId }
         let exercise = FTExercise(id: newId, name: data.name, description: data.description,

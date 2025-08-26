@@ -85,6 +85,28 @@ final class BaseCoachCoordinatorTests: XCTestCase {
 }
 
 fileprivate class MockCoachVCFactory: CoachViewControllerFactory {
+    // хуйня поправить
+    func makeWorkoutsVC(delegate: (any FitnessTogether.WorkoutListViewControllerDelegate)?) -> UIViewController {
+        return UIViewController()
+    }
+    
+    func changeWorkoutBuilderToEditModel(_ vc: UIViewController) {
+        wasChangeWorkoutBuilderToEditCalled = true
+    }
+    
+    func changeExerciseBuilderToEditModel(_ vc: UIViewController) {
+     
+    }
+    
+    func makeFilterVC(delegate: (any FitnessTogether.WorkoutFilterViewControllerDelegate)?) -> UIViewController {
+        return UIViewController()
+    }
+    
+    func makeSetListVC(exerciseId: String, delegate: (any FitnessTogether.SetListViewControllerDelegate)) -> UIViewController {
+        return UIViewController()
+    }
+    //
+    
     var wasChangeWorkoutBuilderToEditCalled = false
     
     func makeTabBarVC(workoutListDeleage: (any WorkoutListViewControllerDelegate)?, calendarDelegate: (any FitnessTogether.CalendarViewControllerDelegate)?) -> UITabBarController {
@@ -128,10 +150,6 @@ fileprivate class MockCoachVCFactory: CoachViewControllerFactory {
 
     func makeEditExerciseVC(workoutId: String, exerciseId: String, delegate: (any FitnessTogether.ExerciseBuilderViewControllerDelegate)?) -> UIViewController {
         return vc("ExerciseEdit")
-    }
-    
-    func changeWorkoutBuilderToEditModel(_ vc: UIViewController, workoutId: String) {
-        wasChangeWorkoutBuilderToEditCalled = true
     }
     
     

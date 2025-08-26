@@ -137,6 +137,10 @@ public class OfflineUserInterface: FTUserInterface {
         completion?(.success(clients ?? []))
     }
     
+    public func getCoaches(completion: FTCompletion<[FTUser]>) {
+        let coaches = user?.coaches.map { $0.coach }
+        completion?(.success(coaches ?? []))
+    }
     
 }
 

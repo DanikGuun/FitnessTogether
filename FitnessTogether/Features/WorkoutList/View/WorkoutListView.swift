@@ -11,10 +11,10 @@ public protocol WorkoutListView: UIView {
 public struct WorkoutItem {
     var id: String?
     var image: UIImage?
-    var title: String
-    var date: Date
+    var title: String?
+    var date: Date?
  
-    init(id: String? = nil, image: UIImage? = nil, name: String = "", date: Date = Date()) {
+    init(id: String? = nil, image: UIImage? = nil, name: String = "", date: Date? = nil) {
         self.id = id
         self.image = image
         self.title = name

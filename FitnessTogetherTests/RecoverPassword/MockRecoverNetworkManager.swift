@@ -15,6 +15,7 @@ final class MockRecoverNetworkManager: PasswordRecoverNetworkManager {
     
     func sendEmailCode(_ email: String, completion: @escaping ((FitnessTogether.ValidatorResult) -> ())) {
         sendEmailCodeCalled = true
+        completion(.valid)
     }
     
     func sendEmailCodeAgain(completion: ((ValidatorResult) -> ())?) {

@@ -81,6 +81,7 @@ public class DisclosureButton: UIControl {
         viewToDisclosure.isDisclosed = isDisclosed
         superview?.layoutIfNeeded()
         scrollSuperview?.layoutIfNeeded()
+        viewController?.view.layoutIfNeeded()
         
         var height: CGFloat = 0
         if isDisclosed {
@@ -93,6 +94,7 @@ public class DisclosureButton: UIControl {
             viewToDisclosure.constraintHeight(max(height, 1))
             self?.superview?.layoutIfNeeded()
             self?.scrollSuperview?.layoutIfNeeded()
+            self?.viewController?.view.layoutIfNeeded()
         })
     }
     
@@ -103,6 +105,7 @@ public class DisclosureButton: UIControl {
             self?.alpha = hidden ? 0 : 1
             self?.layoutIfNeeded()
             self?.scrollSuperview?.layoutIfNeeded()
+            self?.viewController?.view.layoutIfNeeded()
         })
     }
     

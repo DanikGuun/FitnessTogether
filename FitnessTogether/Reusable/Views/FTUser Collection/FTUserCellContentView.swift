@@ -81,7 +81,7 @@ public class FTUserCollectionContentView: UIView, UIContentView {
     
     private func updateConfiguration() {
         let conf = getConfiguration()
-        imageView.image = conf.image
+        imageView.image = conf.image ?? UIImage(systemName: "person.circle")
         
         titleLabel.text = conf.title
         titleLabel.textColor = conf.isSelected ? .systemBackground : .label
@@ -117,7 +117,7 @@ public class FTUserCollectionContentView: UIView, UIContentView {
         )
         
         let halfH = lineFrame.height/2
-        let cornerRadius: CGFloat = 15
+        let cornerRadius: CGFloat = 17
         
         let path = UIBezierPath()
         tintColor.setStroke()

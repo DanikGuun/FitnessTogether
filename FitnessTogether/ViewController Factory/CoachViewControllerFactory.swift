@@ -41,6 +41,7 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
             makeProfileVC()
         ]
         
+        tabBarController.selectedIndex = 3
         return tabBarController
     }
     
@@ -79,7 +80,8 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
     }
     
     public func makeProfileVC() -> UIViewController {
-        let vc = UIViewController()
+        let model = BaseProfileModel(ftManager: ftManager)
+        let vc = ProfileViewController(model: model)
         vc.tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(named: "figure"), selectedImage: UIImage(named: "figure.fill"))
         return vc
     }

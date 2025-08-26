@@ -21,16 +21,19 @@ public extension UIView {
         return nil
     }
     
-    func constraintHeight(_ height: CGFloat) {
+    func constraintHeight(_ height: CGFloat?) {
+        if height == nil, let constraint = self.constraints.first(where: { $0.identifier == "heightConstraint" }) {
+            removeConstraint(constraint)
+        }
         self.translatesAutoresizingMaskIntoConstraints = false
         if let constraint = self.constraints.first(where: { $0.identifier == "heightConstraint" }) {
-            constraint.constant = height
+            constraint.constant = height!
             updateConstraints()
             superview?.layoutIfNeeded()
             setNeedsDisplay()
         }
         else {
-            let constraint = heightAnchor.constraint(equalToConstant: height)
+            let constraint = heightAnchor.constraint(equalToConstant: height!)
             constraint.identifier = "heightConstraint"
             constraint.isActive = true
         }

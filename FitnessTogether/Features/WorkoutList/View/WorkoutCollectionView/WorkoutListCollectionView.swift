@@ -7,12 +7,13 @@ public class WorkoutListCollectionView: UIView, WorkoutListView, DisclosableView
     //Disclosing
     public var fullHeight: CGFloat { contentSize.height }
     public var maximumCollapsedHeight: CGFloat = 290
-    public weak var disclosureButton: DisclosureButton?
+    public weak var disclosureButton: DisclosureButton? { didSet { updateDisclosureButton() } }
     public var isDisclosed = false
     
     public var items: [WorkoutItem] = [] { didSet { itemsHasUpdated() } }
     public var itemDidPressed: ((WorkoutItem) -> Void)?
     public var needShowTitleIfEmpty: Bool = true
+    public var emptyTitleText: String? { get { noDataLabel.text } set { noDataLabel.text = newValue } }
     public var contentSize: CGSize { getContentSize() }
     
     private var collectionView = UICollectionView(frame: .zero, collectionViewLayout: WorkoutListCollectionView.makeLayout())
@@ -84,7 +85,9 @@ public class WorkoutListCollectionView: UIView, WorkoutListView, DisclosableView
         var conf = FTUserCellConfiguration()
         conf.image = item.image
         conf.title = item.title
-        conf.subtitle = dateFormatter.string(from: item.date).capitalized(with: .actual)
+        if let date = item.date {
+            conf.subtitle = dateFormatter.string(from: date).capitalized(with: .actual)
+        }
         conf.lineWidth = 1
         return conf
     }
@@ -107,6 +110,11 @@ public class WorkoutListCollectionView: UIView, WorkoutListView, DisclosableView
         collectionView.reloadData()
         superview?.layoutIfNeeded()
         noDataLabel.isHidden = items.count > 0
+        updateDisclosureButton()
+    }
+    
+    private func updateDisclosureButton() {
+        disclosureButton?.isHidden = items.count <= 4
     }
     
     private func getContentSize() -> CGSize {
