@@ -132,13 +132,13 @@ public class OfflineUserInterface: FTUserInterface {
     
     public func addClientToCoach(clientId: String, completion: FTCompletion<Void>) { }
     
-    public func getClients(completion: FTCompletion<[FTUser]>) {
-        let clients = user?.clients.map { $0.client }
+    public func getClients(completion: FTCompletion<[FTClientData]>) {
+        let clients = user?.clients.map { $0.client.clientData }
         completion?(.success(clients ?? []))
     }
     
-    public func getCoaches(completion: FTCompletion<[FTUser]>) {
-        let coaches = user?.coaches.map { $0.coach }
+    public func getCoaches(completion: FTCompletion<[FTClientData]>) {
+        let coaches = user?.coaches.map { $0.coach.clientData }
         completion?(.success(coaches ?? []))
     }
     
@@ -181,10 +181,9 @@ public class OfflineWorkoutInterface: FTWorkoutInterface {
     private func getWorkoutFromCreate(_ workout: FTWorkoutCreate, id: String? = nil) -> FTWorkout {
         var newId = UUID().uuidString
         if let id { newId = id }
-        let formatter = ISO8601DateFormatter()
         let part = FTWorkoutParticipant(workoutId: newId, userId: workout.userId!, role: .client)
         let part2 = FTWorkoutParticipant(workoutId: newId, userId: coachId, role: .coach)
-        let newWorkout = FTWorkout(id: newId, description: workout.description, startDate: formatter.date(from: workout.startDate), duration: 5400, workoutKind: workout.workoutKind, participants: [part, part2])
+        let newWorkout = FTWorkout(id: newId, description: workout.description, startDate: workout.startDate.ftDate, duration: 5400, workoutKind: workout.workoutKind, participants: [part, part2])
         return newWorkout
     }
     

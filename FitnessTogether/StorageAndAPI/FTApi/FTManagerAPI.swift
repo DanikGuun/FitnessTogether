@@ -71,11 +71,11 @@ fileprivate final class FTUserApiAdapter: FTUserInterface {
         userAPI.addClientToCoach(clientId: clientId, completion: completion)
     }
     
-    func getClients(completion: FTCompletion<[FTUser]>) {
+    func getClients(completion: FTCompletion<[FTClientData]>) {
         userAPI.getClients(completion: completion)
     }
     
-    func getCoaches(completion: FTCompletion<[FTUser]>) {
+    func getCoaches(completion: FTCompletion<[FTClientData]>) {
         userAPI.getCoaches(completion: completion)
     }
     

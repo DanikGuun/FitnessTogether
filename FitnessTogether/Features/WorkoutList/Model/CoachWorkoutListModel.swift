@@ -29,7 +29,7 @@ public final class CoachWorkoutListModel: BaseWorkoutListModel {
         })
     }
     
-    private func getClientName(workout: FTWorkout, clients: [FTUser]) -> String {
+    private func getClientName(workout: FTWorkout, clients: [FTClientData]) -> String {
         let userId = workout.participants?.first(where: { $0.role == .client })?.userId ?? ""
         let user = clients.first(where: { $0.id == userId })
         return user?.firstName ?? ""

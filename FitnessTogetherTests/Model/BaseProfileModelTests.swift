@@ -38,23 +38,23 @@ final class BaseProfileModelTests: XCTestCase {
     func test_GetClients() {
         setupData()
         
-        var fetchedClient: FTUser?
+        var fetchedClient: FTClientData?
         model.getClients(completion: { clients in
             fetchedClient = clients.first
         })
         
-        XCTAssertEqual(fetchedClient, client)
+        XCTAssertEqual(fetchedClient, client.clientData)
     }
     
     func test_GetCoaches() {
         setupData()
         
-        var fetchedCoach: FTUser?
+        var fetchedCoach: FTClientData?
         model.getCoaches(completion: { coaches in
             fetchedCoach = coaches.first
         })
         
-        XCTAssertEqual(fetchedCoach, coach)
+        XCTAssertEqual(fetchedCoach, coach.clientData)
     }
     
 }

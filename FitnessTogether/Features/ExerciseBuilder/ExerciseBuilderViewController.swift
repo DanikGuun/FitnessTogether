@@ -13,6 +13,7 @@ public final class ExerciseBuilderViewController: FTViewController, UITextFieldD
     public var delegate: (any ExerciseBuilderViewControllerDelegate)?
     var model: (any ExerciseBuilderModel)!
     
+    public override var title: String? { get { mainTitle.text } set { mainTitle.text = newValue } }
     var complexity: Int {
         get { Int(complexitySlider.fill * 10) }
         set {
@@ -79,7 +80,6 @@ public final class ExerciseBuilderViewController: FTViewController, UITextFieldD
     private func setupMainTitle() {
         addStackSubview(mainTitle)
         mainTitle.font = DC.Font.headline
-        mainTitle.text = model.mainTitle
         mainTitle.textAlignment = .center
     }
     

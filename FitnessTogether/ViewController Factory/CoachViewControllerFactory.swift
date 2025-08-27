@@ -91,6 +91,8 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         let model = CreateWorkoutBuilderModel(ftManager: ftManager)
         let vc = WorkoutBuilderViewController(model: model)
         vc.delegate = delegate
+        vc.title = "Новая тренировка"
+        vc.nextButtonTitle = "Добавить"
         if let date = startInterval?.start { vc.dateTimeView.date = date }
         return vc
     }
@@ -100,12 +102,16 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
                 let workoutId = vc.model.workoutId else { return }
         let model = EditWorkoutBuilderModel(ftManager: ftManager, workoutId: workoutId)
         vc.model = model
+        vc.title = "Изменить тренировку"
+        vc.nextButtonTitle = "Сохранить"
     }
     
     public func makeEditWorkoutVC(workoutId: String, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController {
         let model = EditWorkoutBuilderModel(ftManager: ftManager, workoutId: workoutId)
         let vc = WorkoutBuilderViewController(model: model)
         vc.delegate = delegate
+        vc.title = "Изменить тренировку"
+        vc.nextButtonTitle = "Сохранить"
         return vc
     }
     
@@ -120,6 +126,7 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         let model = ExerciseBuilderCreateModel(ftManager: ftManager, workoutId: workoutId)
         let vc = ExerciseBuilderViewController(model: model)
         vc.delegate = delegate
+        vc.title = "Добавить упражнение"
         return vc
     }
     
@@ -129,12 +136,14 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         guard let exerciseId = oldModel!.exerciseId else { return }
         let model = ExerciseBuilderEditModel(ftManager: ftManager, workoutId: oldModel!.workoutId, exerciseId: exerciseId)
         vc.model = model
+        vc.title = "Изменить упражнение"
     }
     
     public func makeEditExerciseVC(workoutId: String, exerciseId: String, delegate: (any ExerciseBuilderViewControllerDelegate)?) -> UIViewController {
         let model = ExerciseBuilderEditModel(ftManager: ftManager, workoutId: workoutId, exerciseId: exerciseId)
         let vc = ExerciseBuilderViewController(model: model)
         vc.delegate = delegate
+        vc.title = "Изменить упражнение"
         return vc
     }
     

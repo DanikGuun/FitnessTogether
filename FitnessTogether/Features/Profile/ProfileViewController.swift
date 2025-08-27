@@ -209,7 +209,7 @@ public final class ProfileViewController: UIViewController {
         })
     }
     
-    private func ftUserToItem(_ user: FTUser) -> WorkoutItem {
+    private func ftUserToItem(_ user: FTClientData) -> WorkoutItem {
         return WorkoutItem(
             id: user.id,
             image: nil,

@@ -37,7 +37,7 @@ final class EditWorkoutBuilderModelTests: XCTestCase {
         let user = FTUser(firstName: "Test")
         ftManager._user.user?.clients = [FTClientCoachPair(clientId: "client", client: user, coachId: "coach", coach: FTUser())]
         
-        var clients: [FTUser] = []
+        var clients: [FTClientData] = []
         model.getClients(completion: { clients = $0 })
         
         XCTAssertEqual(clients.first?.firstName, user.firstName)

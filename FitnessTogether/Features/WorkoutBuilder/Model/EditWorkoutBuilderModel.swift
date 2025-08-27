@@ -29,7 +29,7 @@ public final class EditWorkoutBuilderModel: WorkoutBuilderModel {
         })
     }
     
-    public func getClients(completion: @escaping (([FTUser]) -> Void)) {
+    public func getClients(completion: @escaping (([FTClientData]) -> Void)) {
         ftManager.user.getClients(completion: { result in
             switch result {
                 

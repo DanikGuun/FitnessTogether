@@ -2,7 +2,6 @@
 import FTDomainData
 
 public protocol ExerciseBuilderModel {
-    var mainTitle: String { get }
     var exerciseId: String? { get }
     var workoutId: String { get }
     var addButtonTitle: String { get }

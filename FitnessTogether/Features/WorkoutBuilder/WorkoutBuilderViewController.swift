@@ -6,6 +6,9 @@ public final class WorkoutBuilderViewController: FTViewController {
     var model: WorkoutBuilderModel!
     var delegate: (any WorkoutBuilderViewControllerDelegate)?
     
+    public override var title: String? { get { titleLabel.text } set { titleLabel.text = newValue } }
+    public var nextButtonTitle: String? { get { nextButton.configuration?.title } set { nextButton.configuration?.title = newValue } }
+    
     var titleLabel = UILabel()
     var subtitleLabel = UILabel()
     
@@ -21,7 +24,7 @@ public final class WorkoutBuilderViewController: FTViewController {
     var clientSelecter = ClientListCollectionView()
     var clientDisclosureButton: DisclosureButton!
     
-    lazy var nextButton = UIButton.ftFilled(title: model.addButtonTitle)
+    lazy var nextButton = UIButton.ftFilled()
     
     //MARK: - Lifecycle
     public convenience init(model: WorkoutBuilderModel) {
@@ -50,7 +53,7 @@ public final class WorkoutBuilderViewController: FTViewController {
     //MARK: - UI
     
     private func setup() {
-        setupTitle(titleLabel, text: model.mainTitle)
+        setupTitle(titleLabel)
         setupSubtitle()
         addSpacing(.fixed(20))
         
@@ -76,9 +79,9 @@ public final class WorkoutBuilderViewController: FTViewController {
         setupInitialData()
     }
     
-    private func setupTitle(_ label: UILabel, text: String = "") {
+    private func setupTitle(_ label: UILabel, text: String? = nil) {
         label.font = DC.Font.headline
-        label.text = text
+        if let text { label.text = text }
         label.textAlignment = .center
         addStackSubview(label)
     }
@@ -139,7 +142,7 @@ public final class WorkoutBuilderViewController: FTViewController {
         
     }
     
-    private func getUserTitle(_ user: FTUser) -> String {
+    private func getUserTitle(_ user: FTClientData) -> String {
         let name = user.firstName
         let lastName = user.lastName.last ?? Character(" ")
         return "\(name) \(lastName)"
@@ -148,10 +151,10 @@ public final class WorkoutBuilderViewController: FTViewController {
     private func setupInitialData() {
         model.getInitialWorkoutData(completion: { [weak self] data in
             guard let self, let data else { return }
-            let formatter = ISO8601DateFormatter()
+            
             workoutKindSelecter.selectedWorkoutKind = data.workoutKind
             descriptionTextView.text = data.description
-            dateTimeView.date = formatter.date(from: data.startDate)
+            dateTimeView.date = data.startDate.ftDate
             clientSelecter.selectClient(id: data.userId)
         })
     }

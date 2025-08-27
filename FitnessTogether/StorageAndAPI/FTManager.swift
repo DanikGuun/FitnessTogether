@@ -26,8 +26,8 @@ public protocol FTUserInterface {
     func logout(completion: FTCompletion<Void>)
     func current(completion: FTCompletion<FTUser>)
     func addClientToCoach(clientId: String, completion: FTCompletion<Void>)
-    func getClients(completion: FTCompletion<[FTUser]>)
-    func getCoaches(completion: FTCompletion<[FTUser]>)
+    func getClients(completion: FTCompletion<[FTClientData]>)
+    func getCoaches(completion: FTCompletion<[FTClientData]>)
 }
 
 public protocol FTWorkoutInterface {

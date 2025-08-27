@@ -2,8 +2,8 @@
 import FTDomainData
 
 public protocol ProfileModel {
-    func getCoaches(completion: @escaping ([FTUser]) -> Void)
-    func getClients(completion: @escaping ([FTUser]) -> Void)
+    func getCoaches(completion: @escaping ([FTClientData]) -> Void)
+    func getClients(completion: @escaping ([FTClientData]) -> Void)
 }
 
 public final class BaseProfileModel: ProfileModel {
@@ -14,7 +14,7 @@ public final class BaseProfileModel: ProfileModel {
         self.ftManager = ftManager
     }
     
-    public func getCoaches(completion: @escaping ([FTUser]) -> Void) {
+    public func getCoaches(completion: @escaping ([FTClientData]) -> Void) {
         ftManager.user.getCoaches(completion: { result in
             switch result {
                 
@@ -27,7 +27,7 @@ public final class BaseProfileModel: ProfileModel {
         })
     }
     
-    public func getClients(completion: @escaping ([FTUser]) -> Void) {
+    public func getClients(completion: @escaping ([FTClientData]) -> Void) {
         ftManager.user.getClients(completion: { result in
             switch result {
                 
