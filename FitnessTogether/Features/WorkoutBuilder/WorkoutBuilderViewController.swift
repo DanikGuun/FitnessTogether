@@ -110,7 +110,7 @@ public final class WorkoutBuilderViewController: FTViewController {
     
     private func setupDateTimeView() {
         dateTimeView.dateHasChanged = { [weak self] _ in self?.checkNextButtonAvailable() }
-        addStackSubview(dateTimeView)
+        addStackSubview(dateTimeView, height: DC.Size.buttonHeight * 2.8)
     }
     
     private func setupClientSelecter() {

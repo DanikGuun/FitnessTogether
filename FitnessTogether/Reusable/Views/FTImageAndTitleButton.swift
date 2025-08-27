@@ -29,7 +29,7 @@ public class FTImageAndTitleButton: UIControl {
         tintColor = .systemGray2
     }
     
-    private func setupTitleLabel() {
+    func setupTitleLabel() {
         addSubview(titleLabel)
         titleLabel.snp.makeConstraints { maker in
             maker.leading.equalToSuperview().inset(DC.Layout.insets.left)
@@ -39,7 +39,7 @@ public class FTImageAndTitleButton: UIControl {
         titleLabel.font = DC.Font.roboto(weight: .medium, size: 16)
     }
     
-    private func setupImageView() {
+    func setupImageView() {
         addSubview(imageView)
         imageView.snp.makeConstraints { maker in
             maker.trailing.equalToSuperview().inset(DC.Layout.insets.right)
