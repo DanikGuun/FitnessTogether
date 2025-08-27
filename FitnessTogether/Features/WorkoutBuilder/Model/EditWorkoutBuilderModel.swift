@@ -50,6 +50,7 @@ public final class EditWorkoutBuilderModel: WorkoutBuilderModel {
             case .success(let workout):
                 let workoutData = FTWorkoutCreate(description: workout.description,
                                                   startDate: workout.startDate ?? Date(),
+                                                  duration: workout.duration,
                                                   userId: getClientId(workout: workout),
                                                   workoutKind: workout.workoutKind)
                 completion(workoutData)

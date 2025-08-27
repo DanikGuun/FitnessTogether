@@ -93,7 +93,7 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         vc.delegate = delegate
         vc.title = "Новая тренировка"
         vc.nextButtonTitle = "Добавить"
-        if let date = startInterval?.start { vc.dateTimeView.date = date }
+        if let interval = startInterval { vc.dateTimeView.dateInterval = interval }
         return vc
     }
     

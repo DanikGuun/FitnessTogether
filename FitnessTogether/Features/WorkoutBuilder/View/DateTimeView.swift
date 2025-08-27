@@ -3,32 +3,25 @@ import UIKit
 
 public class DateTimeView: UIStackView {
     
-    public var date: Date? {
-        get { return _date }
+    public var dateInterval: DateInterval? {
+        get { return _dateInterval }
         set {
-            _date = getRoundedDate(newValue)
-            dateButton.date = _date ?? Date()
+            _dateInterval = getRoundedDateInterval(newValue)
             updateButtonTitles()
-            dateHasChanged?(_date)
+            dateHasChanged?(_dateInterval)
         }
     }
-    private var _date: Date?
-    public var dateHasChanged: ((Date?) -> Void)?
+    private var _dateInterval: DateInterval? = DateInterval() { didSet { updateButtonTitles() } }
+    public var dateHasChanged: ((DateInterval?) -> Void)?
     
     private var dateLabel = UILabel()
-    let dateButtonTitleLabel = UILabel() //чтобы сделать кастомный тинт
-    private var dateButton = FTDateButton()
+    private var dateButton = DateCalendarButton()
     
     private var timeStartLabel = UILabel()
     private var timeStartButton = FTImageAndTitleButton()
     
     private var timeEndLabel = UILabel()
     private var timeEndButton = FTImageAndTitleButton()
-    
-    public override func tintColorDidChange() {
-        super.tintColorDidChange()
-        updateDateLabel()
-    }
     
     //MARK: - Lifecycle
     public convenience init(){
@@ -53,23 +46,11 @@ public class DateTimeView: UIStackView {
     
     private func setupDateStackView() -> UIStackView {
         setupTitleLabel(dateLabel, text: "Дата")
+        setupDateButton()
         
         let stackView = UIStackView(arrangedSubviews: [dateLabel, dateButton])
         stackView.axis = .vertical
         stackView.distribution = .fill
-        dateButton.imageView.image = nil
-        
-        dateButton.titleLabel.textAlignment = .center
-        dateButton.imageView.removeFromSuperview()
-        dateButton.titleLabel.text = ""
-        
-        dateButton.addSubview(dateButtonTitleLabel)
-        dateButtonTitleLabel.snp.makeConstraints { $0.edges.equalToSuperview() }
-        dateButtonTitleLabel.textAlignment = .center
-        dateButtonTitleLabel.numberOfLines = 2
-        
-        dateButton.titleLabel.snp.makeConstraints { $0.edges.equalToSuperview() }
-        dateButton.titleLabel.numberOfLines = 2
         
         return stackView
     }
@@ -77,6 +58,9 @@ public class DateTimeView: UIStackView {
     private func setupDayIntervalStackView() -> UIStackView {
         setupTitleLabel(timeStartLabel, text: "Время начала")
         setupTitleLabel(timeEndLabel, text: "Время конца")
+        setupTimeButton(timeStartButton, handler: timeStartButtonPressed)
+        setupTimeButton(timeEndButton, handler: timeEndButtonPressed)
+        
         let stackView = UIStackView(arrangedSubviews: [
             timeStartLabel,
             timeStartButton,
@@ -98,71 +82,90 @@ public class DateTimeView: UIStackView {
     
     
     private func setupDateButton() {
+        dateButton.addAction(UIAction(handler: dateButtonPressed), for: .touchUpInside)
         dateButton.addAction(UIAction(handler: dateSelected), for: .valueChanged)
     }
     
-    private func setupTimeButton() {
-        timeStartButton.titleLabel.text = "чч:мм"
+    private func setupTimeButton(_ button: FTImageAndTitleButton, handler: @escaping ((UIAction?) -> Void)) {
+        button.titleLabel.text = "чч:мм"
         let conf = UIImage.SymbolConfiguration(weight: .bold)
-        timeStartButton.imageView.image = UIImage(systemName: "clock", withConfiguration: conf)
-        timeStartButton.addAction(UIAction(handler: timeButtonPressed), for: .touchUpInside)
+        button.imageView.image = UIImage(systemName: "clock", withConfiguration: conf)
+        button.addAction(UIAction(handler: handler), for: .touchUpInside)
     }
     
     //MARK: - Actions
-    private func dateSelected(_ action: UIAction?) {
-        date = dateButton.date
+    private func dateButtonPressed(_ action: UIAction?) {
+        let controller = UIDatePicker.ftDatePickerController(pickerMode: .date, startDate: dateInterval?.start, handler: dateSelected)
+        viewController?.presentPopover(controller, size: CGSize(width: bounds.width, height: 200), sourceView: timeStartButton, arrowDirections: [.down, .up])
     }
     
-    private func timeButtonPressed(_ action: UIAction) {
-        let controller = UIDatePicker.ftDatePickerController(pickerMode: .time, startDate: date, handler: timeSelected)
+    private func dateSelected(_ action: UIAction?) {
+        guard let picker = action?.sender as? UIDatePicker else { return }
+        
+        let components = Calendar.current.dateComponents([.day, .month, .year], from: picker.date)
+        var currentStartDateComponents = Calendar.current.allComponents(from: dateInterval?.start ?? Date())
+        currentStartDateComponents.day = components.day
+        currentStartDateComponents.month = components.month
+        currentStartDateComponents.year = components.year
+        
+        var currentEndDateComponents = Calendar.current.allComponents(from: dateInterval?.end ?? Date())
+        currentEndDateComponents.day = components.day
+        currentEndDateComponents.month = components.month
+        currentEndDateComponents.year = components.year
+        
+        _dateInterval?.start = Calendar.current.date(from: currentStartDateComponents)!
+        _dateInterval?.end = Calendar.current.date(from: currentEndDateComponents)!
+        dateButton.date = picker.date
+    }
+    
+    private func timeStartButtonPressed(_ action: UIAction?) {
+        let controller = UIDatePicker.ftDatePickerController(pickerMode: .time, startDate: dateInterval?.start, handler: timeStartSelected)
         viewController?.presentPopover(controller, size: CGSize(width: bounds.width, height: 150), sourceView: timeStartButton, arrowDirections: [.down, .up])
     }
     
-    private func timeSelected(_ action: UIAction) {
-        guard let picker = action.sender as? UIDatePicker else { return }
+    private func timeEndButtonPressed(_ action: UIAction?) {
+        let controller = UIDatePicker.ftDatePickerController(pickerMode: .time, startDate: dateInterval?.end, handler: timeEndSelected)
+        viewController?.presentPopover(controller, size: CGSize(width: bounds.width, height: 150), sourceView: timeEndButton, arrowDirections: [.down, .up])
+    }
+    
+    private func timeStartSelected(_ action: UIAction?) {
+        guard let picker = action?.sender as? UIDatePicker else { return }
         
         let components = Calendar.current.dateComponents([.hour, .minute], from: picker.date)
-        var currentDateComponents = Calendar.current.allComponents(from: date ?? Date())
+        var currentDateComponents = Calendar.current.allComponents(from: dateInterval?.start ?? Date())
         currentDateComponents.hour = components.hour
         currentDateComponents.minute = components.minute
         currentDateComponents.second = 0
         
-        date = Calendar.current.date(from: currentDateComponents)
+        let date = Calendar.current.date(from: currentDateComponents) ?? Date()
+        let end = _dateInterval?.end ?? Date()
+        _dateInterval?.start = date
+        _dateInterval?.end = end
+    }
+    
+    private func timeEndSelected(_ action: UIAction?) {
+        guard let picker = action?.sender as? UIDatePicker else { return }
+        
+        let components = Calendar.current.dateComponents([.hour, .minute], from: picker.date)
+        var currentDateComponents = Calendar.current.allComponents(from: dateInterval?.end ?? Date())
+        currentDateComponents.hour = components.hour
+        currentDateComponents.minute = components.minute
+        currentDateComponents.second = 0
+        
+        let date = Calendar.current.date(from: currentDateComponents) ?? Date()
+        _dateInterval?.end = date
     }
     
     private func updateButtonTitles() {
-        updateDateLabel()
+        dateButton.date = dateInterval?.start ?? Date()
         let formatter = DateFormatter()
         
         formatter.dateFormat = "HH:mm"
-        timeStartButton.titleLabel.text = formatter.string(from: date ?? Date())
-    }
-    
-    private func updateDateLabel() {
-        let isOverlapsed = viewController?.isOverlapsed ?? false
-        let formatter = DateFormatter()
+        let startText = formatter.string(from: dateInterval?.start ?? Date())
+        timeStartButton.titleLabel.text = startText
         
-        formatter.dateFormat = "eeee\ndd"
-        formatter.locale = Locale.actual
-        let string = formatter.string(from: date ?? Date())
-        let attributedTitle = NSMutableAttributedString(string: string)
-        
-        let spaceLocation = string.firstIndex(of: "\n")!
-        let spaceIndex = string.distance(from: string.startIndex, to: spaceLocation)
-        let lengthToEnd = string.count - spaceIndex
-        
-        attributedTitle.setAttributes([
-            .foregroundColor: isOverlapsed ? UIColor.systemGray3 : UIColor.label,
-            .font: DC.Font.roboto(weight: .semibold, size: 16)
-        ], range: NSRange(location: 0, length: spaceIndex))
-        
-        attributedTitle.setAttributes([
-            .foregroundColor: isOverlapsed ? UIColor.systemGray3 : UIColor.systemRed,
-            .font: DC.Font.roboto(weight: .semibold, size: 60)
-        ], range: NSRange(location: spaceIndex, length: lengthToEnd))
-        
-        dateButtonTitleLabel.attributedText = attributedTitle
-        dateButton.titleLabel.text = ""
+        let endText = formatter.string(from: dateInterval?.end ?? Date())
+        timeEndButton.titleLabel.text = endText
     }
     
     //MARK: - Additional
@@ -175,10 +178,16 @@ public class DateTimeView: UIStackView {
         addArrangedSubview(stack)
     }
     
-    private func getRoundedDate(_ date: Date?) -> Date? {
-        guard let date else { return nil }
-        let restTime = date.timeIntervalSince1970.truncatingRemainder(dividingBy: 300) //300 секунд - 5 минут
-        return date.addingTimeInterval(-restTime)
+    private func getRoundedDateInterval(_ dateInterval: DateInterval?) -> DateInterval? {
+        guard let dateInterval else { return nil }
+        let startRestTime = dateInterval.start.timeIntervalSince1970.truncatingRemainder(dividingBy: 300) //300 секунд - 5 минут
+        let endRestTime = dateInterval.end.timeIntervalSince1970.truncatingRemainder(dividingBy: 300)//300 секунд - 5 минут
+        
+        let start = dateInterval.start.addingTimeInterval(-startRestTime)
+        let end = dateInterval.end.addingTimeInterval(-endRestTime)
+        let interval = DateInterval(start: start, end: end)
+        
+        return interval
     }
     
 }

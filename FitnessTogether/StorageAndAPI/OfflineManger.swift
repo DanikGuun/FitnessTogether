@@ -43,7 +43,8 @@ public class OfflineManger: FTManager {
                 let date = refDate//Calendar.current.date(byAdding: .day, value: Int.random(in: 0..<7), to: refDate)
                 let random = getRandomCurrentWeekDate(refDate)
                 let type = FTWorkoutKind.allCases.randomElement()!
-                var workout = FTWorkout(id: UUID().uuidString, startDate: random, duration: 5400, workoutKind: type)
+                let duration = Double.random(in: 3600..<3600*3)
+                var workout = FTWorkout(id: UUID().uuidString, startDate: random, duration: duration, workoutKind: type)
                 let client = clients.randomElement()!
                 let part1 = FTWorkoutParticipant(workoutId: workout.id, userId: client.id, role: .client)
                 let part2 = FTWorkoutParticipant(workoutId: workout.id, userId: coach.id, role: .coach)
@@ -183,7 +184,7 @@ public class OfflineWorkoutInterface: FTWorkoutInterface {
         if let id { newId = id }
         let part = FTWorkoutParticipant(workoutId: newId, userId: workout.userId!, role: .client)
         let part2 = FTWorkoutParticipant(workoutId: newId, userId: coachId, role: .coach)
-        let newWorkout = FTWorkout(id: newId, description: workout.description, startDate: workout.startDate.ftDate, duration: 5400, workoutKind: workout.workoutKind, participants: [part, part2])
+        let newWorkout = FTWorkout(id: newId, description: workout.description, startDate: workout.startDate.ftDate, duration: workout.duration, workoutKind: workout.workoutKind, participants: [part, part2])
         return newWorkout
     }
     

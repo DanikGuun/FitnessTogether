@@ -154,7 +154,10 @@ public final class WorkoutBuilderViewController: FTViewController {
             
             workoutKindSelecter.selectedWorkoutKind = data.workoutKind
             descriptionTextView.text = data.description
-            dateTimeView.date = data.startDate.ftDate
+            let start = data.startDate.ftDate ?? Date()
+            let end = data.startDate.ftDate?.addingTimeInterval(Double(data.duration)) ?? Date()
+            let interval = DateInterval(start: start, end: end)
+            dateTimeView.dateInterval = interval
             clientSelecter.selectClient(id: data.userId)
         })
     }
@@ -180,15 +183,16 @@ public final class WorkoutBuilderViewController: FTViewController {
     private func getWorkoutData() -> FTWorkoutCreate {
         let kind = workoutKindSelecter.selectedWorkoutKind ?? .none
         let description = descriptionTextView.text ?? ""
-        let date = dateTimeView.date!
+        let startDate = dateTimeView.dateInterval?.start ?? Date()
+        let duration = dateTimeView.dateInterval?.duration ?? 0
         let clientId = clientSelecter.selectedItem!.id
-        let data = FTWorkoutCreate(description: description, startDate: date, userId: clientId, workoutKind: kind)
+        let data = FTWorkoutCreate(description: description, startDate: startDate, duration: duration, userId: clientId, workoutKind: kind)
         return data
     }
     
     //MARK: - Validation
     private func checkNextButtonAvailable() {
-        let available = dateTimeView.date != nil && clientSelecter.selectedItem != nil
+        let available = dateTimeView.dateInterval != nil && clientSelecter.selectedItem != nil
         nextButton.isEnabled = available
     }
 
