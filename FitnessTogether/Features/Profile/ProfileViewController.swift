@@ -2,25 +2,32 @@
 import UIKit
 import FTDomainData
 
-public final class ProfileViewController: UIViewController {
+public protocol ProfileViewControllerDelegate {
+    func profileVCRequestToAddClient(_ vc: UIViewController, delegate: (any AddClientViewControllerDelegate)?)
+}
+
+public final class ProfileViewController: FTViewController, AddClientViewControllerDelegate {
     
     public var model: (any ProfileModel)!
+    var delegate: (any ProfileViewControllerDelegate)?
     
-    private let scrollView = UIScrollView()
-    private let backgroundView = UIView() //задняя верхняя
-    private let topSpacingView = UIView()
-    private let mainBackgroundView = UIView() //все заполнение
-    private let profileImage = ProfileImageView()
+    let backgroundView = UIView() //задняя верхняя
+    let topSpacingView = UIView()
+    //let mainBackgroundView = UIView() //все заполнение
+    let profileImage = ProfileImageView()
     
-    private let nameTitleLabel = UILabel()
-    private let descriptionButton = UIButton(configuration: .plain())
-    private let coachesTitleLabel = UILabel.headline("Тренеры")
-    private let coachCollection = WorkoutListCollectionView()
-    private lazy var coachDisclosureButton = DisclosureButton(viewToDisclosure: coachCollection)
+    let nameTitleLabel = UILabel()
+    let descriptionButton = UIButton(configuration: .plain())
     
-    private let clientsTitleLabel = UILabel.headline("Ученики")
-    private let clientCollection = WorkoutListCollectionView()
-    private lazy var clientDisclosureButton = DisclosureButton(viewToDisclosure: clientCollection)
+    let coachesTitleLabel = UILabel.subHeadline("Тренеры")
+    let coachCollection = WorkoutListCollectionView()
+    lazy var coachDisclosureButton = DisclosureButton(viewToDisclosure: coachCollection)
+    
+    let clientsTitleLabel = UILabel.subHeadline("Ученики")
+    let clientCollection = WorkoutListCollectionView()
+    lazy var clientDisclosureButton = DisclosureButton(viewToDisclosure: clientCollection)
+    
+    private lazy var addClientButton = UIButton.ftFilled(title: "Добавить ученика", handler: addClientButtonPressed)
     
     //MARK: - Lifecycle
     public convenience init(model: (any ProfileModel)) {
@@ -44,9 +51,9 @@ public final class ProfileViewController: UIViewController {
     //MARK: - UI
     private func setup() {
         setupBackgroundView()
-        setupScrollView()
         setupSpacingView()
-        setupMainBackgroundView()
+        setupScrollView()
+        //setupMainBackgroundView()
         setupProfileImageView()
         setupNameTitle()
         setupDescriptionButton()
@@ -54,6 +61,7 @@ public final class ProfileViewController: UIViewController {
         setupCoachesCollection()
         setupClientsLabel()
         setupClientCollection()
+        setupAddClientButton()
     }
     private func setupBackgroundView() {
         view.addSubview(backgroundView)
@@ -64,47 +72,46 @@ public final class ProfileViewController: UIViewController {
         }
     }
     
-    private func setupScrollView() {
-        view.addSubview(scrollView)
-        scrollView.snp.makeConstraints { $0.edges.equalToSuperview() }
-    }
-    
     private func setupSpacingView() {
         scrollView.addSubview(topSpacingView)
         topSpacingView.backgroundColor = .clear
         topSpacingView.snp.makeConstraints { maker in
-            
-            maker.top.leading.trailing.width.equalToSuperview().priority(.required)
-            maker.height.equalTo(140)
+            maker.leading.trailing.width.top.equalToSuperview()
+            maker.height.equalTo(80)
         }
     }
     
-    private func setupMainBackgroundView() {
-        scrollView.addSubview(mainBackgroundView)
-        mainBackgroundView.backgroundColor = .systemBackground
-        mainBackgroundView.snp.makeConstraints { maker in
-            maker.leading.trailing.bottom.width.equalToSuperview()
-            maker.top.equalTo(topSpacingView.snp.bottom)
-        }
+    private func setupScrollView() {
+        view.addSubview(scrollView)
+        scrollView.snp.remakeConstraints { $0.edges.equalTo(view.safeAreaLayoutGuide) }
+        scrollView.clipsToBounds = false
         
-        mainBackgroundView.layer.cornerRadius = 24
+        scrollView.addSubview(stackView)
+        stackView.snp.remakeConstraints { maker in
+            maker.top.equalTo(topSpacingView.snp.bottom)
+            maker.leading.trailing.bottom.equalToSuperview()
+            maker.width.equalTo(view)
+        }
+        stackView.axis = .vertical
+        stackView.distribution = .fill
+        stackView.layoutMargins = DC.Layout.insets
+        stackView.isLayoutMarginsRelativeArrangement = true
+        stackView.backgroundColor = .systemBackground
+        stackView.layer.cornerRadius = 24
+        addSpacing(.fixed(80))
     }
     
     private func setupProfileImageView() {
         view.addSubview(profileImage)
         profileImage.snp.makeConstraints { maker in
             maker.centerX.equalToSuperview()
-            maker.centerY.equalTo(mainBackgroundView.snp.top)
+            maker.centerY.equalTo(stackView.snp.top)
             maker.size.equalTo(CGSize(width: 140, height: 140))
         }
     }
     
     private func setupNameTitle() {
-        mainBackgroundView.addSubview(nameTitleLabel)
-        nameTitleLabel.snp.makeConstraints { maker in
-            maker.top.equalTo(profileImage.snp.bottom).offset(4)
-            maker.leading.trailing.equalToSuperview().inset(12)
-        }
+        addStackSubview(nameTitleLabel, spaceAfter: .fixed(0))
         
         nameTitleLabel.textAlignment = .center
         nameTitleLabel.text = "Имени чет нет"
@@ -112,11 +119,7 @@ public final class ProfileViewController: UIViewController {
     }
     
     private func setupDescriptionButton() {
-        mainBackgroundView.addSubview(descriptionButton)
-        descriptionButton.snp.makeConstraints { maker in
-            maker.top.equalTo(nameTitleLabel.snp.bottom)
-            maker.leading.trailing.equalToSuperview().inset(12)
-        }
+        addStackSubview(descriptionButton)
         
         let title = NSAttributedString(string: "Подробнее", attributes: [
             .font: DC.Font.roboto(weight: .regular, size: 12)
@@ -133,58 +136,41 @@ public final class ProfileViewController: UIViewController {
     }
     
     private func setupCoachesLabel() {
-        mainBackgroundView.addSubview(coachesTitleLabel)
-        coachesTitleLabel.snp.makeConstraints { maker in
-            maker.top.equalTo(descriptionButton.snp.bottom).offset(26)
-            maker.leading.trailing.equalToSuperview().inset(12)
-        }
+        addStackSubview(coachesTitleLabel)
     }
     
     private func setupCoachesCollection() {
-        mainBackgroundView.addSubview(coachCollection)
-        coachCollection.snp.makeConstraints { maker in
-            maker.top.equalTo(coachesTitleLabel.snp.bottom).offset(DC.Layout.spacing)
-            maker.leading.trailing.equalToSuperview().inset(DC.Layout.insets.left)
-        }
+        addStackSubview(coachCollection)
+        coachCollection.emptyTitleText = "Тренеров у вас нет("
         
-        var items: [WorkoutItem] = []
-        for i in 0 ..< 5 {
-            let item = WorkoutItem(id: nil, image: nil, name: "title \(i)", date: nil)
-            items.append(item)
-        }
-        coachCollection.items = items
-        
-        mainBackgroundView.addSubview(coachDisclosureButton)
+        addStackSubview(coachDisclosureButton)
         coachDisclosureButton.backgroundColor = .clear
-        coachDisclosureButton.snp.makeConstraints { maker in
-            maker.top.equalTo(coachCollection.snp.bottom)
-            maker.leading.trailing.equalTo(coachCollection)
-        }
     }
     
     private func setupClientsLabel() {
-        mainBackgroundView.addSubview(clientsTitleLabel)
-        clientsTitleLabel.snp.makeConstraints { maker in
-            maker.top.equalTo(coachDisclosureButton.snp.bottom).offset(DC.Layout.spacing)
-            maker.leading.trailing.equalToSuperview().inset(12)
-        }
+        addStackSubview(clientsTitleLabel)
     }
     
     private func setupClientCollection() {
-        mainBackgroundView.addSubview(clientCollection)
-        clientCollection.snp.makeConstraints { maker in
-            maker.top.equalTo(clientsTitleLabel.snp.bottom).offset(DC.Layout.spacing)
-            maker.leading.trailing.equalToSuperview().inset(DC.Layout.insets.left)
-        }
+        addStackSubview(clientCollection)
         clientCollection.emptyTitleText = "У вас нет учеников("
+        clientCollection.maximumCollapsedItemsCount = 3
         
-        mainBackgroundView.addSubview(clientDisclosureButton)
+        addStackSubview(clientDisclosureButton)
         clientDisclosureButton.backgroundColor = .clear
-        clientDisclosureButton.snp.makeConstraints { maker in
-            maker.top.equalTo(clientCollection.snp.bottom)
-            maker.leading.trailing.equalTo(clientCollection)
-            maker.bottom.equalToSuperview().priority(50)
-        }
+    }
+    
+    private func setupAddClientButton() {
+        addStackSubview(addClientButton)
+    }
+    
+    //MARK: - Actions
+    private func addClientButtonPressed(_ action: UIAction?) {
+        delegate?.profileVCRequestToAddClient(self, delegate: self)
+    }
+    
+    public func addClientVCDidFinish(_ vc: UIViewController) {
+        updateData()
     }
     
     //MARK: - Data
@@ -205,7 +191,7 @@ public final class ProfileViewController: UIViewController {
         model.getClients(completion: { [weak self] clients in
             guard let self else { return }
             let items = clients.map(ftUserToItem)
-            clientCollection.items = Array(items) + Array(items)
+            clientCollection.items = items
         })
     }
     
@@ -217,4 +203,8 @@ public final class ProfileViewController: UIViewController {
             date: nil)
     }
     
+}
+
+public extension ProfileViewControllerDelegate {
+    func profileVCRequestToAddClient(_ vc: UIViewController, delegate: (any AddClientViewControllerDelegate)?) {}
 }

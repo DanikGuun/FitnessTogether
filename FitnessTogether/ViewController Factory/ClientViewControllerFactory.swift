@@ -49,8 +49,12 @@ public class BaseClientViewControllerFactory: ClientViewControllerFactory {
     }
     
     public func makeProfileVC() -> UIViewController {
-        let vc = UIViewController()
+        let model = BaseProfileModel(ftManager: ftManager)
+        let vc = ProfileViewController(model: model)
         vc.tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(named: "figure"), selectedImage: UIImage(named: "figure.fill"))
+        vc.clientCollection.removeFromSuperview()
+        vc.clientsTitleLabel.removeFromSuperview()
+        vc.clientDisclosureButton.removeFromSuperview()
         return vc
     }
     

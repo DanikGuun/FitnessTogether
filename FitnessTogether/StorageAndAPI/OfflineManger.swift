@@ -27,8 +27,11 @@ public class OfflineManger: FTManager {
             let client = FTUser(firstName: name, role: .client, id: name)
             clients.append(client)
         }
+        _user.allUsers = clients
+        
         
         var coaches: [FTUser] = []
+        
         var workouts: [FTWorkout] = []
         for name in ["Здоровяк"] { //, "Громила", "Чертяга"
             //сам тренер
@@ -55,6 +58,8 @@ public class OfflineManger: FTManager {
                 _exercise.exercises += exersies
             }
         }
+        _user.allUsers += coaches
+        _user.allUsers.append(FTUser(firstName: "Egor", lastName: "Negor", id: "12345"))
         
         _workout.workouts = workouts
         _workout.coachId = coaches.first!.id
@@ -111,6 +116,8 @@ public class OfflineUserInterface: FTUserInterface {
     
     var user: FTUser?
     
+    var allUsers: [FTUser] = []
+    
     init() {
         
     }
@@ -131,7 +138,20 @@ public class OfflineUserInterface: FTUserInterface {
         completion?(.success(user ?? FTUser()))
     }
     
-    public func addClientToCoach(clientId: String, completion: FTCompletion<Void>) { }
+    public func addClientToCoach(clientId: String, completion: FTCompletion<Void>) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1, execute: { [weak self] in
+            guard let self else { return }
+            let id = user!.id
+            let thisUser = user!
+            if let newUser = allUsers.first(where: { $0.id == clientId }) {
+                user?.clients += [FTClientCoachPair(clientId: newUser.id, client: newUser, coachId: id, coach: thisUser)]
+                completion?(.success(()))
+            }
+            else {
+                completion?(.failure(.error(message: "No User Id")))
+            }
+        })
+    }
     
     public func getClients(completion: FTCompletion<[FTClientData]>) {
         let clients = user?.clients.map { $0.client.clientData }
@@ -141,6 +161,19 @@ public class OfflineUserInterface: FTUserInterface {
     public func getCoaches(completion: FTCompletion<[FTClientData]>) {
         let coaches = user?.coaches.map { $0.coach.clientData }
         completion?(.success(coaches ?? []))
+    }
+    
+    public func get(id: String, completion: FTCompletion<FTClientData>) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3, execute: { [weak self] in
+            guard let self else { return }
+            let user = allUsers.first { $0.id == id }
+            if let user {
+                completion?(.success(user.clientData))
+            }
+            else {
+                completion?(.failure(.error(message: "No Such User")))
+            }
+        })
     }
     
 }

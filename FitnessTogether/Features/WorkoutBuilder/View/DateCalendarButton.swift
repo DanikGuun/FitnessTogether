@@ -34,7 +34,7 @@ public final class DateCalendarButton: FTImageAndTitleButton {
         ], range: NSRange(location: 0, length: spaceIndex))
         
         attributedTitle.setAttributes([
-            .foregroundColor: isOverlapsed ? UIColor.systemGray3 : UIColor.systemRed,
+            .foregroundColor: isOverlapsed ? UIColor.systemGray3 : UIColor.ftOrange,
             .font: DC.Font.roboto(weight: .semibold, size: 60)
         ], range: NSRange(location: spaceIndex, length: lengthToEnd))
         

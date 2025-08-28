@@ -1,12 +1,12 @@
 
 import UIKit
 
-public class FTUserCollectionContentView: UIView, UIContentView {
+public class FTUserCellContentView: UIView, UIContentView {
     public var configuration: any UIContentConfiguration { didSet { updateConfiguration() } }
     
-    private let titleLabel = UILabel()
-    private let subtitleLabel = UILabel()
-    private let imageView = UIImageView()
+   let titleLabel = UILabel()
+   let subtitleLabel = UILabel()
+   let imageView = UIImageView()
     private let imageMaskLayer = CAShapeLayer()
     
     private var lineWidth: CGFloat = 1

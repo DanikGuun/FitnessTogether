@@ -13,7 +13,7 @@ public struct FTUserCellConfiguration: UIContentConfiguration {
     var attributedSubtitle: NSAttributedString? = nil
     
     public func makeContentView() -> any UIView & UIContentView {
-        return FTUserCollectionContentView(configuration: self)
+        return FTUserCellContentView(configuration: self)
     }
     
     public func updated(for state: any UIConfigurationState) -> FTUserCellConfiguration {

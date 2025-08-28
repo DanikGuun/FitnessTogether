@@ -3,11 +3,11 @@ import UIKit
 import FTDomainData
 
 public protocol CoachViewControllerFactory {
-    func makeTabBarVC(workoutListDeleage: (any WorkoutListViewControllerDelegate)?, calendarDelegate: CalendarViewControllerDelegate?) -> UITabBarController
+    func makeTabBarVC(workoutListDeleage: (any WorkoutListViewControllerDelegate)?, calendarDelegate: CalendarViewControllerDelegate?, profileDelegate: (any ProfileViewControllerDelegate)?) -> UITabBarController
     func makeMainVC(delegate: (any WorkoutListViewControllerDelegate)?) -> UIViewController
     func makeCalendarVC(delegate: CalendarViewControllerDelegate?) -> UIViewController
     func makeWorkoutsVC(delegate: (any WorkoutListViewControllerDelegate)?) -> UIViewController
-    func makeProfileVC() -> UIViewController
+    func makeProfileVC(delegate: (any ProfileViewControllerDelegate)?) -> UIViewController
     func makeAddWorkoutVC(startInterval: DateInterval?, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController
     func makeEditWorkoutVC(workoutId: String, delegate: (any WorkoutBuilderViewControllerDelegate)?) -> UIViewController
     func changeWorkoutBuilderToEditModel(_ vc: UIViewController)
@@ -17,6 +17,7 @@ public protocol CoachViewControllerFactory {
     func makeEditExerciseVC(workoutId: String, exerciseId: String, delegate: (any ExerciseBuilderViewControllerDelegate)?) -> UIViewController
     func makeFilterVC(delegate: (any WorkoutFilterViewControllerDelegate)?) -> UIViewController
     func makeSetListVC(exerciseId: String, delegate: (any SetListViewControllerDelegate)) -> UIViewController
+    func makeAddClientVC(delegate: (any AddClientViewControllerDelegate)?) -> UIViewController
 }
 
 public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
@@ -28,7 +29,7 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
     }
     
     //MARK: - Tab
-    public func makeTabBarVC(workoutListDeleage: (any WorkoutListViewControllerDelegate)?, calendarDelegate: CalendarViewControllerDelegate?) -> UITabBarController {
+    public func makeTabBarVC(workoutListDeleage: (any WorkoutListViewControllerDelegate)?, calendarDelegate: CalendarViewControllerDelegate?, profileDelegate: (any ProfileViewControllerDelegate)?) -> UITabBarController {
         let tabBarController = FTTabBarController()
         
         let tabBar = FTTabBar()
@@ -38,7 +39,7 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
             makeMainVC(delegate: workoutListDeleage),
             makeCalendarVC(delegate: calendarDelegate),
             makeWorkoutsVC(delegate: workoutListDeleage),
-            makeProfileVC()
+            makeProfileVC(delegate: profileDelegate)
         ]
         
         tabBarController.selectedIndex = 3
@@ -79,9 +80,10 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         return vc
     }
     
-    public func makeProfileVC() -> UIViewController {
+    public func makeProfileVC(delegate: (any ProfileViewControllerDelegate)?) -> UIViewController {
         let model = BaseProfileModel(ftManager: ftManager)
         let vc = ProfileViewController(model: model)
+        vc.delegate = delegate
         vc.tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(named: "figure"), selectedImage: UIImage(named: "figure.fill"))
         return vc
     }
@@ -156,6 +158,13 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
     public func makeSetListVC(exerciseId: String, delegate: (any SetListViewControllerDelegate)) -> UIViewController {
         let model = BaseSetListModel(ftManager: ftManager, exerciseId: exerciseId)
         let vc = SetListViewController(model: model)
+        vc.delegate = delegate
+        return vc
+    }
+    
+    public func makeAddClientVC(delegate: (any AddClientViewControllerDelegate)?) -> UIViewController {
+        let model = BaseAddClientModel(ftManager: ftManager)
+        let vc = AddClientViewController(model: model)
         vc.delegate = delegate
         return vc
     }

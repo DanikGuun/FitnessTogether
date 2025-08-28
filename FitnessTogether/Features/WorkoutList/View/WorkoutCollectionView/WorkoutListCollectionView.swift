@@ -3,10 +3,10 @@ import UIKit
 
 public class WorkoutListCollectionView: UIView, WorkoutListView, DisclosableView, UICollectionViewDelegate, UICollectionViewDataSource {
     
-    
     //Disclosing
     public var fullHeight: CGFloat { contentSize.height }
-    public var maximumCollapsedHeight: CGFloat = 290
+    public var maximumCollapsedHeight: CGFloat { CGFloat(maximumCollapsedItemsCount) * 75 }
+    public var maximumCollapsedItemsCount: Int = 4
     public weak var disclosureButton: DisclosureButton? { didSet { updateDisclosureButton() } }
     public var isDisclosed = false
     
@@ -114,7 +114,8 @@ public class WorkoutListCollectionView: UIView, WorkoutListView, DisclosableView
     }
     
     private func updateDisclosureButton() {
-        disclosureButton?.isHidden = items.count <= 4
+        disclosureButton?.isHidden = items.count < maximumCollapsedItemsCount
+        disclosureButton?.updateViewHeight()
     }
     
     private func getContentSize() -> CGSize {

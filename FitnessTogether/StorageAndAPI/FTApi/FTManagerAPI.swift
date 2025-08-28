@@ -79,6 +79,10 @@ fileprivate final class FTUserApiAdapter: FTUserInterface {
         userAPI.getCoaches(completion: completion)
     }
     
+    func get(id: String, completion: FTCompletion<FTClientData>) {
+        userAPI.get(id: id, completion: completion)
+    }
+    
 }
 
 fileprivate final class FTWorkoutApiAdapter: FTWorkoutInterface {

@@ -17,7 +17,7 @@ public final class BaseCoachCoordinator: NSObject, CoachCoordinator {
     init(factory: CoachViewControllerFactory) {
         self.factory = factory
         super.init()
-        self.tabBarVC = factory.makeTabBarVC(workoutListDeleage: self, calendarDelegate: self)
+        self.tabBarVC = factory.makeTabBarVC(workoutListDeleage: self, calendarDelegate: self, profileDelegate: self)
         self.navigationVC = UINavigationController(rootViewController: tabBarVC)
         tabBarVC.selectedIndex = 0
 
@@ -116,6 +116,18 @@ extension BaseCoachCoordinator: SetListViewControllerDelegate {
     
     public func setListVCRequestToOpenEditSetVC(_ vc: UIViewController, setId: String, exerciseId: String) {
         print("Edit \(setId) to id: \(exerciseId)")
+    }
+    
+}
+
+extension BaseCoachCoordinator: ProfileViewControllerDelegate {
+    
+    public func profileVCRequestToAddClient(_ vc: UIViewController, delegate: (any AddClientViewControllerDelegate)?) {
+        let vc = factory.makeAddClientVC(delegate: delegate)
+        vc.modalPresentationStyle = .formSheet
+        vc.preferredContentSize = CGSize(width: 350, height: 400)
+        vc.sheetPresentationController?.detents = [.medium()]
+        currentVC?.present(vc, animated: needAnimate)
     }
     
 }

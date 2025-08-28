@@ -8,7 +8,7 @@ public struct DC {
         public static let leadingInset: CGFloat = 25
         public static let trailingInset: CGFloat = 25
         public static let spacing: CGFloat = 14
-        public static let insets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 10)
+        public static let insets = UIEdgeInsets(top: 10, left: 20, bottom: 10, right: 20)
         public static let calendarLeftInset: CGFloat = 50
     }
     
@@ -21,7 +21,8 @@ public struct DC {
     public struct Font {
         public static let cellTitle = DC.Font.roboto(weight: .medium, size: 16)
         public static let cellSubtitle = DC.Font.roboto(weight: .semibold, size: 12)
-        public static let headline = DC.Font.roboto(weight: .medium, size: 20)
+        public static let headline = DC.Font.roboto(weight: .semibold, size: 24)
+        public static let subHeadline = DC.Font.roboto(weight: .medium, size: 20)
         public static let textField = DC.Font.roboto(weight: .medium, size: 15)
         public static let additionalInfo = DC.Font.roboto(weight: .regular, size: 12)
         
