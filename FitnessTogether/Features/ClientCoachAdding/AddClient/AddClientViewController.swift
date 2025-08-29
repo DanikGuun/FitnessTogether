@@ -20,6 +20,7 @@ public final class AddClientViewController: FTViewController {
     
     var clientId: String?
     var isUpdating = false
+    var activeGetByIdRequests: Int = 0
     var timer: Timer?
     
     public override var title: String? { get {titleLabel.text } set { titleLabel.text = newValue } }
@@ -40,6 +41,7 @@ public final class AddClientViewController: FTViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         setup()
+        userPlate.isEnabled = false
     }
     
     private func setup() {
@@ -131,8 +133,17 @@ public final class AddClientViewController: FTViewController {
         view.endEditing(true)
     }
     
+    private func startGetByIdThrottle() {
+        timer?.invalidate()
+        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { [weak self] _ in
+            self?.getUserById()
+        })
+    }
+    
     private func addButtonDidPressed(_ action: UIAction?) {
         guard let clientId else { return }
+        addButton.setBusy(true)
+        
         model.addClient(id: clientId, completion: { [weak self] result in
             guard let self else { return }
             switch result {
@@ -140,7 +151,7 @@ public final class AddClientViewController: FTViewController {
             case .success(_):
                 dismiss(animated: true)
                 delegate?.addClientVCDidFinish(self)
-                
+                addButton.setBusy(false)
                 
             case .failure(let error):
                 print(error.localizedDescription)
@@ -154,34 +165,36 @@ public final class AddClientViewController: FTViewController {
         setIncorrectIdTextField(false)
     }
     
-    private func startGetByIdThrottle() {
-        timer?.invalidate()
-        timer = Timer.scheduledTimer(withTimeInterval: 0.5, repeats: false, block: { [weak self] _ in
-            self?.getUserById()
-        })
-    }
-    
     private func getUserById() {
         let id = idTextField.text ?? ""
         addButton.isEnabled = false
+        activeGetByIdRequests += 1
+
         
         model.getUserById(id: id, completion: { [weak self] user in
             guard let self else { return }
+            activeGetByIdRequests -= 1
+            print(activeGetByIdRequests)
+
             clientId = id
             updateState(inConwistWith: user)
-            setBlinkingUserPlate(false)
         })
         
     }
     
     private func updateState(inConwistWith user: FTClientData?) {
+        guard activeGetByIdRequests <= 0 else { return }
+        setBlinkingUserPlate(false)
+        
         if let user {
             userPlate.titleLabel.text = user.firstName + " " + user.lastName
+            userPlate.isEnabled = true
             addButton.isEnabled = true
             setIncorrectIdTextField(false)
         }
         else {
-            userPlate.titleLabel.text = "Пользователя не существует"
+            userPlate.titleLabel.text = "ФИО ученика..."
+            userPlate.isEnabled = false
             addButton.isEnabled = false
             setIncorrectIdTextField(true)
         }
