@@ -27,12 +27,13 @@ public final class ProfileViewController: FTViewController, AddClientViewControl
     let clientCollection = WorkoutListCollectionView()
     lazy var clientDisclosureButton = DisclosureButton(viewToDisclosure: clientCollection)
     
-    private lazy var addClientButton = UIButton.ftFilled(title: "Добавить ученика", handler: addClientButtonPressed)
+    lazy var addClientButton = UIButton.ftFilled(title: "Добавить ученика", handler: addClientButtonPressed)
     
     //MARK: - Lifecycle
     public convenience init(model: (any ProfileModel)) {
         self.init(nibName: nil, bundle: nil)
         self.model = model
+        setup()
     }
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -44,7 +45,6 @@ public final class ProfileViewController: FTViewController, AddClientViewControl
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
         updateData()
     }
     
@@ -53,7 +53,6 @@ public final class ProfileViewController: FTViewController, AddClientViewControl
         setupBackgroundView()
         setupSpacingView()
         setupScrollView()
-        //setupMainBackgroundView()
         setupProfileImageView()
         setupNameTitle()
         setupDescriptionButton()

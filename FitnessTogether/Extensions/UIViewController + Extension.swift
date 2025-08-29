@@ -25,14 +25,14 @@ extension UIViewController: UIPopoverPresentationControllerDelegate {
         return base
     }
     
-    func presentPopover(_ controller: UIViewController, size: CGSize, sourceView: UIView?, arrowDirections: UIPopoverArrowDirection = .init()) {
+    func presentPopover(_ controller: UIViewController, size: CGSize, sourceView: UIView?, sourceRect: CGRect? = nil, arrowDirections: UIPopoverArrowDirection = .init()) {
         controller.modalPresentationStyle = .popover
         controller.preferredContentSize = size
         
         guard let presentation = controller.popoverPresentationController else { return }
         presentation.permittedArrowDirections = arrowDirections
         presentation.sourceView = sourceView
-        presentation.sourceRect = sourceView?.bounds ?? .zero
+        presentation.sourceRect = sourceRect ?? sourceView?.bounds ?? .zero
         presentation.delegate = self
         
         self.present(controller, animated: true)

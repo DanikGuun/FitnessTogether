@@ -51,7 +51,7 @@ public final class ExerciseBuilderEditModel: ExerciseBuilderModel {
     private func exerciseToCreate(_ exercise: FTExercise) -> FTExerciseCreate {
         let exerciseCreate = FTExerciseCreate(
             name: exercise.name,
-            description: exercise.name,
+            description: exercise.description,
             muscleKinds: exercise.muscleKinds,
             complexity: exercise.сomplexity,
             workoutId: exercise.workoutId

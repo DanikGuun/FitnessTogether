@@ -3,6 +3,8 @@ import UIKit
 
 public class FTButtonList: UIControl {
     
+    var isSelectingEnable = true { didSet { buttons.forEach { $0.isUserInteractionEnabled = isSelectingEnable } } }
+    
     public private(set) var buttons: [UIButton] = []
     public override var intrinsicContentSize: CGSize { CGSize(width: superview?.bounds.width ?? 0, height: 44) }
     
@@ -113,6 +115,7 @@ public class FTButtonList: UIControl {
         
         button.makeCornerAndShadow(radius: 0, shadowRadius: 2, opacity: 0.2)
         button.addAction(UIAction(handler: buttonPressed), for: .touchUpInside)
+        button.isUserInteractionEnabled = isSelectingEnable
         buttons.append(button)
     }
     

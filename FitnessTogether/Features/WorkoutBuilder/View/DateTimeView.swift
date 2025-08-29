@@ -74,7 +74,7 @@ public class DateTimeView: UIStackView {
     }
     
     private func setupTitleLabel(_ label: UILabel, text: String) {
-        label.font = DC.Font.headline
+        label.font = DC.Font.subHeadline
         label.text = text
         label.textAlignment = .left
         label.setContentHuggingPriority(.required, for: .vertical)

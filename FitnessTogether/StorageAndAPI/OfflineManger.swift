@@ -42,7 +42,7 @@ public class OfflineManger: FTManager {
             coaches.append(coach)
             
             //его тренировки
-            for _ in 0...8 {
+            for _ in 0...50 {
                 let date = refDate//Calendar.current.date(byAdding: .day, value: Int.random(in: 0..<7), to: refDate)
                 let random = getRandomCurrentWeekDate(refDate)
                 let type = FTWorkoutKind.allCases.randomElement()!

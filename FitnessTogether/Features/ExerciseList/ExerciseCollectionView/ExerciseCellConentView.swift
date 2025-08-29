@@ -26,8 +26,14 @@ public final class ExerciseCellConentView: UIView, UIContentView {
     
     private func updateConfiguration() {
         let conf = getConfiguration()
+        
         titleLabel.text = conf.title
+        titleLabel.textColor = conf.isHighlited ? .systemBackground : .label
+        
+        
         subtitleLabel.text = conf.subtitle
+        subtitleLabel.textColor = conf.isHighlited ? .systemBackground : .systemGray3
+        
         imageView.image = conf.image ?? UIImage(systemName: "trophy.circle")
         backgroundColor = conf.isHighlited ? .ftOrange : .systemBackground
     }

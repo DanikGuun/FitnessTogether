@@ -9,6 +9,11 @@ public struct FTUserCellConfiguration: UIContentConfiguration {
     var isSelected = false
     var lineWidth: CGFloat = 1
     
+    var textColor: UIColor = .label
+    var lineColor: UIColor = .ftOrange
+    var imageColor: UIColor = .systemBlue
+    
+    
     var attributedTitle: NSAttributedString? = nil
     var attributedSubtitle: NSAttributedString? = nil
     

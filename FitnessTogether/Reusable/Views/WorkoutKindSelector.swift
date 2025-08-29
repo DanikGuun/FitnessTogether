@@ -23,6 +23,7 @@ public final class WorkoutKindSelector: FTButtonList {
     }
     
     internal override func buttonPressed(_ action: UIAction) {
+        guard isSelectingEnable else { return }
         guard let button = action.sender as? UIButton else { return }
         
         let title = button.configuration?.title

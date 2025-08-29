@@ -37,7 +37,6 @@ public final class BaseAddClientModel: AddClientModel {
                 
             case .failure(let error):
                 completion?(.failure(error))
-                print(error.localizedDescription)
             }
         })
     }

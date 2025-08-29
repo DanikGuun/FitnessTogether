@@ -17,12 +17,14 @@ public final class WorkoutListViewController: FTViewController, WorkoutFilterVie
     var filterButton = UIButton(configuration: .plain())
     var workoutCollection: WorkoutListView = WorkoutListCollectionView()
     var disclosureButton: DisclosureButton!
+    let addWorkoutButton = UIButton.ftFilled(title: "Добавить тренировку")
     
     
     //MARK: - Lifecycle
     public convenience init(model: WorkoutListModel) {
         self.init(nibName: nil, bundle: nil)
         self.model = model
+        setupViews()
     }
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -34,7 +36,6 @@ public final class WorkoutListViewController: FTViewController, WorkoutFilterVie
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        setupViews()
     }
     
     public override func viewWillAppear(_ animated: Bool) {
@@ -59,9 +60,8 @@ public final class WorkoutListViewController: FTViewController, WorkoutFilterVie
     }
     
     private func setupAddWorkoutButton() {
-        let button = UIButton.ftFilled(title: "Добавить тренировку")
-        addStackSubview(button)
-        button.addAction(UIAction(handler: addWorkoutButtonPressed), for: .touchUpInside)
+        addStackSubview(addWorkoutButton)
+        addWorkoutButton.addAction(UIAction(handler: addWorkoutButtonPressed), for: .touchUpInside)
     }
     
     private func setupDisclosureButton() {

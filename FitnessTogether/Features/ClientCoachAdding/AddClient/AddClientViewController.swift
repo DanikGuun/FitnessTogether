@@ -174,7 +174,6 @@ public final class AddClientViewController: FTViewController {
         model.getUserById(id: id, completion: { [weak self] user in
             guard let self else { return }
             activeGetByIdRequests -= 1
-            print(activeGetByIdRequests)
 
             clientId = id
             updateState(inConwistWith: user)

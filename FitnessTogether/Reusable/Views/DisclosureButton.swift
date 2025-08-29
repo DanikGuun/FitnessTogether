@@ -27,6 +27,7 @@ public class DisclosureButton: UIControl {
         super.init(frame: frame)
         setup()
         constraintHeight(DC.Size.smallButtonHeight)
+        DispatchQueue.main.async { [weak self] in self?.backgroundColor = .clear }
     }
     
     required init?(coder: NSCoder) {

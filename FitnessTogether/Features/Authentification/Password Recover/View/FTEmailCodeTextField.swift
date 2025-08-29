@@ -67,9 +67,9 @@ public class FTEmailCodeTextField: UIControl, UITextFieldDelegate {
         tf.activeAppearance.outlineCornerRadius = 8
         tf.errorAppearance.outlineCornerRadius = 8
         
-        tf.standartAppearance.font = DC.Font.headline
-        tf.activeAppearance.font = DC.Font.headline
-        tf.errorAppearance.font = DC.Font.headline
+        tf.standartAppearance.font = DC.Font.subHeadline
+        tf.activeAppearance.font = DC.Font.subHeadline
+        tf.errorAppearance.font = DC.Font.subHeadline
         
         tf.standartAppearance.insets = .zero
         tf.activeAppearance.insets = .zero

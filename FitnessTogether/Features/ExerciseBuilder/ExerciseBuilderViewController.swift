@@ -38,6 +38,7 @@ public final class ExerciseBuilderViewController: FTViewController, UITextFieldD
     public convenience init(model: (any ExerciseBuilderModel)) {
         self.init(nibName: nil, bundle: nil)
         self.model = model
+        setup()
     }
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
         super.init(nibName: nibNameOrNil, bundle: nibBundleOrNil)
@@ -49,7 +50,6 @@ public final class ExerciseBuilderViewController: FTViewController, UITextFieldD
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        setup()
         setupInitialData()
     }
     
@@ -84,7 +84,7 @@ public final class ExerciseBuilderViewController: FTViewController, UITextFieldD
     }
     
     private func setupTitle(_ label: UILabel, title text: String) {
-        label.font = DC.Font.headline
+        label.font = DC.Font.subHeadline
         label.text = text
         addStackSubview(label)
     }

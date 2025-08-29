@@ -11,12 +11,7 @@ public class FTUserCellContentView: UIView, UIContentView {
     
     var isEnabled = true { didSet { setNeedsLayout(); tintColorDidChange() } }
     private var lineWidth: CGFloat = 1
-    
-    //Colors
     private let inactiveColor: UIColor = .systemGray4
-    private var textColor: UIColor = .label
-    private var imageTintColor: UIColor = .systemBlue
-    private var lineColor: UIColor = .ftOrange
     
     //MARK: - Lifecycle
     public convenience init(configuration: any UIContentConfiguration){
@@ -82,49 +77,38 @@ public class FTUserCellContentView: UIView, UIContentView {
     }
 
     public override func tintColorDidChange() {
-        saveTintColorsIfNeeded()
         tintViews()
         setNeedsDisplay()
     }
     
-    private func saveTintColorsIfNeeded() {
-        if tintColor != inactiveColor {
-            lineColor = tintColor
-        }
-        if titleLabel.textColor != inactiveColor {
-            textColor = titleLabel.textColor
-        }
-        if imageView.tintColor != inactiveColor {
-            imageTintColor = imageView.tintColor
-        }
-    }
-    
     private func tintViews() {
+        let conf = getConfiguration()
         //если перекрыт или выключен - то серая
         let shouldTintInactive = (viewController?.isOverlapsed ?? false) || !isEnabled
+        
         if shouldTintInactive {
             tintColor = inactiveColor
             titleLabel.textColor = inactiveColor
             imageView.tintColor = inactiveColor
         }
         else {
-            tintColor = lineColor
-            titleLabel.textColor = textColor
-            imageView.tintColor = imageTintColor
+            updateConfiguration()
         }
     }
     
     private func updateConfiguration() {
         let conf = getConfiguration()
         imageView.image = conf.image ?? UIImage(systemName: "person.circle")
+        imageView.tintColor = conf.imageColor
         
         titleLabel.text = conf.title
-        titleLabel.textColor = conf.isSelected ? .systemBackground : .label
+        titleLabel.textColor = conf.isSelected ? .systemBackground : conf.textColor
         
         subtitleLabel.text = conf.subtitle
         subtitleLabel.textColor = conf.isSelected ? .systemBackground : .secondaryLabel
         
         self.lineWidth = conf.lineWidth
+        tintColor = conf.lineColor
         
         if let title = conf.attributedTitle { titleLabel.attributedText = title }
         if let subtitle = conf.attributedSubtitle { titleLabel.attributedText = subtitle }

@@ -14,7 +14,7 @@ public final class ExerciseListViewController: FTViewController {
     
     var titleLabel = UILabel()
     var subtitleLabel = UILabel()
-    var selectExercisesLabel = UILabel.headline("Добавьте упражнения")
+    var selectExercisesLabel = UILabel.subHeadline("Добавьте упражнения")
     var exerciseCollectionView = ExerciseCollectionView()
     var disclosureButton: DisclosureButton!
 

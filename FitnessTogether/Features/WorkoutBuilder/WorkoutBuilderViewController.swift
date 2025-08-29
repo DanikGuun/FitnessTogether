@@ -30,6 +30,7 @@ public final class WorkoutBuilderViewController: FTViewController {
     public convenience init(model: WorkoutBuilderModel) {
         self.init(nibName: nil, bundle: nil)
         self.model = model
+        setup()
     }
     
     public override init(nibName nibNameOrNil: String?, bundle nibBundleOrNil: Bundle?) {
@@ -43,7 +44,6 @@ public final class WorkoutBuilderViewController: FTViewController {
     public override func viewDidLoad() {
         super.viewDidLoad()
         scrollView.keyboardDismissMode = .onDrag
-        setup()
     }
     
     public override func viewDidAppear(_ animated: Bool) {
@@ -57,11 +57,11 @@ public final class WorkoutBuilderViewController: FTViewController {
         setupSubtitle()
         addSpacing(.fixed(20))
         
-        setupTitle(workoutKindLabel, text: "Тип")
+        setupSectionTitle(workoutKindLabel, text: "Тип")
         setupWorkoutKindSelecter()
         addSpacing(.fixed(DC.Layout.spacing))
         
-        setupTitle(descriptionLabel, text: "Описание")
+        setupSectionTitle(descriptionLabel, text: "Описание")
         setupDescriptionTextView()
         addStackSubview(UIView.underlineView(), height: 2)
         addSpacing(.fixed(DC.Layout.spacing))
@@ -69,7 +69,7 @@ public final class WorkoutBuilderViewController: FTViewController {
         setupDateTimeView()
         addSpacing(.fixed(DC.Layout.spacing))
         
-        setupTitle(selectClientLabel, text: "Выберите ученика")
+        setupSectionTitle(selectClientLabel, text: "Выберите ученика")
         setupClientSelecter()
         setupClientDisclosureButton()
         addSpacing(.fixed(DC.Layout.spacing))
@@ -92,6 +92,13 @@ public final class WorkoutBuilderViewController: FTViewController {
         subtitleLabel.textAlignment = .center
         subtitleLabel.text = "Соберите тренировку"
         addStackSubview(subtitleLabel)
+    }
+    
+    private func setupSectionTitle(_ label: UILabel, text: String? = nil) {
+        label.font = DC.Font.subHeadline
+        if let text { label.text = text }
+        label.textAlignment = .center
+        addStackSubview(label)
     }
     
     private func setupWorkoutKindSelecter() {

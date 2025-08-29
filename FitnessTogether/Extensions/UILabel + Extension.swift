@@ -31,6 +31,16 @@ public extension UILabel {
         return label
     }
     
+    static func additionalInfo(_ title: String?) -> UILabel {
+        let label = UILabel()
+        label.font = DC.Font.additionalInfo
+        label.text = title
+        label.textColor = .systemGray3
+        label.numberOfLines = 0
+        label.textAlignment = .center
+        return label
+    }
+    
     static func secondary(_ title: String?) -> UILabel {
         let label = UILabel()
         label.font = DC.Font.roboto(weight: .regular, size: 15)
