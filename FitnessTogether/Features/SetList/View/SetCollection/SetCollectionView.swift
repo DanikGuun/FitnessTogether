@@ -69,10 +69,9 @@ public final class SetCollectionView: UICollectionView, UICollectionViewDelegate
     
     public func appendItem() {
         var oldItems = items
-        let newItem = SetCollectionItem(id: nil, number: oldItems.count, count: 0, weight: 0)
+        let newItem = SetCollectionItem(id: nil, number: oldItems.count + 1, count: 0, weight: 0)
         oldItems.append(newItem)
         items = oldItems
-        
     }
     
     private func getCurrentItems() -> [SetCollectionItem] {
@@ -83,7 +82,7 @@ public final class SetCollectionView: UICollectionView, UICollectionViewDelegate
                   let conf = cell.contentConfiguration as? SetCellConfiguration else { return [] }
             
             let id = _items[index].id
-            let item = SetCollectionItem(id: id, count: conf.count, weight: conf.weight)
+            let item = SetCollectionItem(id: id, number: index + 1, count: conf.count, weight: conf.weight)
             collectionItems.append(item)
         }
         

@@ -39,21 +39,24 @@ public final class BaseAppCoordinator: NSObject {
     }
     
     private func setUserFlowCoordinator() {
-        ftManager.user.current(completion: { [weak self] result in
+        ftManager.user.loginWithPreviousCredentials(completion: { [weak self] _ in
             guard let self else { return }
-            
-            switch result {
-            case .success(let user):
-                if user.role == .coach {
-                    setCoordinator(coachCoordinator)
-                }
-                else {
-                    setCoordinator(clientCoordinator)
-                }
-            case .failure(let error): print(error.description)
+            ftManager.user.current(completion: { [weak self] result in
+                guard let self else { return }
                 
-            }
-            
+                switch result {
+                case .success(let user):
+                    if user.role == .coach {
+                        setCoordinator(coachCoordinator)
+                    }
+                    else {
+                        setCoordinator(clientCoordinator)
+                    }
+                case .failure(let error): print(error.description)
+                    
+                }
+                
+            })
         })
     }
     
@@ -73,11 +76,15 @@ extension BaseAppCoordinator: AuthCoordinatorDelegate {
 }
 
 extension BaseAppCoordinator: CoachCoordinatorDelegate {
-    
+    public func coachCoordinatorShouldGoToLogin(_ coachCoordinator: any CoachCoordinator) {
+        setCoordinator(authCoordinator)
+    }
 }
 
 extension BaseAppCoordinator: ClientCoordinatorDelegate {
-    
+    public func clientCoordinatorShouldGoToLogin(_ coachCoordinator: any CoachCoordinator) {
+        setCoordinator(authCoordinator)
+    }
 }
 
 public struct CoordinatorBag {

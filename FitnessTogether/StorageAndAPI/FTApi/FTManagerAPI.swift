@@ -63,6 +63,10 @@ fileprivate final class FTUserApiAdapter: FTUserInterface {
         userAPI.logout(completion: completion)
     }
     
+    func deleteAccount(completion: FTCompletion<Void>) {
+        userAPI.deleteAccount(completion: completion)
+    }
+    
     func current(completion: FTCompletion<FTUser>) {
         userAPI.current(completion: completion)
     }

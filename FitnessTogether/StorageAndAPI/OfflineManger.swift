@@ -23,7 +23,7 @@ public class OfflineManger: FTManager {
     private func setupWorkoutsList() {
         let refDate = Date()
         var clients: [FTUser] = []
-        for name in ["Антон", "Егор", "Пиздюк"] {
+        for name in ["Глеб", "Данила", "Илья"] {
             let client = FTUser(firstName: name, role: .client, id: name)
             clients.append(client)
         }
@@ -42,11 +42,11 @@ public class OfflineManger: FTManager {
             coaches.append(coach)
             
             //его тренировки
-            for _ in 0...50 {
-                let date = refDate//Calendar.current.date(byAdding: .day, value: Int.random(in: 0..<7), to: refDate)
+            for _ in 0...10 {
+                let date = refDate //Calendar.current.date(byAdding: .day, value: Int.random(in: 0..<7), to: refDate)
                 let random = getRandomCurrentWeekDate(refDate)
                 let type = FTWorkoutKind.allCases.randomElement()!
-                let duration = Double.random(in: 3600..<3600*3)
+                let duration = Double([7200, 14400].randomElement()!)
                 var workout = FTWorkout(id: UUID().uuidString, startDate: random, duration: duration, workoutKind: type)
                 let client = clients.randomElement()!
                 let part1 = FTWorkoutParticipant(workoutId: workout.id, userId: client.id, role: .client)
@@ -70,8 +70,8 @@ public class OfflineManger: FTManager {
         let exercises = _exercise.exercises
         var sets: [FTSet] = []
         for exercise in exercises {
-            for _ in 0..<5 {
-                let set = FTSet(id: UUID().uuidString, amount: Int.random(in: 0...100), exerciseId: exercise.id, weight: Int.random(in: 0...100))
+            for i in 0..<5 {
+                let set = FTSet(id: UUID().uuidString, number: i + 1, amount: Int.random(in: 0...100), exerciseId: exercise.id, weight: Int.random(in: 0...100))
                 sets.append(set)
             }
         }
@@ -82,7 +82,7 @@ public class OfflineManger: FTManager {
         let daysToAdd = Int.random(in: 0..<7).cgf
         let startWeek = Calendar.current.dateInterval(of: .weekOfYear, for: refDate)!.start
         var day = startWeek.addingTimeInterval(daysToAdd * 24.cgf * 3600.cgf)
-        let startTime = CGFloat.random(in: 0..<21*3600)
+        let startTime = Double(Int.random(in: 4..<21) * 3600)
         day = day.addingTimeInterval(startTime)
         return day
     }
@@ -90,7 +90,25 @@ public class OfflineManger: FTManager {
     private func getRandomExercises(for workout: FTWorkout) -> [FTExercise] {
         var exercieses: [FTExercise] = []
         for _ in 0..<10 {
-            let ex = FTExercise(id: UUID().uuidString, name: "WorkoutName", description: "Some description", muscleKinds: [.abs, .biceps], сomplexity: Int.random(in: 0...10), statistics: [], workoutId: workout.id, workout: workout)
+            let name = ["Огненная сила", "Стальной пресс", "Кардио-взрыв", "Гибкость в движении", "Рывок силы", "Тишина в теле", "Молниеносные ноги", "Огонь верха", "Дробилка кора", "Предел выносливости", "Поток подвижности", "Полное включение", "Быстрая потливка", "Баланс и жар", "Динамический рывок"].randomElement()!
+            let descr = [
+                "Интенсивная силовая тренировка для всего тела.",
+                "Фокус на мышцах кора — пресс, спина, стабильность.",
+                "Динамичная кардио-сессия для сжигания калорий.",
+                "Плавные упражнения на растяжку и гибкость.",
+                "Энергичный комплекс для наращивания силы.",
+                "Медитативная тренировка с элементами йоги и дыхания.",
+                "Быстрые и мощные упражнения для ног и ягодиц.",
+                "Работа с верхней частью тела: руки, плечи, спина.",
+                "Жёсткая прокачка мышц кора за короткое время.",
+                "Тренировка на выносливость: бег, прыжки, повторы.",
+                "Улучшение подвижности суставов и осанки.",
+                "Интенсивная full-body тренировка без перерывов.",
+                "Короткая, но эффективная кардио-сессия.",
+                "Сочетание баланса, координации и жиросжигания.",
+                "Энергичный поток упражнений для динамики и тонуса."
+            ].randomElement()!
+            let ex = FTExercise(id: UUID().uuidString, name: name, description: descr, muscleKinds: [FTMuscleKind.allCases.randomElement()!], сomplexity: Int.random(in: 0...10), statistics: [], workoutId: workout.id, workout: workout)
             exercieses.append(ex)
         }
         return exercieses
@@ -112,7 +130,7 @@ public class OfflineEmailInterface: FTEmailInterface {
 
 public class OfflineUserInterface: FTUserInterface {
     public var token: String?
-    public var hasPreviousLogin: Bool = false
+    public var hasPreviousLogin: Bool = true
     
     var user: FTUser?
     
@@ -133,6 +151,11 @@ public class OfflineUserInterface: FTUserInterface {
     public func loginWithPreviousCredentials(completion: FTCompletion<Data>) { }
     
     public func logout(completion: FTCompletion<Void>) { }
+    
+    public func deleteAccount(completion: FTCompletion<Void>) {
+        print("Offline Manager AccountDelete")
+        completion?(.success(Void()))
+    }
     
     public func current(completion: FTCompletion<FTUser>) {
         completion?(.success(user ?? FTUser()))

@@ -24,6 +24,7 @@ public protocol FTUserInterface {
     func login(data: FTUserLogin, completion: FTCompletion<Data>)
     func loginWithPreviousCredentials(completion: FTCompletion<Data>)
     func logout(completion: FTCompletion<Void>)
+    func deleteAccount(completion: FTCompletion<Void>)
     func current(completion: FTCompletion<FTUser>)
     func addClientToCoach(clientId: String, completion: FTCompletion<Void>)
     func getClients(completion: FTCompletion<[FTClientData]>)

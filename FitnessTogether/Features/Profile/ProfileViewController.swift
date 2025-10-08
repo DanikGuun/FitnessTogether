@@ -4,6 +4,7 @@ import FTDomainData
 
 public protocol ProfileViewControllerDelegate {
     func profileVCRequestToAddClient(_ vc: UIViewController, delegate: (any AddClientViewControllerDelegate)?)
+    func profileVCDeleteAccount(_ vc: UIViewController)
 }
 
 public final class ProfileViewController: FTViewController, AddClientViewControllerDelegate {
@@ -28,6 +29,8 @@ public final class ProfileViewController: FTViewController, AddClientViewControl
     lazy var clientDisclosureButton = DisclosureButton(viewToDisclosure: clientCollection)
     
     lazy var addClientButton = UIButton.ftFilled(title: "Добавить ученика", handler: addClientButtonPressed)
+    
+    lazy var deleteAccountButton = UIButton.ftPlain(title: "Удалить аккаунт", handler: deleteAccountButtonPressed)
     
     //MARK: - Lifecycle
     public convenience init(model: (any ProfileModel)) {
@@ -61,6 +64,7 @@ public final class ProfileViewController: FTViewController, AddClientViewControl
         setupClientsLabel()
         setupClientCollection()
         setupAddClientButton()
+        setupDeleteAccountButton()
     }
     private func setupBackgroundView() {
         view.addSubview(backgroundView)
@@ -163,6 +167,10 @@ public final class ProfileViewController: FTViewController, AddClientViewControl
         addStackSubview(addClientButton)
     }
     
+    private func setupDeleteAccountButton() {
+        addStackSubview(deleteAccountButton)
+    }
+    
     //MARK: - Actions
     private func addClientButtonPressed(_ action: UIAction?) {
         delegate?.profileVCRequestToAddClient(self, delegate: self)
@@ -170,6 +178,31 @@ public final class ProfileViewController: FTViewController, AddClientViewControl
     
     public func addClientVCDidFinish(_ vc: UIViewController) {
         updateData()
+    }
+    
+    private func deleteAccountButtonPressed(_ action: UIAction?) {
+        showDeleteAccountAlert()
+    }
+    
+    private func showDeleteAccountAlert() {
+        let controller = FTViewController()
+        
+        controller.addSpacing(.fixed(30))
+        controller.addStackSubview(UILabel.headline("Вы уверены, что хотите удалить аккаунт?"))
+        controller.addStackSubview(UILabel.additionalInfo("После удаления аккаунта все его данные будут удалены"))
+        controller.addStackSubview(UIButton.ftFilled(title: "Нет", handler: { _ in controller.dismiss(animated: true)}))
+        controller.addStackSubview(UIButton.ftPlain(title: "Да", handler: deleteAccountApproved))
+        
+        self.presentPopover(controller, size: CGSize(width: view.frame.width, height: 280), sourceView: view)
+    }
+    
+    private func deleteAccountApproved(_ action: UIAction) {
+        model.deleteAccount(completion: { [weak self] isSuccess in
+            guard let self else { return }
+            if isSuccess {
+                delegate?.profileVCDeleteAccount(self)
+            }
+        })
     }
     
     //MARK: - Data
@@ -206,4 +239,5 @@ public final class ProfileViewController: FTViewController, AddClientViewControl
 
 public extension ProfileViewControllerDelegate {
     func profileVCRequestToAddClient(_ vc: UIViewController, delegate: (any AddClientViewControllerDelegate)?) {}
+    func profileVCDeleteAccount(_ vc: UIViewController) {}
 }

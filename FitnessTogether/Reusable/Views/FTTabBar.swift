@@ -19,18 +19,34 @@ open class FTTabBar: UITabBar {
     private func setupAppearance() {
         let appearance = UITabBarAppearance()
         appearance.backgroundColor = .ftOrange
-        appearance.stackedLayoutAppearance.normal.iconColor = .systemBackground
-        appearance.stackedLayoutAppearance.selected.iconColor = .systemBackground
-        appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
-            .foregroundColor: UIColor.systemBackground,
-            .font: DC.Font.roboto(weight: .semibold, size: 12)
-        ]
-        appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
-            .foregroundColor: UIColor.systemBackground,
-            .font: DC.Font.roboto(weight: .semibold, size: 12)
-        ]
+        
+        if #available(iOS 26, *) {
+            appearance.stackedLayoutAppearance.normal.iconColor = .systemGray3
+            appearance.stackedLayoutAppearance.selected.iconColor = .ftOrange
+            appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
+                .foregroundColor: UIColor.systemGray3,
+                .font: DC.Font.roboto(weight: .semibold, size: 12)
+            ]
+            appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
+                .foregroundColor: UIColor.ftOrange,
+                .font: DC.Font.roboto(weight: .semibold, size: 12)
+            ]
+        }
+        else {
+            appearance.stackedLayoutAppearance.normal.iconColor = .systemBackground
+            appearance.stackedLayoutAppearance.selected.iconColor = .systemBackground
+            appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
+                .foregroundColor: UIColor.systemBackground,
+                .font: DC.Font.roboto(weight: .semibold, size: 12)
+            ]
+            appearance.stackedLayoutAppearance.selected.titleTextAttributes = [
+                .foregroundColor: UIColor.systemBackground,
+                .font: DC.Font.roboto(weight: .semibold, size: 12)
+            ]
+        }
         self.standardAppearance = appearance
         self.scrollEdgeAppearance = appearance
+        self.tintColor = .ftOrange
     }
     
 }

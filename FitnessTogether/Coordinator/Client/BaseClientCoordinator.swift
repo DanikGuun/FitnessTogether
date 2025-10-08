@@ -70,6 +70,10 @@ extension BaseClientCoordinator: ProfileViewControllerDelegate {
         currentVC?.present(vc, animated: needAnimate)
     }
     
+    public func profileVCDeleteAccount(_ vc: UIViewController) {
+        delegate?.clientCoordinatorShouldGoToLogin(self)
+    }
+    
 }
 
 extension BaseClientCoordinator: SetListViewControllerDelegate {

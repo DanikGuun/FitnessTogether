@@ -15,7 +15,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         
-        let ftManager = OfflineManger()
+        let ftManager = OfflineManger()//FTManagerAPI()
+        
+        
         
         let factory = BaseCoachViewControllerFactory(ftManager: ftManager)
         let c2 = BaseCoachCoordinator(factory: factory)
@@ -26,7 +28,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let f3 = BaseClientViewControllerFactory(ftManager: ftManager)
         let c3 = BaseClientCoordinator(factory: f3)
         
-        window?.rootViewController = c3.mainVC
+        
+        let bag = CoordinatorBag(authCoordinator: c1, coachCoordinator: c2, clientCoordinator: c3)
+        //let appCoordinator = BaseAppCoordinator(window: window!, coordinators: bag, ftManager: ftManager)
+        
+        
+        window?.rootViewController = c2.mainVC
         window?.makeKeyAndVisible()
     }
 

@@ -6,9 +6,9 @@ public protocol CoachCoordinator: Coordinator {
 }
 
 public protocol CoachCoordinatorDelegate {
-    
+    func coachCoordinatorShouldGoToLogin(_ coachCoordinator: CoachCoordinator)
 }
 
 public extension CoachCoordinatorDelegate {
-    
+    func coachCoordinatorShouldGoToLogin(_ coachCoordinator: CoachCoordinator) {}
 }

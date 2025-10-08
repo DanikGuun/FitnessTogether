@@ -130,4 +130,8 @@ extension BaseCoachCoordinator: ProfileViewControllerDelegate {
         currentVC?.present(vc, animated: needAnimate)
     }
     
+    public func profileVCDeleteAccount(_ vc: UIViewController) {
+        delegate?.coachCoordinatorShouldGoToLogin(self)
+    }
+    
 }
