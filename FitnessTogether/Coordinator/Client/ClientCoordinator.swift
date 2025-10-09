@@ -4,9 +4,9 @@ public protocol ClientCoordinator: Coordinator {
 }
 
 public protocol ClientCoordinatorDelegate {
-    func clientCoordinatorShouldGoToLogin(_ coachCoordinator: ClientCoordinator)
+    func clientCoordinatorShouldGoToLogin(_ clientCoordinator: ClientCoordinator)
 }
 
 public extension ClientCoordinatorDelegate {
-    func clientCoordinatorShouldGoToLogin(_ coachCoordinator: ClientCoordinator) {}
+    func clientCoordinatorShouldGoToLogin(_ clientCoordinator: ClientCoordinator) {}
 }

@@ -39,6 +39,7 @@ public final class PasswordRecoverViewController: FTStateViewController {
                 
             case .failure(let error):
                 print(error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }

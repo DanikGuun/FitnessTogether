@@ -25,6 +25,7 @@ public final class BaseCoachCoordinator: NSObject, CoachCoordinator {
 
     public func show(_ viewController: UIViewController) {
         navigationVC.pushViewController(viewController, animated: needAnimate)
+        ErrorPresenter.activeController = viewController
     }
     
 }

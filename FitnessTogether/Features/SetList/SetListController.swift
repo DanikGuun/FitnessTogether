@@ -133,6 +133,7 @@ public final class SetListViewController: FTViewController {
                 
             case .failure(let error):
                 print(error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }

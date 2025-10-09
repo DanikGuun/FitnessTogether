@@ -9,7 +9,7 @@ public final class BaseEmailConfirmer: EmailConfirmer {
     
     public func confirmEmail(_ email: String, completion: @escaping ((ValidatorResult) -> ())) {
         DispatchQueue.global(qos: .userInitiated).async {
-            sleep(3)
+            sleep(1)
             DispatchQueue.main.sync {
                 if email != "bondardanya10@gmail.com" {
                     completion(.valid)

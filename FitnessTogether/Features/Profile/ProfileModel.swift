@@ -25,6 +25,7 @@ public final class BaseProfileModel: ProfileModel {
                 
             case .failure(let error):
                 print(error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }
@@ -38,6 +39,7 @@ public final class BaseProfileModel: ProfileModel {
                 
             case .failure(let error):
                 print(error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }
@@ -52,6 +54,7 @@ public final class BaseProfileModel: ProfileModel {
             case .failure(let error):
                 completion(false)
                 print(error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }

@@ -66,13 +66,15 @@ public final class BaseRegistrationModel: RegistrationModel {
                     case .success(_):
                         completion(.success(Void()))
                     case .failure(let error):
+                        ErrorPresenter.present(error)
                         completion(.failure(error))
                     }
                 })
                 
             case .failure(let error):
-                print(error.description)
+                print(error.localizedDescription)
                 completion(.failure(error))
+                ErrorPresenter.present(error)
             }
         })
     }

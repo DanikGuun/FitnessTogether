@@ -58,6 +58,7 @@ public final class BasePasswordRecoverModel: PasswordRecoverModel {
                 
             case .failure(let error):
                 print(error.localizedDescription)
+                ErrorPresenter.present(error)
                 completion?(.failure(error))
             }
         })

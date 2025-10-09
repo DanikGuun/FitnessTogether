@@ -21,6 +21,7 @@ public final class BaseAuthCoordinator: NSObject, AuthCoordinator {
     
     
     public func show(_ viewController: UIViewController) {
+        ErrorPresenter.activeController = viewController
         navigationVC.pushViewController(viewController, animated: needAnimate)
     }
 

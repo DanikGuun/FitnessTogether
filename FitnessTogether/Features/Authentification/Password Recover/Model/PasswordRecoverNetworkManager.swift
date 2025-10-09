@@ -38,6 +38,7 @@ public class PasswordRecoverNetwork: PasswordRecoverNetworkManager {
             case .failure(let error):
                 print(error.localizedDescription)
                 completion(.invalid(message: "Ошибка отправки кода, повторите попытку позже"))
+                ErrorPresenter.present(error)
             }
         })
     }
@@ -55,6 +56,7 @@ public class PasswordRecoverNetwork: PasswordRecoverNetworkManager {
             case .failure(let error):
                 print(error.localizedDescription)
                 completion?(.invalid(message: "Ошибка отправки кода, повторите попытку позже"))
+                ErrorPresenter.present(error)
             }
         })
     }

@@ -15,7 +15,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         guard let scene = (scene as? UIWindowScene) else { return }
         window = UIWindow(windowScene: scene)
         
-        let ftManager = OfflineManger()//FTManagerAPI()
+        let ftManager = FTManagerAPI()
         
         
         
@@ -30,11 +30,11 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         
         
         let bag = CoordinatorBag(authCoordinator: c1, coachCoordinator: c2, clientCoordinator: c3)
-        //let appCoordinator = BaseAppCoordinator(window: window!, coordinators: bag, ftManager: ftManager)
+        let appCoordinator = BaseAppCoordinator(window: window!, coordinators: bag, ftManager: ftManager)
         
         
-        window?.rootViewController = c2.mainVC
-        window?.makeKeyAndVisible()
+//        window?.rootViewController = c2.mainVC
+//        window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {

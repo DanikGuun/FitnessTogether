@@ -23,6 +23,7 @@ public final class CreateWorkoutBuilderModel: WorkoutBuilderModel {
             case .failure(let error):
                 print("CreateWorkoutBuilderModel " + error.localizedDescription)
                 completion?(.failure(error))
+                ErrorPresenter.present(error)
             }
         })
     }
@@ -36,29 +37,11 @@ public final class CreateWorkoutBuilderModel: WorkoutBuilderModel {
                 
             case .failure(let error):
                 print(error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }
     
     public func getInitialWorkoutData(completion: ((FTWorkoutCreate?) -> Void)) { }
-    
-//    private func addExercises(resultCompletion: ((Result<Void, Error>) -> (Void))?, completion: @escaping (Result<Void, Error>) -> (Void)) {
-//        var count = 0
-//        for exercise in exercises {
-//            ftmanager.exercise.create(data: exercise, completion: { result in
-//                switch result {
-//                case .success(let exercise):
-//                    count += 1
-//                    if count == self.exercises.count {
-//                        completion(.success(()))
-//                    }
-//                    
-//                case .failure(let error):
-//                    resultCompletion?(.failure(error))
-//                    return
-//                }
-//            })
-//        }
-//    }
     
 }

@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		563AF4102E9809C600A9F1AD /* SideAlert in Frameworks */ = {isa = PBXBuildFile; productRef = 563AF40F2E9809C600A9F1AD /* SideAlert */; };
 		567F1C662E2A680B00A32C0A /* SnapKit in Frameworks */ = {isa = PBXBuildFile; productRef = 567F1C652E2A680B00A32C0A /* SnapKit */; };
 		568E98852E28F0FF007144F7 /* FTApi in Frameworks */ = {isa = PBXBuildFile; productRef = 568E98842E28F0FF007144F7 /* FTApi */; };
 		568E988A2E28F226007144F7 /* FTApi in Frameworks */ = {isa = PBXBuildFile; productRef = 568E98892E28F226007144F7 /* FTApi */; };
@@ -150,6 +151,7 @@
 			files = (
 				568E988D2E28F23A007144F7 /* FTApi in Frameworks */,
 				567F1C662E2A680B00A32C0A /* SnapKit in Frameworks */,
+				563AF4102E9809C600A9F1AD /* SideAlert in Frameworks */,
 				568E98852E28F0FF007144F7 /* FTApi in Frameworks */,
 				56D856D02E2E80E7007AB0F3 /* OutlineTextField in Frameworks */,
 				568E988A2E28F226007144F7 /* FTApi in Frameworks */,
@@ -219,6 +221,7 @@
 				568E988C2E28F23A007144F7 /* FTApi */,
 				567F1C652E2A680B00A32C0A /* SnapKit */,
 				56D856CF2E2E80E7007AB0F3 /* OutlineTextField */,
+				563AF40F2E9809C600A9F1AD /* SideAlert */,
 			);
 			productName = FitnessTogether;
 			productReference = 568E984C2E28E9C8007144F7 /* FitnessTogether.app */;
@@ -301,6 +304,7 @@
 				568E988B2E28F23A007144F7 /* XCLocalSwiftPackageReference "../FTApi" */,
 				567F1C642E2A680B00A32C0A /* XCRemoteSwiftPackageReference "SnapKit" */,
 				56D856CE2E2E80E7007AB0F3 /* XCLocalSwiftPackageReference "../Библиотеки/OutlineTextField" */,
+				563AF40E2E9809C600A9F1AD /* XCRemoteSwiftPackageReference "SideAlert" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 568E984D2E28E9C8007144F7 /* Products */;
@@ -683,6 +687,14 @@
 /* End XCLocalSwiftPackageReference section */
 
 /* Begin XCRemoteSwiftPackageReference section */
+		563AF40E2E9809C600A9F1AD /* XCRemoteSwiftPackageReference "SideAlert" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/DanikGuun/SideAlert";
+			requirement = {
+				branch = main;
+				kind = branch;
+			};
+		};
 		567F1C642E2A680B00A32C0A /* XCRemoteSwiftPackageReference "SnapKit" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/SnapKit/SnapKit.git";
@@ -694,6 +706,11 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
+		563AF40F2E9809C600A9F1AD /* SideAlert */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 563AF40E2E9809C600A9F1AD /* XCRemoteSwiftPackageReference "SideAlert" */;
+			productName = SideAlert;
+		};
 		567F1C652E2A680B00A32C0A /* SnapKit */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 567F1C642E2A680B00A32C0A /* XCRemoteSwiftPackageReference "SnapKit" */;

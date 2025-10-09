@@ -51,8 +51,9 @@ public class BaseWorkoutListModel: WorkoutListModel {
                 })
                 
             case .failure(let error):
-                print(error.description)
+                print(error.localizedDescription)
                 completion([])
+                ErrorPresenter.present(error)
             }
         })
     }
@@ -67,8 +68,9 @@ public class BaseWorkoutListModel: WorkoutListModel {
                 completion(filteredWorkouts)
                 
             case .failure(let error):
-                print(error.description)
+                print(error.localizedDescription)
                 completion([])
+                ErrorPresenter.present(error)
             }
             
         })

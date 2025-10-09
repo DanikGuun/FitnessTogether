@@ -25,6 +25,7 @@ public final class EditWorkoutBuilderModel: WorkoutBuilderModel {
             case .failure(let error):
                 print(error.localizedDescription)
                 completion?(.failure(error))
+                ErrorPresenter.present(error)
             }
         })
     }
@@ -38,6 +39,7 @@ public final class EditWorkoutBuilderModel: WorkoutBuilderModel {
                 
             case .failure(let error):
                 print(error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }
@@ -57,6 +59,7 @@ public final class EditWorkoutBuilderModel: WorkoutBuilderModel {
                 
             case .failure(let error):
                 print("EditWorkoutBuilderModel " + error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }

@@ -142,6 +142,7 @@ public final class ExerciseBuilderViewController: FTViewController, UITextFieldD
                 delegate?.exerciseBuilderVCGoToSetList(self, exerciseId: model.exerciseId!)
             case .failure(let error):
                 print(error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }
@@ -157,6 +158,7 @@ public final class ExerciseBuilderViewController: FTViewController, UITextFieldD
                 
             case .failure(let error):
                 print(error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }

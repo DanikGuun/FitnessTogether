@@ -20,6 +20,7 @@ public final class BaseAddToCoachModel: AddToCoachModel {
                 
             case .failure(let error):
                 print(error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }

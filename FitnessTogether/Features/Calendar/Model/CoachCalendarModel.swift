@@ -30,6 +30,7 @@ public final class CoachCalendarModel: CalendarModel {
             case .failure(let error):
                 print(error.localizedDescription)
                 completion([])
+                ErrorPresenter.present(error)
             }
         })
     }
@@ -46,6 +47,7 @@ public final class CoachCalendarModel: CalendarModel {
             case .failure(let error):
                 print(error.localizedDescription)
                 completion([])
+                ErrorPresenter.present(error)
             }
         })
     }
@@ -79,6 +81,7 @@ public final class CoachCalendarModel: CalendarModel {
             case .failure(let error):
                 print(error.localizedDescription)
                 completion([])
+                ErrorPresenter.present(error)
             }
         })
     }

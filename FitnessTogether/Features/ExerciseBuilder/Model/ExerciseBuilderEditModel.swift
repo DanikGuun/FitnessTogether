@@ -28,6 +28,7 @@ public final class ExerciseBuilderEditModel: ExerciseBuilderModel {
             case .failure(let error):
                 print("ExerciseBuilderCreateModel " + error.localizedDescription)
                 completion?(.failure(error))
+                ErrorPresenter.present(error)
                 
             }
         })
@@ -44,6 +45,7 @@ public final class ExerciseBuilderEditModel: ExerciseBuilderModel {
                 
             case .failure(let error):
                 print(error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }

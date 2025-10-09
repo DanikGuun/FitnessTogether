@@ -182,6 +182,7 @@ public final class WorkoutBuilderViewController: FTViewController {
                 
             case .failure(let error):
                 print(error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
         

@@ -28,6 +28,7 @@ public final class BaseWorkoutViewerModel: WorkoutViewerModel {
                 
             case .failure(let error):
                 print("BaseWorkoutViewerModel" + error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }
@@ -43,6 +44,7 @@ public final class BaseWorkoutViewerModel: WorkoutViewerModel {
                 
             case .failure(let error):
                 print(error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }
@@ -62,6 +64,7 @@ public final class BaseWorkoutViewerModel: WorkoutViewerModel {
                 
             case .failure(let error):
                 print(error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }
@@ -75,6 +78,7 @@ public final class BaseWorkoutViewerModel: WorkoutViewerModel {
                 
             case .failure(let error):
                 print(error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }

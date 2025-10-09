@@ -25,6 +25,7 @@ public final class BaseExerciseModel: ExerciseListModel {
                 
             case .failure(let error):
                 print("BaseExerciseModel " + error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }

@@ -28,6 +28,7 @@ public final class BaseSetListModel: SetListModel {
             case .failure(let error):
                 print(error.localizedDescription)
                 completion([])
+                ErrorPresenter.present(error)
             }
         })
         
@@ -56,6 +57,7 @@ public final class BaseSetListModel: SetListModel {
                 
             case .failure(let error):
                 print(error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }
@@ -85,6 +87,7 @@ public final class BaseSetListModel: SetListModel {
             case .failure(let error):
                 print(error.localizedDescription)
                 completion("Нет Названия")
+                ErrorPresenter.present(error)
             }
         })
     }

@@ -12,7 +12,7 @@ public final class BaseLoginModel: LoginModel {
     let userInterface: FTUserInterface
     
     public var motivationTitles: [String] = [
-        "всякие титлы"
+        "Стань лучшей версией себя!"
     ]
     
     init(userInterface: FTUserInterface) {

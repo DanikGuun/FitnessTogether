@@ -24,6 +24,7 @@ public final class BaseAddClientModel: AddClientModel {
             case .failure(let error):
                 print(error.localizedDescription)
                 completion(nil)
+                ErrorPresenter.present(error)
             }
         })
     }
@@ -37,6 +38,7 @@ public final class BaseAddClientModel: AddClientModel {
                 
             case .failure(let error):
                 completion?(.failure(error))
+                ErrorPresenter.present(error)
             }
         })
     }

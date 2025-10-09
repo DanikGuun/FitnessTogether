@@ -20,6 +20,7 @@ public final class BaseClientCoordinator: NSObject, ClientCoordinator {
     }
 
     public func show(_ viewController: UIViewController) {
+        ErrorPresenter.activeController = viewController
         navigationVC.pushViewController(viewController, animated: needAnimate)
     }
     

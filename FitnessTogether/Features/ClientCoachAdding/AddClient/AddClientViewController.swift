@@ -155,6 +155,7 @@ public final class AddClientViewController: FTViewController {
                 
             case .failure(let error):
                 print(error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }

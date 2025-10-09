@@ -51,6 +51,7 @@ public final class RegistrationViewController: FTStateViewController {
                 delegate?.registrationViewControllerDidFinish(self)
             case .failure(let error):
                 print(error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }

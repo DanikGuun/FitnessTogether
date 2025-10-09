@@ -25,6 +25,7 @@ public final class CoachWorkoutListModel: BaseWorkoutListModel {
                 completion(items)
                 
             case .failure(let error): completion([]); print(error.localizedDescription)
+                ErrorPresenter.present(error)
             }
         })
     }

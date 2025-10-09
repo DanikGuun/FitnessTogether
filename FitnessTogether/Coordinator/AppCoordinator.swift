@@ -52,7 +52,7 @@ public final class BaseAppCoordinator: NSObject {
                     else {
                         setCoordinator(clientCoordinator)
                     }
-                case .failure(let error): print(error.description)
+                case .failure(let error): print(error.localizedDescription)
                     
                 }
                 
@@ -82,7 +82,7 @@ extension BaseAppCoordinator: CoachCoordinatorDelegate {
 }
 
 extension BaseAppCoordinator: ClientCoordinatorDelegate {
-    public func clientCoordinatorShouldGoToLogin(_ coachCoordinator: any CoachCoordinator) {
+    public func clientCoordinatorShouldGoToLogin(_ clientCoordinator: any ClientCoordinator) {
         setCoordinator(authCoordinator)
     }
 }
