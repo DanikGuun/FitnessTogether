@@ -6,7 +6,6 @@ public protocol RegistrationModel {
     var stepCount: Int { get }
     var currentState: Int { get }
     func goNext() -> (any RegistrationState)?
-    func getPreviousState() -> (any RegistrationState)?
     func popPreviousState() -> (any RegistrationState)?
     func register(user: FTUserRegister, completion: @escaping (Result<Void, Error>) -> ())
 }
@@ -36,9 +35,6 @@ public final class BaseRegistrationModel: RegistrationModel {
         return state
     }
     
-    public func getPreviousState() -> (any RegistrationState)? {
-        return states[safe: currentState]
-    }
     
     public func popPreviousState() -> (any RegistrationState)? {
         states[currentState].setEmptyState()
