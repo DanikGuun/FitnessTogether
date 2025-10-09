@@ -20,7 +20,7 @@ public final class BaseCoachCoordinator: NSObject, CoachCoordinator {
         self.tabBarVC = factory.makeTabBarVC(workoutListDeleage: self, calendarDelegate: self, profileDelegate: self)
         self.navigationVC = UINavigationController(rootViewController: tabBarVC)
         tabBarVC.selectedIndex = 0
-
+        ErrorPresenter.activeController = tabBarVC
     }
 
     public func show(_ viewController: UIViewController) {

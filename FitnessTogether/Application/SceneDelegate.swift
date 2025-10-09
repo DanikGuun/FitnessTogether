@@ -5,6 +5,7 @@
 //  Created by Данила Бондарь on 17.07.2025.
 //
 
+import FTDomainData
 import UIKit
 
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
@@ -32,6 +33,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let bag = CoordinatorBag(authCoordinator: c1, coachCoordinator: c2, clientCoordinator: c3)
         let appCoordinator = BaseAppCoordinator(window: window!, coordinators: bag, ftManager: ftManager)
         
+        Timer.scheduledTimer(withTimeInterval: 5, repeats: false, block: { _ in
+            ErrorPresenter.present(FTError.networkError(code: 500, message: "User/Register"))
+        })
         
 //        window?.rootViewController = c2.mainVC
 //        window?.makeKeyAndVisible()

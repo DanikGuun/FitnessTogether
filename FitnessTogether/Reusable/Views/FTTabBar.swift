@@ -21,10 +21,10 @@ open class FTTabBar: UITabBar {
         appearance.backgroundColor = .ftOrange
         
         if #available(iOS 26, *) {
-            appearance.stackedLayoutAppearance.normal.iconColor = .systemGray3
+            appearance.stackedLayoutAppearance.normal.iconColor = .label
             appearance.stackedLayoutAppearance.selected.iconColor = .ftOrange
             appearance.stackedLayoutAppearance.normal.titleTextAttributes = [
-                .foregroundColor: UIColor.systemGray3,
+                .foregroundColor: UIColor.label,
                 .font: DC.Font.roboto(weight: .semibold, size: 12)
             ]
             appearance.stackedLayoutAppearance.selected.titleTextAttributes = [

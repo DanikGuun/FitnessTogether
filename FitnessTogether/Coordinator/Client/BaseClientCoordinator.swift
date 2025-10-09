@@ -17,6 +17,7 @@ public final class BaseClientCoordinator: NSObject, ClientCoordinator {
         super.init()
         self.tabBarVC = factory.makeTabBarVC(workoutListDeleage: self, profileDelegate: self)
         self.navigationVC = UINavigationController(rootViewController: tabBarVC)
+        ErrorPresenter.activeController = tabBarVC
     }
 
     public func show(_ viewController: UIViewController) {

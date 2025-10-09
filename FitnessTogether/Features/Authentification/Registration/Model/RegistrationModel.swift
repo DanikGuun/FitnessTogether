@@ -7,6 +7,7 @@ public protocol RegistrationModel {
     var currentState: Int { get }
     func goNext() -> (any RegistrationState)?
     func getPreviousState() -> (any RegistrationState)?
+    func popPreviousState() -> (any RegistrationState)?
     func register(user: FTUserRegister, completion: @escaping (Result<Void, Error>) -> ())
 }
 
@@ -36,8 +37,12 @@ public final class BaseRegistrationModel: RegistrationModel {
     }
     
     public func getPreviousState() -> (any RegistrationState)? {
-        currentState -= 1
         return states[safe: currentState]
+    }
+    
+    public func popPreviousState() -> (any RegistrationState)? {
+        currentState -= 1
+        return states.popLast()
     }
     
     private func getCorrectNextState() -> (any RegistrationState)? {

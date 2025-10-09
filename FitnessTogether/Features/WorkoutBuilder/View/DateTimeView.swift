@@ -140,7 +140,7 @@ public class DateTimeView: UIStackView {
         let date = Calendar.current.date(from: currentDateComponents) ?? Date()
         let end = _dateInterval?.end ?? Date()
         _dateInterval?.start = date
-        _dateInterval?.end = end
+        _dateInterval?.end = max(date, end) //чтобы конец дня не перескочил перед началом
     }
     
     private func timeEndSelected(_ action: UIAction?) {
@@ -153,6 +153,8 @@ public class DateTimeView: UIStackView {
         currentDateComponents.second = 0
         
         let date = Calendar.current.date(from: currentDateComponents) ?? Date()
+        let start = _dateInterval?.start ?? Date()
+        _dateInterval?.start = min(date, start) //чтобы начало не было после конца
         _dateInterval?.end = date
     }
     

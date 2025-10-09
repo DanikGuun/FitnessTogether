@@ -70,7 +70,8 @@ public final class RegistrationViewController: FTStateViewController {
     }
     
     public override func getPreviousState() -> (any ScreenState)? {
-        return model.getPreviousState()
+        currentStep -= 1
+        return model.popPreviousState()
     }
     
     public override func isFirstState() -> Bool {
