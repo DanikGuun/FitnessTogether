@@ -29,6 +29,14 @@ public final class RegistrationCredintalsState: BaseRegistrationState, UITextFie
         userRegister.password = passwordTextField.text?.trimmingCharacters(in: .whitespacesAndNewlines) ?? ""
     }
     
+    public override func setEmptyState() {
+        emailTextField.text = nil
+        passwordTextField.text = nil
+        confirmPasswordTextField.text = nil
+        passwordVisibleButton.isSelected = false
+        passwordVisibleButtonPressed(nil)
+    }
+    
     //MARK: - UI
     internal override func setupViews() {
         super.setupViews()
@@ -86,12 +94,13 @@ public final class RegistrationCredintalsState: BaseRegistrationState, UITextFie
         button.configuration = conf
     }
     
-    private func passwordVisibleButtonPressed(_ action: UIAction) {
-        guard let button = action.sender as? UIButton else { return }
-        passwordVisibleButton.isSelected = button.isSelected
-        confirmPasswordVisibleButton.isSelected = button.isSelected
-        passwordTextField.isSecureTextEntry = button.isSelected
-        confirmPasswordTextField.isSecureTextEntry = button.isSelected
+    private func passwordVisibleButtonPressed(_ action: UIAction?) {
+        let button = action?.sender as? UIButton
+        let isSelected = button?.isSelected ?? false
+        passwordVisibleButton.isSelected = isSelected
+        confirmPasswordVisibleButton.isSelected = isSelected
+        passwordTextField.isSecureTextEntry = isSelected
+        confirmPasswordTextField.isSecureTextEntry = isSelected
     }
     
     //MARK: - TextField Delegate

@@ -25,6 +25,13 @@ public final class RegistrationCoachInfoState: BaseRegistrationState, UITextFiel
         return [titleLabel, workExperienceTextField, organizationTextField, descriptionTextView, nextButton, infoLabel]
     }
     
+    public override func setEmptyState() {
+        workExperienceTextField.text = nil
+        organizationTextField.text = nil
+        descriptionTextView.text = nil
+    }
+    
+    //
     override func setupViews() {
         super.setupViews()
         setupTextField(workExperienceTextField)

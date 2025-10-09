@@ -23,6 +23,12 @@ public final class RegistrationPersonalDataState: BaseRegistrationState, UITextF
         userRegister.lastName = lastNameTextField.text ?? ""
     }
     
+    public override func setEmptyState() {
+        firstNameTextField.text = nil
+        lastNameTextField.text = nil
+        datePickerView.date = nil
+    }
+    
     //MARK: - UI
     internal override func setupViews() {
         setupTitleLabel()

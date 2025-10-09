@@ -5,6 +5,7 @@ import FTDomainData
 public protocol RegistrationState: ScreenState, AnyObject {
     func apply(userRegister: inout FTUserRegister)
     func setNextButtonBusy(_ available: Bool)
+    func setEmptyState()
 }
 
 open class BaseRegistrationState: BaseFieldsScreenState, RegistrationState {
@@ -34,5 +35,7 @@ open class BaseRegistrationState: BaseFieldsScreenState, RegistrationState {
         infoLabel.numberOfLines = 0
         infoLabel.font = DC.Font.additionalInfo
     }
+    
+    public func setEmptyState() {}
 
 }

@@ -23,6 +23,12 @@ public final class RegistrationRoleState: BaseRegistrationState {
         else if clientButton.isSelected { userRegister.role = .client }
     }
     
+    public override func setEmptyState() {
+        coachButton.isSelected = false
+        clientButton.isSelected = false
+        setNextButtonBusy(false)
+    }
+    
     //MARK: - UI
     override func setupViews() {
         super.setupViews()

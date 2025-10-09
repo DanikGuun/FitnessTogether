@@ -58,7 +58,6 @@ public final class RegistrationViewController: FTStateViewController {
     
     public override func goToNextState() {
         super.goToNextState()
-        
         currentStep += 1
         updateStepLabel()
     }
@@ -71,6 +70,7 @@ public final class RegistrationViewController: FTStateViewController {
     
     public override func getPreviousState() -> (any ScreenState)? {
         currentStep -= 1
+        updateStepLabel()
         return model.popPreviousState()
     }
     

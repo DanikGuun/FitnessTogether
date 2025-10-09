@@ -41,8 +41,9 @@ public final class BaseRegistrationModel: RegistrationModel {
     }
     
     public func popPreviousState() -> (any RegistrationState)? {
+        states[currentState].setEmptyState()
         currentState -= 1
-        return states.popLast()
+        return states[currentState]
     }
     
     private func getCorrectNextState() -> (any RegistrationState)? {

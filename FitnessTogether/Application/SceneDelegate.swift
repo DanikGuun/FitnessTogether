@@ -30,15 +30,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         let c3 = BaseClientCoordinator(factory: f3)
         
         
-        let bag = CoordinatorBag(authCoordinator: c1, coachCoordinator: c2, clientCoordinator: c3)
-        let appCoordinator = BaseAppCoordinator(window: window!, coordinators: bag, ftManager: ftManager)
+        //let bag = CoordinatorBag(authCoordinator: c1, coachCoordinator: c2, clientCoordinator: c3)
+        //let appCoordinator = BaseAppCoordinator(window: window!, coordinators: bag, ftManager: ftManager)
         
-        Timer.scheduledTimer(withTimeInterval: 5, repeats: false, block: { _ in
-            ErrorPresenter.present(FTError.networkError(code: 500, message: "User/Register"))
-        })
+//        Timer.scheduledTimer(withTimeInterval: 5, repeats: false, block: { _ in
+//            ErrorPresenter.present(FTError.networkError(code: 500, message: "User/Register"))
+//        })
         
-//        window?.rootViewController = c2.mainVC
-//        window?.makeKeyAndVisible()
+        window?.rootViewController = c1.mainVC
+        window?.makeKeyAndVisible()
     }
 
     func sceneDidDisconnect(_ scene: UIScene) {
