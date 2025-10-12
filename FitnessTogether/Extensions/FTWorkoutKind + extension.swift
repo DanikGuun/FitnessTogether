@@ -6,10 +6,12 @@ public extension FTWorkoutKind {
     
     var color: UIColor {
         switch self {
-        case .none: .black
+        case .none: .systemTeal
         case .force: .systemRed
         case .cardio: .systemBlue
         case .functional: .systemGreen
+        case .split: .systemYellow
+        case .fullbody: .systemCyan
         }
     }
     

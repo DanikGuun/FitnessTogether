@@ -33,7 +33,7 @@ public final class CalendarViewController: UIViewController, UICollectionViewDel
     
     public override func viewWillAppear(_ animated: Bool) {
         super.viewWillAppear(animated)
-        collection.reloadItems(at: collection.indexPathsForVisibleItems)
+        collection.reloadData()
         
     }
     

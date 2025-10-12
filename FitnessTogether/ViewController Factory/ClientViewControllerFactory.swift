@@ -32,7 +32,7 @@ public class BaseClientViewControllerFactory: ClientViewControllerFactory {
         
         tabBarController.viewControllers = [
             makeMainVC(delegate: workoutListDeleage),
-            makerWorkoutsVC(delegate: workoutListDeleage),
+            makeWorkoutsVC(delegate: workoutListDeleage),
             makeProfileVC(delegate: profileDelegate)
         ]
         
@@ -55,7 +55,7 @@ public class BaseClientViewControllerFactory: ClientViewControllerFactory {
         return vc
     }
     
-    public func makerWorkoutsVC(delegate: (any WorkoutListViewControllerDelegate)?) -> UIViewController {
+    public func makeWorkoutsVC(delegate: (any WorkoutListViewControllerDelegate)?) -> UIViewController {
         let bag = FTFilterBag(dateInterval: .allTime, workoutKind: nil)
         let model = ClientWorkoutListModel(ftManager: ftManager)
         model.initialFilterBag = bag
@@ -64,6 +64,7 @@ public class BaseClientViewControllerFactory: ClientViewControllerFactory {
         let vc = WorkoutListViewController(model: model)
         vc.delegate = delegate
         vc.mainTitleLabel.text = "Мои тренировки"
+        vc.addWorkoutButton.removeFromSuperview()
         vc.tabBarItem = UITabBarItem(title: "Тренировки", image: UIImage(named: "barbell"), selectedImage: UIImage(named: "barbell.fill"))
         return vc
     }

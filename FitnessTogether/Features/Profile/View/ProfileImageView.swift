@@ -32,12 +32,14 @@ public final class ProfileImageView: UIView {
     
     public override func layoutSubviews() {
         super.layoutSubviews()
-        layer.cornerRadius = bounds.width / 2
-        imageView.layer.cornerRadius = imageView.bounds.width / 2
-        onlineIndicatorBackgroundView.layer.cornerRadius = onlineIndicatorBackgroundView.bounds.width / 2
-        onlineIndicatorView.layer.cornerRadius = onlineIndicatorView.bounds.width / 2
-        
-        updateOnlineIndicator()
+        DispatchQueue.main.async { [weak self] in
+            guard let self else { return }
+            layer.cornerRadius = bounds.width / 2
+            imageView.layer.cornerRadius = imageView.bounds.width / 2
+            onlineIndicatorBackgroundView.layer.cornerRadius = onlineIndicatorBackgroundView.bounds.width / 2
+            onlineIndicatorView.layer.cornerRadius = onlineIndicatorView.bounds.width / 2
+            updateOnlineIndicator()
+        }
     }
     
     private func updateOnlineIndicator() {

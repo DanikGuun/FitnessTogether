@@ -37,7 +37,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 //            ErrorPresenter.present(FTError.networkError(code: 500, message: "User/Register"))
 //        })
         
-//        window?.rootViewController = c1.mainVC
+//        window?.rootViewController = c2.mainVC
 //        window?.makeKeyAndVisible()
     }
 
