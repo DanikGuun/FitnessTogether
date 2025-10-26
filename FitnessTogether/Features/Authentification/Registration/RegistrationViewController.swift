@@ -44,8 +44,10 @@ public final class RegistrationViewController: FTStateViewController {
     }
     
     public override func viewStatesDidEnd() {
+        view.isUserInteractionEnabled = false
         model.register(user: model.userRegister, completion: { [weak self] result in
             guard let self else { return }
+            view.isUserInteractionEnabled = true
             switch result {
             case .success(_):
                 delegate?.registrationViewControllerDidFinish(self)

@@ -185,19 +185,22 @@ public final class AddClientViewController: FTViewController {
     private func updateState(inConwistWith user: FTClientData?) {
         guard activeGetByIdRequests <= 0 else { return }
         setBlinkingUserPlate(false)
+        var conf = (userPlate.configuration as! FTUserCellConfiguration)
         
         if let user {
-            userPlate.titleLabel.text = user.firstName + " " + user.lastName
+            conf.title = user.firstName + " " + user.lastName
             userPlate.isEnabled = true
             addButton.isEnabled = true
             setIncorrectIdTextField(false)
         }
         else {
-            userPlate.titleLabel.text = "ФИО ученика..."
+            conf.title = "ФИО ученика..."
             userPlate.isEnabled = false
             addButton.isEnabled = false
             setIncorrectIdTextField(true)
         }
+        
+        userPlate.configuration = conf
     }
     
     private func setIncorrectIdTextField(_ isIncorrect: Bool) {

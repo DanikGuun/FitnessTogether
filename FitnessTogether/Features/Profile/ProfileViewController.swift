@@ -211,8 +211,16 @@ public final class ProfileViewController: FTViewController, AddClientViewControl
     
     //MARK: - Data
     func updateData() {
+        updateName()
         updateCoaches()
         updateClients()
+    }
+    
+    func updateName() {
+        model.getName(completion: { [weak self] name in
+            guard let self else { return }
+            self.nameTitleLabel.text = name ?? "Не указано"
+        })
     }
     
     func updateCoaches() {

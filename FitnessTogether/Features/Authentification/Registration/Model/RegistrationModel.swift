@@ -57,12 +57,12 @@ public final class BaseRegistrationModel: RegistrationModel {
         let state = states[safe: currentState]
         state?.setNextButtonBusy(true)
         userInterface.register(data: user, completion: { [weak self] result in
+            state?.setNextButtonBusy(false)
             switch result {
             case .success(_):
                 
                 let loginData = FTUserLogin(email: user.email, password: user.password)
                 self?.userInterface.login(data: loginData, completion: { _ in
-                    state?.setNextButtonBusy(false)
                     
                     switch result {
                     case .success(_):
