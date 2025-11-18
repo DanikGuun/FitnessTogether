@@ -1,6 +1,6 @@
 //
-//  FTPinCodeView.swift
-//  FTPinCodeView
+//  FTPinCodeTextField.swift
+//  FTPinCodeTextField
 //
 //  Created by Sergey Vasilich on 18.11.2025.
 //
