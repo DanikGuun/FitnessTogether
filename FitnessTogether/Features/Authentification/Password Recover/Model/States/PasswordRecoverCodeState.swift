@@ -4,7 +4,7 @@ import FTDomainData
 
 public final class PasswordRecoverCodeState: BaseFieldsScreenState, PasswordRecoverState {
     
-    let codeTextField = FTEmailCodeTextField()
+    let codeTextField = FTPinCodeTextField()
     let sendCodeAgainButton: UIButton = UIButton.secondaryButton(title: "Отправить код повторно")
     
     let recoverManager: PasswordRecoverNetworkManager
@@ -14,12 +14,13 @@ public final class PasswordRecoverCodeState: BaseFieldsScreenState, PasswordReco
     }
     
     public func apply(to resetData: inout FTResetPassword) {
-        resetData.resetCode = codeTextField.text
+        resetData.resetCode = codeTextField.code
     }
     
     public override func viewsToPresent() -> [UIView] {
         DispatchQueue.main.async { [weak self] in
             self?.showCodeSendAlert()
+            self?.codeTextField.becomeFirstResponder()
         }
         return [titleLabel, UIView.spaceView(24), codeTextField, nextButton, sendCodeAgainButton]
     }
@@ -38,11 +39,19 @@ public final class PasswordRecoverCodeState: BaseFieldsScreenState, PasswordReco
     
     private func setupCodeTextField() {
         codeTextField.constraintHeight(DC.Size.buttonHeight)
-        codeTextField.addAction(UIAction(handler: codeTextFieldHasUpdated), for: .editingChanged)
-        codeTextField.addAction(UIAction(handler: nextButtonPressed(_:)), for: .editingDidEnd)
+
+        codeTextField.onCodeChanged = { [weak self] code in
+            self?.codeTextFieldHasUpdated(nil)
+        }
+        
+        codeTextField.onCodeFinich = { [weak self] code in
+            self?.nextButtonPressed(nil)
+        }
+        
+        codeTextField.translatesAutoresizingMaskIntoConstraints = false
     }
     
-    private func codeTextFieldHasUpdated(_ action: UIAction) {
+    private func codeTextFieldHasUpdated(_ action: UIAction?) {
         checkNextButtonAvailable(nil)
     }
     
@@ -52,6 +61,7 @@ public final class PasswordRecoverCodeState: BaseFieldsScreenState, PasswordReco
     
     func sendCodeAgainButtonPressed(_ action: UIAction?) {
         setNextButtonBusy(true)
+        codeTextField.clear()
         recoverManager.sendEmailCodeAgain(completion: { [weak self] _ in
             self?.setNextButtonBusy(false)
         })
@@ -60,23 +70,28 @@ public final class PasswordRecoverCodeState: BaseFieldsScreenState, PasswordReco
     override func isAllFieldsFilled() -> Bool {
         return codeTextField.isAllCharactersFilled
     }
+
     
     //MARK: - Other
     
     override func nextButtonPressed(_ action: UIAction?) {
         setNextButtonBusy(true)
-        recoverManager.isEmailCodeValid(codeTextField.text, completion: { [weak self] result in
+        recoverManager.isEmailCodeValid(codeTextField.code, completion: { [weak self] result in
             guard let self else { return }
             
             setNextButtonBusy(false)
             let isValid = updateFieldInConsistWithValidate(codeTextField, result: result)
-            codeTextField.isError = !isValid
+            if isValid {
+                codeTextField.resetError()
+            }
+            else {
+                codeTextField.showError()
+            }
             if isValid {
                 delegate?.screenStateGoNext(self)
             }
         })
     }
-    
     
     private func showCodeSendAlert() {
         guard let parent = nextButton.viewController?.view else { return }
