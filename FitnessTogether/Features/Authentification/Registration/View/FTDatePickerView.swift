@@ -90,7 +90,7 @@ public final class FTDatePickerView: UIButton, UIPopoverPresentationControllerDe
             maker.width.equalTo(self.calendarImageView.snp.height).multipliedBy(0.9)
         }
         
-        calendarImageView.image = UIImage(named: "calendar")
+        calendarImageView.image = UIImage(named: "Calendar")
     }
     
     private func configurationUpdateHandler(_ button: UIButton) {

@@ -50,7 +50,7 @@ public class BaseClientViewControllerFactory: ClientViewControllerFactory {
         vc.filterButton.isHidden = true
         vc.addWorkoutButton.removeFromSuperview()
         vc.stackView.removeArrangedSubview(vc.addWorkoutButton)
-        vc.tabBarItem = UITabBarItem(title: "Главная", image: UIImage(named: "house"), selectedImage: UIImage(named: "house.fill"))
+        vc.tabBarItem = UITabBarItem(title: "Главная", image: UIImage(named: "House"), selectedImage: UIImage(named: "House.fill"))
         
         return vc
     }
@@ -65,7 +65,7 @@ public class BaseClientViewControllerFactory: ClientViewControllerFactory {
         vc.delegate = delegate
         vc.mainTitleLabel.text = "Мои тренировки"
         vc.addWorkoutButton.removeFromSuperview()
-        vc.tabBarItem = UITabBarItem(title: "Тренировки", image: UIImage(named: "barbell"), selectedImage: UIImage(named: "barbell.fill"))
+        vc.tabBarItem = UITabBarItem(title: "Тренировки", image: UIImage(named: "Barbell"), selectedImage: UIImage(named: "Barbell.fill"))
         return vc
     }
     
@@ -73,7 +73,7 @@ public class BaseClientViewControllerFactory: ClientViewControllerFactory {
         let model = BaseProfileModel(ftManager: ftManager)
         let vc = ProfileViewController(model: model)
         vc.delegate = delegate
-        vc.tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(named: "figure"), selectedImage: UIImage(named: "figure.fill"))
+        vc.tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(named: "Figure"), selectedImage: UIImage(named: "Figure.fill"))
         
         let attributes = AttributeContainer([
             .font: DC.Font.roboto(weight: .semibold, size: 16)

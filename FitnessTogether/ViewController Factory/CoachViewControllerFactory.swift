@@ -55,7 +55,7 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         let vc = WorkoutListViewController(model: model)
         vc.filterButton.isHidden = true
         vc.delegate = delegate
-        vc.tabBarItem = UITabBarItem(title: "Главная", image: UIImage(named: "house"), selectedImage: UIImage(named: "house.fill"))
+        vc.tabBarItem = UITabBarItem(title: "Главная", image: UIImage(named: "House"), selectedImage: UIImage(named: "House.fill"))
         return vc
     }
     
@@ -63,7 +63,7 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         let model = CoachCalendarModel(ftManager: ftManager)
         let vc = CalendarViewController(model: model)
         vc.delegate = delegate
-        vc.tabBarItem = UITabBarItem(title: "Календарь", image: UIImage(named: "calendar"), selectedImage: UIImage(named: "calendar.fill"))
+        vc.tabBarItem = UITabBarItem(title: "Календарь", image: UIImage(named: "Calendar"), selectedImage: UIImage(named: "Calendar.fill"))
         return vc
     }
     
@@ -76,7 +76,7 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         let vc = WorkoutListViewController(model: model)
         vc.delegate = delegate
         vc.mainTitleLabel.text = "Мои тренировки"
-        vc.tabBarItem = UITabBarItem(title: "Тренировки", image: UIImage(named: "barbell"), selectedImage: UIImage(named: "barbell.fill"))
+        vc.tabBarItem = UITabBarItem(title: "Тренировки", image: UIImage(named: "Barbell"), selectedImage: UIImage(named: "Barbell.fill"))
         return vc
     }
     
@@ -84,7 +84,7 @@ public final class BaseCoachViewControllerFactory: CoachViewControllerFactory {
         let model = BaseProfileModel(ftManager: ftManager)
         let vc = ProfileViewController(model: model)
         vc.delegate = delegate
-        vc.tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(named: "figure"), selectedImage: UIImage(named: "figure.fill"))
+        vc.tabBarItem = UITabBarItem(title: "Профиль", image: UIImage(named: "Figure"), selectedImage: UIImage(named: "Figure.fill"))
         return vc
     }
     

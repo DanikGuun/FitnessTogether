@@ -85,7 +85,7 @@ public final class RegistrationCredintalsState: BaseRegistrationState, UITextFie
     }
     
     private func passwordVisibleButtonConfigurationUpdateHandler(_ button: UIButton) {
-        let imageName = button.isSelected ? "eye.striked" : "eye"
+        let imageName = button.isSelected ? "Eye.striked" : "Eye"
         let superTextFieldIsEdiding = (button.superview as? OutlinedTextField)?.isActiveState ?? false
         var conf = button.configuration
         conf?.image = UIImage(named: imageName)

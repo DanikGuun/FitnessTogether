@@ -34,7 +34,7 @@ public class FTDateButton: FTImageAndTitleButton {
     
     private func setupDefaultImageAndTitle() {
         titleLabel.text = "дд.мм.гггг"
-        imageView.image = UIImage(named: "calendar")
+        imageView.image = UIImage(named: "Calendar")
         addAction(UIAction(handler: dateButtonPressed), for: .touchUpInside)
     }
     

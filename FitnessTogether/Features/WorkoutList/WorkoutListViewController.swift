@@ -76,7 +76,7 @@ public final class WorkoutListViewController: FTViewController, WorkoutFilterVie
         mainTitleLabel.isUserInteractionEnabled = true
         filterButton.snp.makeConstraints { $0.top.bottom.trailing.equalToSuperview() }
         
-        let image = UIImage(named: "filter")
+        let image = UIImage(named: "Filter")
         filterButton.setImage(image, for: .normal)
         filterButton.tintColor = .label
         filterButton.addAction(UIAction(handler: filterButtonPressed), for: .touchUpInside)
