@@ -61,6 +61,7 @@ public final class LoginViewController: FTViewController, UITextFieldDelegate {
     }
     
     private func setupPasswordTextField() {
+        passwordTextField.isSecureTextEntry = true
         passwordTextField.textContentType = .password
         passwordTextField.autocapitalizationType = .none
         passwordTextField.delegate = self
@@ -91,6 +92,7 @@ public final class LoginViewController: FTViewController, UITextFieldDelegate {
         conf?.baseForegroundColor = superTextFieldIsEdiding ? .label : .systemGray4
         conf?.baseBackgroundColor = .clear
         button.configuration = conf
+        (button.superview as? OutlinedTextField)?.isSecureTextEntry = !button.isSelected
     }
     
     private func setupLoginButton () {

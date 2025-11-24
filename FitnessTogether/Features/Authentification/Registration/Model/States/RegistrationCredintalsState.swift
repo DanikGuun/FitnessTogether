@@ -63,6 +63,7 @@ public final class RegistrationCredintalsState: BaseRegistrationState, UITextFie
     private func setupTextField(_ textField: OutlinedTextField) {
         textField.constraintHeight(DC.Size.buttonHeight)
         textField.delegate = self
+        textField.isSecureTextEntry = true
         textField.textContentType = .password
         textField.autocapitalizationType = .none
         textField.addAction(UIAction(handler: checkNextButtonAvailable), for: .editingChanged)
@@ -92,6 +93,7 @@ public final class RegistrationCredintalsState: BaseRegistrationState, UITextFie
         conf?.baseForegroundColor = superTextFieldIsEdiding ? .label : .systemGray4
         conf?.baseBackgroundColor = .clear
         button.configuration = conf
+        (button.superview as? OutlinedTextField)?.isSecureTextEntry = !button.isSelected
     }
     
     private func passwordVisibleButtonPressed(_ action: UIAction?) {
