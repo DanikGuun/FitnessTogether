@@ -14,6 +14,7 @@ public protocol FTManager {
 public protocol FTEmailInterface {
     func forgotPassword(data: FTForgotPasswordEmail, completion: FTCompletion<FTResetCode>)
     func resetPassword(data: FTResetPassword, completion: FTCompletion<Void>)
+    func isEmailAvailable(email: String, completion: FTCompletion<FTIsEmailAvailableData>)
 }
 
 public protocol FTUserInterface {

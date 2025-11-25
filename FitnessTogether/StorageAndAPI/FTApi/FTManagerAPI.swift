@@ -23,6 +23,7 @@ public final class FTManagerAPI: FTManager {
 }
 
 fileprivate final class FTEmailApiAdapter: FTEmailInterface {
+
     var emailAPI: FTEmailManager
     
     init(emailAPI: FTEmailManager) {
@@ -35,6 +36,10 @@ fileprivate final class FTEmailApiAdapter: FTEmailInterface {
     
     func resetPassword(data: FTResetPassword, completion: FTCompletion<Void>) {
         emailAPI.resetPassword(data: data, completion: completion)
+    }
+    
+    func isEmailAvailable(email: String, completion: FTCompletion<FTIsEmailAvailableData>) {
+        emailAPI.isEmailAvailable(email: email, completion: completion)
     }
 }
 

@@ -30,9 +30,13 @@ class MockEmailInterface: FTEmailInterface {
         completion?(.success(()))
     }
     
+    func isEmailAvailable(email: String, completion: FTCompletion<FTIsEmailAvailableData>) {
+        completion?(.success(FTIsEmailAvailableData(isAvailable: false)))
+    }
 }
 
 class MockUserInterface: FTUserInterface {
+
     var token: String? = nil
     var hasPreviousLogin: Bool = false
     
@@ -71,6 +75,12 @@ class MockUserInterface: FTUserInterface {
         completion?(.success(coaches ?? []))
     }
     
+    func deleteAccount(completion: FTCompletion<Void>) {}
+    
+    func get(id: String, completion: FTCompletion<FTClientData>) {
+        guard let clientData = user?.clientData else { completion?(.failure(.unknown)); return }
+        completion?(.success(clientData))
+    }
 }
 
 class MockWorkoutInterface: FTWorkoutInterface {

@@ -46,12 +46,14 @@ public final class PasswordRecoverEmailState: BaseFieldsScreenState, PasswordRec
             setNextButtonBusy(true)
             recoverManager.isEmailExist(email) { [weak self] result in
                 guard let self else { return }
-                let isValid = updateFieldInConsistWithValidate(emailTextField, result: result)
-                if isValid {
+                if result == .valid {
                     recoverManager.sendEmailCode(email, completion: { _ in
                         self.delegate?.screenStateGoNext(self)
                         self.setNextButtonBusy(false)
                     })
+                }
+                else {
+                    setNextButtonBusy(false)
                 }
             }
         }

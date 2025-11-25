@@ -15,13 +15,32 @@ public class PasswordRecoverNetwork: PasswordRecoverNetworkManager {
     
     private var email: String = ""
     private var resetCode: String = ""
+    private var isEmailAvailable: Bool = false
     
     init(ftManager: any FTManager) {
         self.ftManager = ftManager
     }
     
     public func isEmailExist(_ email: String, completion: @escaping ((ValidatorResult) -> ())) {
-        completion(.valid)
+        ftManager.email.isEmailAvailable(email: email, completion: { [weak self] result in
+            switch result {
+                
+            case .success(let result):
+                self?.isEmailAvailable = result.isAvailable
+                if result.isAvailable {
+                    completion(.valid)
+                }
+                else {
+                    completion(.invalid(message: "Неправильный e-mail."))
+                    ErrorPresenter.present(FTError.error(message: "Неправильный e-mail."))
+                }
+                
+            case .failure(let error):
+                print(error.localizedDescription)
+                completion(.invalid(message: "Неправильный e-mail."))
+                ErrorPresenter.present(error)
+            }
+        })
     }
     
     public func sendEmailCode(_ email: String, completion: @escaping ((ValidatorResult) -> ())) {

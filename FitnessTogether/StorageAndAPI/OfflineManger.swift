@@ -126,6 +126,10 @@ public class OfflineEmailInterface: FTEmailInterface {
         completion?(.success(()))
     }
     
+    public func isEmailAvailable(email: String, completion: FTCompletion<FTIsEmailAvailableData>) {
+        completion?(.success(FTIsEmailAvailableData(isAvailable: false)))
+    }
+    
 }
 
 public class OfflineUserInterface: FTUserInterface {
