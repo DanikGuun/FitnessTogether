@@ -49,13 +49,25 @@ public final class BasePasswordRecoverModel: PasswordRecoverModel {
         let state = getCurrentState()
         state?.setNextButtonBusy(true)
 
-        ftManager.email.resetPassword(data: resetPasswordData, completion: { result in
+        ftManager.email.resetPassword(data: resetPasswordData, completion: { [weak self] result in
+            guard let rpt = self?.resetPasswordData else { return }
+            
             switch result {
                 
             case .success(_):
-                state?.setNextButtonBusy(false)
-                completion?(.success(()))
-                
+
+                let loginData = FTUserLogin(email: rpt.email, password: rpt.newPassword)
+                self?.ftManager.user.login(data: loginData, completion: { _ in
+                    
+                    switch result {
+                    case .success(_):
+                        completion?(.success(()))
+                    case .failure(let error):
+                        ErrorPresenter.present(error)
+                        completion?(.failure(error))
+                    }
+                })
+  
             case .failure(let error):
                 print(error.localizedDescription)
                 ErrorPresenter.present(error)

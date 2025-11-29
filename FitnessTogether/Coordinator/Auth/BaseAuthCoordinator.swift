@@ -51,7 +51,7 @@ extension BaseAuthCoordinator: AuthViewControllerDelegate {
         let vc = factory.makeLoginVC(delegate: self)
         show(vc)
     }
-    
+
 }
 
 extension BaseAuthCoordinator: RegistrationViewControllerDelegate {
@@ -78,7 +78,8 @@ extension BaseAuthCoordinator: LoginViewControllerDelegate {
 extension BaseAuthCoordinator: PasswordRecoverControllerDelegate {
     
     public func passwordRecoverDidFinish(_ controller: UIViewController) {
-        navigationVC.popViewController(animated: needAnimate)
+        delegate?.authCoordinatorDidFinishAuth(self)
+        //navigationVC.popViewController(animated: needAnimate)
     }
     
 }
