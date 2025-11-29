@@ -79,7 +79,6 @@ extension BaseAuthCoordinator: PasswordRecoverControllerDelegate {
     
     public func passwordRecoverDidFinish(_ controller: UIViewController) {
         delegate?.authCoordinatorDidFinishAuth(self)
-        //navigationVC.popViewController(animated: needAnimate)
     }
     
 }
