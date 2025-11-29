@@ -63,6 +63,12 @@ public final class PasswordRecoverViewController: FTStateViewController {
         updateStepLabel()
     }
     
+    public override func goToPreviousState() {
+        super.goToPreviousState()
+        step -= 1
+        updateStepLabel()
+    }
+    
     public override func getNextState() -> (any ScreenState)? {
         return model.goNext()
     }
