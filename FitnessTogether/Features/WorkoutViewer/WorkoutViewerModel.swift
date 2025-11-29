@@ -60,7 +60,7 @@ public final class BaseWorkoutViewerModel: WorkoutViewerModel {
             switch result {
                 
             case .success(let coach):
-                completion(coach.firstName + coach.lastName)
+                completion(coach.firstName + " " + coach.lastName)
                 
             case .failure(let error):
                 print(error.localizedDescription)

@@ -243,7 +243,7 @@ public final class ProfileViewController: FTViewController, AddClientViewControl
         return WorkoutItem(
             id: user.id,
             image: nil,
-            name: user.lastName + user.firstName,
+            name: user.firstName + " " + user.lastName,
             date: nil)
     }
     
