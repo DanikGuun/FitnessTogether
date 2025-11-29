@@ -57,7 +57,7 @@ public final class BasePasswordRecoverModel: PasswordRecoverModel {
             case .success(_):
 
                 let loginData = FTUserLogin(email: rpt.email, password: rpt.newPassword)
-                self?.ftManager.user.login(data: loginData, completion: { _ in
+                self?.ftManager.user.login(data: loginData, completion: { [weak self] _ in
                     
                     switch result {
                     case .success(_):
@@ -66,6 +66,7 @@ public final class BasePasswordRecoverModel: PasswordRecoverModel {
                         ErrorPresenter.present(error)
                         completion?(.failure(error))
                     }
+                    self?.getCurrentState()?.setNextButtonBusy(false)
                 })
   
             case .failure(let error):
@@ -73,12 +74,19 @@ public final class BasePasswordRecoverModel: PasswordRecoverModel {
                 ErrorPresenter.present(error)
                 completion?(.failure(error))
             }
+            self?.getCurrentState()?.setNextButtonBusy(false)
         })
     }
     
     private func getCurrentState() -> (any PasswordRecoverState)? {
-        guard currentStep >= 0, currentStep < states.count else { return nil }
-        return states[currentStep]
+        if currentStep < 0 {
+            return states.first
+        }
+        else if currentStep >= states.count {
+            return states.last
+        }
+        else {
+            return states[currentStep]
+        }
     }
-    
 }
