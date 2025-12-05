@@ -50,6 +50,7 @@ public final class ExerciseBuilderViewController: FTViewController, UITextFieldD
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        setupKeyboardHider()
         setupInitialData()
     }
     

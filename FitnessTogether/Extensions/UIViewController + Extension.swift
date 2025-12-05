@@ -42,5 +42,14 @@ extension UIViewController: UIPopoverPresentationControllerDelegate {
         .none
     }
     
-    
+    func setupKeyboardHider() {
+        let tap = UITapGestureRecognizer(target: self, action: #selector(UIViewController.hideKeyboard))
+        tap.cancelsTouchesInView = false
+        view.addGestureRecognizer(tap)
+    }
+
+    @objc func hideKeyboard() {
+        view.endEditing(true)
+    }
+
 }

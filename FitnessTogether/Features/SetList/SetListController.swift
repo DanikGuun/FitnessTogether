@@ -32,6 +32,7 @@ public final class SetListViewController: FTViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
+        setupKeyboardHider()
         setup()
     }
     
