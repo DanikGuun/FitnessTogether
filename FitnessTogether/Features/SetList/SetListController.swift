@@ -112,7 +112,8 @@ public final class SetListViewController: FTViewController {
     
     //MARK: - Actions
     private func setDidSelect(setItem: SetCollectionItem) {
-        delegate?.setListVCRequestToOpenEditSetVC(self, setId: setItem.id!, exerciseId: model.exerciseId)
+        guard let id = setItem.id else { return }
+        delegate?.setListVCRequestToOpenEditSetVC(self, setId: id, exerciseId: model.exerciseId)
     }
     
     private func addSetButtonPressed(_ action: UIAction?) {
