@@ -165,6 +165,7 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
     
     @objc
     public func popViewController() {
+        view.endEditing(true)
         navigationController?.popViewController(animated: true)
     }
 
