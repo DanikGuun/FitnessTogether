@@ -55,16 +55,16 @@ public final class SetListViewController: FTViewController {
     }
     
     private func setupMainTitle() {
+        setupTitle(mainTitle, text: " ")
         model.getExerciseName(completion: { [weak self] name in
             guard let self else { return }
-            setupTitle(mainTitle, text: name)
+            self.mainTitle.text = name
         })
     }
     
     private func setupTitle(_ label: UILabel, text: String) {
         label.font = DC.Font.headline
         label.textAlignment = .center
-        label.text = text
         addStackSubview(label)
     }
     
