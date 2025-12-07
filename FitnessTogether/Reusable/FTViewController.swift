@@ -46,6 +46,7 @@ public class FTViewController: UIViewController, UIGestureRecognizerDelegate {
         view.backgroundColor = .systemBackground
         setupStackView()
         setupNavigationBar()
+        setupKeyboardHider()
     }
     
     public func addStackSubview(_ subview: UIView, height: CGFloat? = nil, spaceAfter: SpaceKind = .fixed(DC.Layout.spacing)) {

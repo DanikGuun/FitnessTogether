@@ -116,6 +116,7 @@ public class WorkoutsTimelineView: TimeLineView {
         guard let item = (sender.view as? WorkoutTimelineItemView)?.item,
             let delegate = delegate as? WorkoutTimelineDelegate else { return }
         delegate.workoutTimeline(self, didSelect: item)
+        endEditing(true)
     }
     
 }
