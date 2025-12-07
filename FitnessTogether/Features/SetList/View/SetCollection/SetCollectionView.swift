@@ -68,10 +68,8 @@ public final class SetCollectionView: UICollectionView, UICollectionViewDelegate
     }
     
     public func appendItem() {
-        var oldItems = items
-        let newItem = SetCollectionItem(id: nil, number: oldItems.count + 1, count: 0, weight: 0)
-        oldItems.append(newItem)
-        items = oldItems
+        let newItem = SetCollectionItem(id: nil, number: items.count + 1, count: 0, weight: 0)
+        items.append(newItem)
     }
     
     private func getCurrentItems() -> [SetCollectionItem] {

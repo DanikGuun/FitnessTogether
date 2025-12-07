@@ -32,7 +32,6 @@ public final class SetListViewController: FTViewController {
     
     public override func viewDidLoad() {
         super.viewDidLoad()
-        setupKeyboardHider()
         setup()
     }
     
@@ -95,10 +94,6 @@ public final class SetListViewController: FTViewController {
     private func setupSetCollection() {
         addStackSubview(setCollection)
         var its: [SetCollectionItem] = []
-        for _ in 0...10 {
-            let item = SetCollectionItem(count: Int.random(in: 1...10), weight: Int.random(in: 1...100))
-            its.append(item)
-        }
         setCollection.items = its
         setCollection.didSelectSet = setDidSelect
     }
