@@ -46,12 +46,13 @@ public final class BaseAppCoordinator: NSObject {
                 
                 switch result {
                 case .success(let user):
-                    if user.role == .coach {
-                        setCoordinator(coachCoordinator)
-                    }
-                    else {
+                    // bsv: раскоментить
+                    //if user.role == .coach {
+                    //    setCoordinator(coachCoordinator)
+                    //}
+                    //else {
                         setCoordinator(clientCoordinator)
-                    }
+                    //}
                 case .failure(let error): print(error.localizedDescription)
                     
                 }

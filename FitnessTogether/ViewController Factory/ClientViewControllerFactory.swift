@@ -2,7 +2,12 @@
 import UIKit
 
 public protocol ClientViewControllerFactory {
-    func makeTabBarVC(workoutListDeleage: (any WorkoutListViewControllerDelegate)?, profileDelegate: (any ProfileViewControllerDelegate)?) -> UITabBarController
+    func makeTabBarVC(
+        workoutListDeleage: (any WorkoutListViewControllerDelegate)?,
+        analyticsDeleage: (any WorkoutAnalysisViewControllerDelegate)?,
+        profileDelegate: (any ProfileViewControllerDelegate)?
+    ) -> UITabBarController
+    
     func makeMainVC(delegate: (any WorkoutListViewControllerDelegate)?) -> UIViewController
 //    func makeWorkoutsVC(delegate: (any WorkoutListViewControllerDelegate)?) -> UIViewController
 //    func makeProfileVC(delegate: (any ProfileViewControllerDelegate)?) -> UIViewController
@@ -11,7 +16,12 @@ public protocol ClientViewControllerFactory {
 //    func makeExerciseListVC(workoutId: String, delegate: (any ExerciseListViewControllerDelegate)?) -> UIViewController
 //    func makeCreateExerciseVC(workoutId: String, delegate: (any ExerciseBuilderViewControllerDelegate)?) -> UIViewController
 //    func changeExerciseBuilderToEditModel(_ vc: UIViewController)
-    func makeEditExerciseVC(workoutId: String, exerciseId: String, delegate: (any ExerciseBuilderViewControllerDelegate)?) -> UIViewController
+    func makeEditExerciseVC(
+        workoutId: String,
+        exerciseId: String,
+        delegate: (any ExerciseBuilderViewControllerDelegate)?
+    ) -> UIViewController
+    
     func makeFilterVC(delegate: (any WorkoutFilterViewControllerDelegate)?) -> UIViewController
     func makeSetListVC(exerciseId: String, delegate: (any SetListViewControllerDelegate)) -> UIViewController
     func makeAddToCoachVC() -> UIViewController
@@ -24,7 +34,11 @@ public class BaseClientViewControllerFactory: ClientViewControllerFactory {
         self.ftManager = ftManager
     }
     
-    public func makeTabBarVC(workoutListDeleage: (any WorkoutListViewControllerDelegate)?, profileDelegate: (any ProfileViewControllerDelegate)?) -> UITabBarController {
+    public func makeTabBarVC(
+        workoutListDeleage: (any WorkoutListViewControllerDelegate)?,
+        analyticsDeleage: (any WorkoutAnalysisViewControllerDelegate)?,
+        profileDelegate: (any ProfileViewControllerDelegate)?
+    ) -> UITabBarController {
         let tabBarController = UITabBarController()
         
         let tabBar = FTTabBar()
@@ -33,6 +47,7 @@ public class BaseClientViewControllerFactory: ClientViewControllerFactory {
         tabBarController.viewControllers = [
             makeMainVC(delegate: workoutListDeleage),
             makeWorkoutsVC(delegate: workoutListDeleage),
+            makeAnalyticsVC(delegate: analyticsDeleage),
             makeProfileVC(delegate: profileDelegate)
         ]
         
@@ -66,6 +81,17 @@ public class BaseClientViewControllerFactory: ClientViewControllerFactory {
         vc.mainTitleLabel.text = "Мои тренировки"
         vc.addWorkoutButton.removeFromSuperview()
         vc.tabBarItem = UITabBarItem(title: "Тренировки", image: UIImage(named: "Barbell"), selectedImage: UIImage(named: "Barbell.fill"))
+        return vc
+    }
+    
+    public func makeAnalyticsVC(delegate: (any WorkoutAnalysisViewControllerDelegate)?) -> UIViewController {
+        let bag = FTFilterBag(dateInterval: .allTime, workoutKind: nil)
+        let model = BaseWorkoutAnalysisModel(ftManager: ftManager)
+
+        let vc = WorkoutAnalysisViewController(model: model)
+        vc.delegate = delegate
+        vc.titleLabel.text = "Аналитика"
+        vc.tabBarItem = UITabBarItem(title: "Аналитика", image: UIImage(named: "Analytics"), selectedImage: UIImage(named: "Analytics"))
         return vc
     }
     

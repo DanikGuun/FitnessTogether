@@ -11,12 +11,14 @@ class MockFTManager: FTManager {
     var workout: any FitnessTogether.FTWorkoutInterface { _workout }
     var exercise: any FitnessTogether.FTExerciseInterface { _exercise }
     var set: any FitnessTogether.FTSetInterface { _set }
+    var analytics: any FitnessTogether.FTWorkoutAnalysisInterface { _analytics }
     
     var _email = MockEmailInterface()
     var _user = MockUserInterface()
     var _workout = MockWorkoutInterface()
     var _exercise = MockExerciseInterface()
     var _set = MockSetInterface()
+    var _analytics = MockAnalyticsInterface()
     
 }
 
@@ -172,4 +174,8 @@ class MockSetInterface: FTSetInterface {
     func delete(setId: String, completion: FTCompletion<Void>) {}
     
     
+}
+
+class MockAnalyticsInterface: FTWorkoutAnalysisInterface {
+    func analytics(completion: FTCompletion<FTUserWorkoutAnalysis>) {}
 }

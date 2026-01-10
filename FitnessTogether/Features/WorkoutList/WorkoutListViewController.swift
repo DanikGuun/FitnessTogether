@@ -18,6 +18,7 @@ public final class WorkoutListViewController: FTViewController, WorkoutFilterVie
     var workoutCollection: WorkoutListView = WorkoutListCollectionView()
     var disclosureButton: DisclosureButton!
     let addWorkoutButton = UIButton.ftFilled(title: "Добавить тренировку")
+    let analyziseMyProgressButton = UIButton.ftPlain(title: "Проанализировать мой прогресс")
     
     
     //MARK: - Lifecycle
@@ -52,6 +53,7 @@ public final class WorkoutListViewController: FTViewController, WorkoutFilterVie
         setupAddWorkoutButton()
         addSpacing(.fixed(50))
         setupFilterButton()
+        setupAnalyziseMyProgressView()
     }
     
     private func setupTrainsCollectionView() {
@@ -82,6 +84,11 @@ public final class WorkoutListViewController: FTViewController, WorkoutFilterVie
         filterButton.addAction(UIAction(handler: filterButtonPressed), for: .touchUpInside)
     }
     
+    private func setupAnalyziseMyProgressView() {
+        addStackSubview(analyziseMyProgressButton)
+        analyziseMyProgressButton.addAction(UIAction(handler: analyziseMyProgressButton), for: .touchUpInside)
+    }
+    
     //MARK: - Actions
     private func addWorkoutButtonPressed(_ action: UIAction) {
         updateItems()
@@ -95,6 +102,14 @@ public final class WorkoutListViewController: FTViewController, WorkoutFilterVie
     
     private func filterButtonPressed(_ action: UIAction) {
         delegate?.workoutListRequestToOpenFilter(self, delegate: self)
+    }
+    
+    private func analyziseMyProgressButton(_ action: UIAction?) {
+        model.analyziseMyProgress { result in
+            if result {
+                self.tabBarController?.selectedIndex = 2
+            }
+        }
     }
     
     //MARK: - Workout Filter\

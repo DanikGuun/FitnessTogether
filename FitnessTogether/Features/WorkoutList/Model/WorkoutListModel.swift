@@ -8,11 +8,12 @@ public protocol WorkoutListModel {
     var currentFilterBag: FTFilterBag { get set }
     func getItems(completion: @escaping ([WorkoutItem]) -> Void)
     func getItems(withFilter filter: FTFilterBag, completion: @escaping ([WorkoutItem]) -> Void)
+    func analyziseMyProgress(completion: @escaping (Bool) -> Void)
 }
 
 public class BaseWorkoutListModel: WorkoutListModel {
-    public var initialFilterBag: FTFilterBag = FTFilterBag()
-    public var currentFilterBag: FTFilterBag = FTFilterBag()
+    public var initialFilterBag: FTFilterBag = FTFilterBag(dateInterval: .toEndOfWeek)
+    public var currentFilterBag: FTFilterBag = FTFilterBag(dateInterval: .toEndOfWeek)
     var role: FTUserRole { .coach }
     let ftManager: FTManager
     var refDate = Date()
@@ -76,13 +77,42 @@ public class BaseWorkoutListModel: WorkoutListModel {
         })
     }
     
+    public func analyziseMyProgress(completion: @escaping (Bool) -> Void) {
+        ftManager.workoutAnalysis.post { result in
+            switch result {
+            case .success():
+                completion(true)
+
+            case .failure(let error):
+                print(error.localizedDescription)
+                
+                switch error {
+                case .networkError(let code, _):
+                    switch code {
+                    case 400: ErrorPresenter.present(FTError.error(message: "Ошибка на сервиса."))
+                    case 401: ErrorPresenter.present(FTError.error(message: "Пользователь не авторизован. Пожалуйста, войдите заново."))
+                    case 404: ErrorPresenter.present(FTError.error(message: "Нет данных для анализа."))
+                    case 409: ErrorPresenter.present(FTError.error(message: "Анализ уже сделан."))
+                    default: ErrorPresenter.present(error)
+                    }
+                    
+                default: ErrorPresenter.present(error)
+                }
+            }
+        }
+    }
+    
     internal func filterWorkouts(_ workouts: [FTWorkout], filter: FTFilterBag, user: FTUser) -> [FTWorkout] {
 
         return workouts.filter { [weak self] workout in
             guard let self else { return false }
+            
+            // TODO: Ждём правки на стороне API, https://ru.yougile.com/team/60c344d10c22/FitnessTogether#FT-41
             guard let role = workout.participants?.first(where: { $0.userId == user.id })?.role else { return false }
-            return role.userRole == self.role && //чтобы роль совпдала
+            return role.userRole == self.role && //чтобы роль совпадала
                     filter.shouldInclude(workout)
+            
+            return filter.shouldInclude(workout)
         }
     }
 }

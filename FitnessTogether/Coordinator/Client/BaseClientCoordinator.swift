@@ -15,7 +15,11 @@ public final class BaseClientCoordinator: NSObject, ClientCoordinator {
     init(factory: ClientViewControllerFactory) {
         self.factory = factory
         super.init()
-        self.tabBarVC = factory.makeTabBarVC(workoutListDeleage: self, profileDelegate: self)
+        self.tabBarVC = factory.makeTabBarVC(
+            workoutListDeleage: self,
+            analyticsDeleage: self,
+            profileDelegate: self
+        )
         self.navigationVC = UINavigationController(rootViewController: tabBarVC)
         ErrorPresenter.activeController = tabBarVC
     }
@@ -57,6 +61,17 @@ extension BaseClientCoordinator: ExerciseBuilderViewControllerDelegate {
         show(vc)
     }
     
+}
+
+extension BaseClientCoordinator: WorkoutAnalysisViewControllerDelegate {
+    
+    public func analyticsGoToTrain(_ vc: UIViewController) {
+        let vc = factory.makeMainVC(delegate: self)
+        show(vc)
+    }
+    public func analyticsPostToAnanlyze(_ vc: UIViewController) {
+        
+    }
 }
 
 extension BaseClientCoordinator: ProfileViewControllerDelegate {

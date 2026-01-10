@@ -9,6 +9,7 @@ public protocol FTManager {
     var workout: FTWorkoutInterface { get }
     var exercise: FTExerciseInterface { get }
     var set: FTSetInterface { get }
+    var workoutAnalysis: FTWorkoutAnalysisInterface { get }
 }
 
 public protocol FTEmailInterface {
@@ -55,4 +56,9 @@ public protocol FTSetInterface {
     func get(exerciseId: String, completion: FTCompletion<[FTSet]>)
     func edit(setId: String, newData data: FTSetCreate, completion: FTCompletion<FTSet>)
     func delete(setId: String, completion: FTCompletion<Void>)
+}
+
+public protocol FTWorkoutAnalysisInterface {
+    func post(completion: FTCompletion<Void>)
+    func get(userId: String, completion: FTCompletion<[FTUserWorkoutAnalysis]>)
 }

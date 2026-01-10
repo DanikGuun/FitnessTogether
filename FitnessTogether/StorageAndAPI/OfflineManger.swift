@@ -8,12 +8,14 @@ public class OfflineManger: FTManager {
     public var workout: any FTWorkoutInterface { _workout }
     public var exercise: any FTExerciseInterface { _exercise }
     public var set: any FTSetInterface { _set }
+    public var workoutAnalysis: any FTWorkoutAnalysisInterface { _workoutAnalysis }
     
     var _email = OfflineEmailInterface()
     var _user = OfflineUserInterface()
     var _workout = OfflineWorkoutInterface()
     var _exercise = OfflineExerciseInterface()
     var _set = OfflineSetInterface()
+    var _workoutAnalysis = OfflineWorkoutAnalysisInterface()
     
     init() {
         setupWorkoutsList()
@@ -339,4 +341,27 @@ public class OfflineSetInterface: FTSetInterface {
         return set
     }
     
+}
+
+
+public class OfflineWorkoutAnalysisInterface: FTWorkoutAnalysisInterface {
+
+    init() {}
+    
+    public func post(completion: FTCompletion<Void>) {}
+    
+    public func get(userId: String, completion: FTDomainData.FTCompletion<[FTUserWorkoutAnalysis]>) {
+        let userWorkoutAnalysises = [FTUserWorkoutAnalysis(
+             id: "1f5a907a-e66c-4f8f-b8fb-7f838aa3ccd7",
+             workouts: nil,
+             user: nil,
+             createdAt: "2026-01-08T01:53:48.792357",
+             activityAnalysis: "Тренировки начались 25 декабря, но есть недостаток данных для оценки регулярности и продолжительности. Ожидаю более полного отчета о тренировках.",
+             exercisesWithProgress: "",
+             growthPoints: "",
+             conclusionAndAdvices: "Для начала тренировочного процесса нужно собрать достаточное количество данных, чтобы оценить прогресс и дать рекомендации. Необходимо добавить информацию о выполненных упражнениях и их количестве.",
+             isCanResend: false
+        )]
+        completion?(.success(userWorkoutAnalysises))
+    }
 }

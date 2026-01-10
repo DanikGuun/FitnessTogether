@@ -305,6 +305,7 @@
 				567F1C642E2A680B00A32C0A /* XCRemoteSwiftPackageReference "SnapKit" */,
 				56D856CE2E2E80E7007AB0F3 /* XCLocalSwiftPackageReference "../Библиотеки/OutlineTextField" */,
 				56D038BF2E982DBA00F542EC /* XCLocalSwiftPackageReference "../Библиотеки/SideAlert" */,
+				A5D090C52ED2FA2900F2B250 /* XCLocalSwiftPackageReference "../FTDomainData" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 568E984D2E28E9C8007144F7 /* Products */;
@@ -697,6 +698,10 @@
 		56D856CE2E2E80E7007AB0F3 /* XCLocalSwiftPackageReference "../Библиотеки/OutlineTextField" */ = {
 			isa = XCLocalSwiftPackageReference;
 			relativePath = "../Библиотеки/OutlineTextField";
+		};
+		A5D090C52ED2FA2900F2B250 /* XCLocalSwiftPackageReference "../FTDomainData" */ = {
+			isa = XCLocalSwiftPackageReference;
+			relativePath = ../FTDomainData;
 		};
 /* End XCLocalSwiftPackageReference section */
 

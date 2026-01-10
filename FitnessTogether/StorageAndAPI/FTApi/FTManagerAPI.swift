@@ -10,6 +10,7 @@ public final class FTManagerAPI: FTManager {
     public var workout: any FTWorkoutInterface
     public var exercise: any FTExerciseInterface
     public var set: any FTSetInterface
+    public var workoutAnalysis: any FTWorkoutAnalysisInterface
     
     public init() {
         let api = FTApi()
@@ -18,6 +19,7 @@ public final class FTManagerAPI: FTManager {
         workout = FTWorkoutApiAdapter(workoutAPI: api.workout)
         exercise = FTExerciseApiAdapter(exerciseAPI: api.exercise)
         set = FTSetApiAdapter(setAPI: api.set)
+        workoutAnalysis = FTWorkoutAnalysisApiAdapter(workoutAnalysisAPI: api.workoutAnalysis)
     }
     
 }
@@ -183,3 +185,22 @@ fileprivate final class FTSetApiAdapter: FTSetInterface {
     }
     
 }
+
+fileprivate final class FTWorkoutAnalysisApiAdapter: FTWorkoutAnalysisInterface {
+    
+    var workoutAnalysisAPI: FTWorkoutAnalysisManager
+    
+    init(workoutAnalysisAPI: FTWorkoutAnalysisManager) {
+        self.workoutAnalysisAPI = workoutAnalysisAPI
+    }
+    
+    func post(completion: FTCompletion<Void>) {
+        workoutAnalysisAPI.Analyze(completion: completion)
+    }
+    
+    func get(userId: String, completion: FTCompletion<[FTUserWorkoutAnalysis]>) {
+        workoutAnalysisAPI.GetByUserId(userId: userId, completion: completion)
+    }
+
+}
+
