@@ -89,13 +89,14 @@ public class BaseWorkoutListModel: WorkoutListModel {
                 switch error {
                 case .networkError(let code, _):
                     switch code {
-                    case 400: ErrorPresenter.present(FTError.error(message: "Ошибка на сервиса."))
+                    case 400: ErrorPresenter.present(FTError.error(message: "Ошибка сервиса."))
                     case 401: ErrorPresenter.present(FTError.error(message: "Пользователь не авторизован. Пожалуйста, войдите заново."))
                     case 404: ErrorPresenter.present(FTError.error(message: "Нет данных для анализа."))
                     case 409: ErrorPresenter.present(FTError.error(message: "Анализ уже сделан."))
                     default: ErrorPresenter.present(error)
                     }
-                    
+                case .serverError(_): // Http Status Code - 500 
+                    ErrorPresenter.present(FTError.error(message: "Ошибка сервиса."))
                 default: ErrorPresenter.present(error)
                 }
             }
