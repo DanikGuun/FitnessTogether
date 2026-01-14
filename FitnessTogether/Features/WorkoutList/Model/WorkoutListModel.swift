@@ -2,13 +2,23 @@
 import UIKit
 import FTDomainData
 
+
+public enum AnalyziseMyProgressResult {
+    case success
+    case serviceError
+    case authorizedError
+    case notEnoughDataError
+    case alreadyAnalysedError
+    case unknownError
+}
+
 public protocol WorkoutListModel {
-    
+
     var initialFilterBag: FTFilterBag { get set }
     var currentFilterBag: FTFilterBag { get set }
     func getItems(completion: @escaping ([WorkoutItem]) -> Void)
     func getItems(withFilter filter: FTFilterBag, completion: @escaping ([WorkoutItem]) -> Void)
-    func analyziseMyProgress(completion: @escaping (Bool) -> Void)
+    func analyziseMyProgress(completion: @escaping (AnalyziseMyProgressResult) -> Void)
 }
 
 public class BaseWorkoutListModel: WorkoutListModel {
@@ -77,11 +87,11 @@ public class BaseWorkoutListModel: WorkoutListModel {
         })
     }
     
-    public func analyziseMyProgress(completion: @escaping (Bool) -> Void) {
+    public func analyziseMyProgress(completion: @escaping (AnalyziseMyProgressResult) -> Void) {
         ftManager.workoutAnalysis.post { result in
             switch result {
             case .success():
-                completion(true)
+                completion(.success)
 
             case .failure(let error):
                 print(error.localizedDescription)
@@ -89,15 +99,16 @@ public class BaseWorkoutListModel: WorkoutListModel {
                 switch error {
                 case .networkError(let code, _):
                     switch code {
-                    case 400: ErrorPresenter.present(FTError.error(message: "Ошибка сервиса."))
-                    case 401: ErrorPresenter.present(FTError.error(message: "Пользователь не авторизован. Пожалуйста, войдите заново."))
-                    case 404: ErrorPresenter.present(FTError.error(message: "Нет данных для анализа."))
-                    case 409: ErrorPresenter.present(FTError.error(message: "Анализ уже сделан."))
+                    case 400: completion(.serviceError)
+                    case 401: completion(.authorizedError)
+                    case 404: completion(.notEnoughDataError)
+                    case 409: completion(.alreadyAnalysedError)
                     default: ErrorPresenter.present(error)
                     }
-                case .serverError(_): // Http Status Code - 500 
-                    ErrorPresenter.present(FTError.error(message: "Ошибка сервиса."))
-                default: ErrorPresenter.present(error)
+                case .serverError(_): // Http Status Code - 500
+                    completion(.serviceError)
+                    
+                default: completion(.unknownError)
                 }
             }
         }

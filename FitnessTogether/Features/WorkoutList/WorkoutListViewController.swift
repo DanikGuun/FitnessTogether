@@ -104,13 +104,32 @@ public final class WorkoutListViewController: FTViewController, WorkoutFilterVie
         delegate?.workoutListRequestToOpenFilter(self, delegate: self)
     }
     
+
     private func analyziseMyProgressButton(_ action: UIAction?) {
-        model.analyziseMyProgress { result in
-            if result {
-                self.tabBarController?.selectedIndex = 2
+        analyziseMyProgressButton.isEnabled = false
+        model.analyziseMyProgress { [weak self] result in
+            switch result {
+            case .success: self?.tabBarController?.selectedIndex = 2
+            case .serviceError: self?.showErrorAlert("Ошибка сервиса.")
+            case .authorizedError: self?.showErrorAlert("Пользователь не авторизован. Пожалуйста, войдите заново.")
+            case .notEnoughDataError: self?.showErrorAlert("Нет данных для анализа.")
+            case .alreadyAnalysedError: self?.showErrorAlert("Анализ уже сделан.")
+            case .unknownError: self?.showErrorAlert("Ошибка.")
             }
+            self?.analyziseMyProgressButton.isEnabled = true
         }
     }
+    
+    private func showErrorAlert(_ message: String) {
+        let controller = FTViewController()
+        let label = UILabel.headline(message)
+        controller.view.addSubview(label)
+        label.snp.makeConstraints { maker in
+            maker.edges.equalToSuperview().inset(20)
+        }
+        self.presentPopover(controller, size: CGSize(width: view.frame.width, height: 280), sourceView: view)
+    }
+    
     
     //MARK: - Workout Filter\
     public func workoutFilterVCGetDefaultBag(_ vc: UIViewController) -> FTFilterBag {
